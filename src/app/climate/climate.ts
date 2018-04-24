@@ -1,10 +1,17 @@
 export class WeatherStation {
-    public stationNum: number;
+    public stationId: number;
     public stationName: string;
     constructor() { }
 }
-export class HighchartsData {
+
+export class HighchartsTempratures {
     public dateFormatted: Date;
     public temperatureC: number;
+    constructor() { }
+}
+
+export class HighchartsHumidities {
+    public dateFormatted: Date;
+    public relativeHumidities: number;
     constructor() { }
 }

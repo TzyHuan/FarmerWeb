@@ -4,12 +4,13 @@ import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
 
-import { WeatherStation, HighchartsData } from './climate'
+import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './climate'
 
 @Injectable()
 export class ClimateService {
-    public StationApiUrl: string = 'http://localhost/FarmerAPI/api/weatherData/Stations';
-    public TemperatuteApiUrl: string = 'http://localhost/FarmerAPI/api/weatherData/Temperatures';
+    public StationApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Stations';
+    public TemperatuteApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Temperatures';
+    public HumiditiesApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Humidities';
 
     constructor(private http: HttpClient) { }
 
@@ -17,7 +18,11 @@ export class ClimateService {
         return this.http.get<WeatherStation[]>(this.StationApiUrl)
     }
 
-    getTemperatute(params?: HttpParams) {
-        return this.http.get<HighchartsData[]>(this.TemperatuteApiUrl, { params })
+    getTemperatures(params?: HttpParams) {
+        return this.http.get<HighchartsTempratures[]>(this.TemperatuteApiUrl, { params })
+    }
+
+    getRelativeHumidities(params?: HttpParams) {
+        return this.http.get<HighchartsHumidities[]>(this.HumiditiesApiUrl, { params })
     }
 }
