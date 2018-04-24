@@ -1,0 +1,33 @@
+<h1>
+  Welcome to My balcony!! lol~!
+  <p>哭哭QQ</p>
+</h1>
+1. 直接設定param類型為Observable，在HTML做"time | async"
+<br>
+<div>
+  Time: {{ timeNow | async }}
+</div>
+
+<br> 2. Call API per second (Combine together as an Observable array, then ngif)
+<br>
+<!-- <div style="height:2rem; position:fixed;top:18rem;" *ngIf="RealtimeData | async as data ">
+  time: {{ data.dateFormatted }}
+  <br> temp: {{ data.temperatureC }}
+</div> -->
+<!-- <ng-template #fantastic>
+  <h1>Condition Failed!</h1>
+</ng-template> -->
+<br>
+<br>
+<br> 3. Call API per second (2 indivisual parameters, 讓observer定時執行改變param內容，不做"time | async")
+<br>
+<div>
+  time: {{ RealtimeDate }}
+  <br> temp: {{ RealtimeTemp }}
+</div>
+<br> 4. Call API per second (Combine together as an interface, then ngif, 不做async)
+<div *ngIf="DataFromAPI">
+  time: {{ DataFromAPI.dateFormatted }}
+  <br> temp: {{ DataFromAPI.temperatureC }}
+</div>
+<br>

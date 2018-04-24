@@ -1,0 +1,19 @@
+<h1>Long-term Weather data</h1>
+<h5>Crawled from 中央氣象局 by Python</h5>
+<div>
+{{title}}
+  地點：
+  <select (change)="onSelect($event.target.value)" [value]="selectedStations.stationNum">
+    <option *ngFor="let station of stations" value="{{station.stationNum}}">
+      {{station.stationName}}
+    </option>
+  </select>
+  <br /> Selected Country ID: {{selectedStations.stationNum}} & Name: {{selectedStations.stationName}}
+  <br />
+  <p *ngIf="!chart">
+    <em>Loading...</em>
+  </p>
+  <div class="highchart" #chartTarget>
+    chart target
+  </div>
+</div>

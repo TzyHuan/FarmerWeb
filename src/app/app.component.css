@@ -1,0 +1,34 @@
+.catagory {        
+    float: none;
+    width: 100%;    
+}
+
+@media (min-width:768px) {    
+    .catagory {
+        width: 100%;
+        float: none;        
+        display: inline-block; 
+    }
+
+    .content {
+        float: none;
+        width: 100%;
+        padding-right: 5%;
+        padding-left: 5%;        
+    }
+
+   /* .col-sm-3, .col-sm-9 {
+        position: relative;
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px
+    }         */
+
+}
+
+@media (max-width: 767px) {
+    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+    .content {
+        padding-top: 50px;
+    }
+}
