@@ -14,7 +14,7 @@ export class NavMenuComponent {
     public MenuList: vmMenu[];
 
     constructor(private navmenuREST:MenuService) {
-        this.test = '/Climate';
+        this.test = 'Climate';
 
         this.navmenuREST.getAllowedMenu(1).subscribe(
             (result: vmMenu[]) => {
@@ -23,6 +23,5 @@ export class NavMenuComponent {
             },
             error => console.error(error)
         )
-
     }
 }
