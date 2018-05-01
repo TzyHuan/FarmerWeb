@@ -10,10 +10,11 @@
         {{station.stationName}}
       </option>
     </select>
-    <br>    
-    位置：{{APIRealtimeDate.stationName}}
-    <br> 即時溫度：{{APIRealtimeDate.recTemp}} °C
-    <br> 即時濕度：{{APIRealtimeDate.recRH}} %
+    <br>
+    <!-- 因為非同步的緣故，讀取值時可能data還沒傳來，so... Use safe navigation operator "?" -->
+    位置：{{APIRealtimeDate?.stationName}}
+    <br> 即時溫度：{{APIRealtimeDate?.recTemp}} °C
+    <br> 即時濕度：{{APIRealtimeDate?.recRH}} %
   </div>
   <div class="Charts" *ngIf="APIRealtimeDate">     
     </div>
@@ -35,13 +36,13 @@
     <br> 2. Call API per second <br>
     (Combine together as an Observable array, then ngif)
     <br>
-    <!-- <div style="height:2rem; position:fixed;top:18rem;" *ngIf="RealtimeData | async as data ">
+    <div style="height:2rem; position:fixed;top:18rem;" *ngIf="RealtimeData | async as data ">
       time: {{ data.dateFormatted }}
       <br> temp: {{ data.temperatureC }}
-    </div> -->
-    <!-- <ng-template #fantastic>
+    </div> 
+    <ng-template #fantastic>
       <h1>Condition Failed!</h1>
-    </ng-template> -->
+    </ng-template>
     <br>
     <br>
     <br> 3. Call API per second <br>

@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
   //public RealtimeDate: string;
   //public RealtimeTemp: string;
   //public DataFromAPI: WeatherTemperature;
-  //public updata: RealtimeData;
+  public updata: RealtimeData;
 
   //Highchart 
   public RealtimeTempGauge: any;
@@ -41,14 +41,11 @@ export class HomeComponent implements OnInit, AfterContentInit {
   public selectedStations: WeatherStation = new WeatherStation();
 
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
-    // 抓Station Selector選項
-    console.log('fuck')
+    // 抓Station Selector選項    
     this.StationREST.getSelectItem()
       .subscribe(
-        (result) => {
-          console.log(result)
-          this.stations = result;
-          
+        (result: WeatherStation[]) => {          
+          this.stations = result;          
           //預設初始選項為第一個選項
           this.selectedStations = result[0];
           //得到station id後，馬上初始化即時資料
