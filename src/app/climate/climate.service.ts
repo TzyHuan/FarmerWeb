@@ -15,7 +15,6 @@ export class ClimateService {
     constructor(private http: HttpClient) { }
 
     getSelectItem() {
-        console.log('getSelectItem');
         return this.http.get<WeatherStation[]>(this.StationApiUrl)
     }
 

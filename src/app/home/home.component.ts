@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber } from 'rxjs';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+//import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
 
 import { HomeService } from './home.service';
