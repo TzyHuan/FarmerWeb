@@ -32,9 +32,12 @@ export class ClimateComponent implements OnInit, AfterContentInit {
       .subscribe(
         result => {
           this.stations = result;
-          console.log(result);
+          //預設初始選項為第一個選項
+          this.selectedStations = this.stations[0];
         },
         error => console.error(error));
+
+
   };
 
   ngOnInit() {
@@ -172,8 +175,13 @@ export class ClimateComponent implements OnInit, AfterContentInit {
     this.TemperatureChart =new Highcharts.stockChart(this.TemperatureChartEle.nativeElement, optionsA);
     this.HumidityChart = new Highcharts.stockChart(this.HumidityChartEle.nativeElement, optionsB);
 
-    //先置入資料至溫度的Highstock
-    this.ClimateREST.getTemperatures()
+    //初始查詢條件
+    const params = new HttpParams()
+    .set('StationId', String(this.selectedStations.stationId))
+    .set('SearchNum', "10000");
+
+    //置入資料至溫度的Highstock
+    this.ClimateREST.getTemperatures(params)
       .subscribe(
         (result: HighchartsTempratures[]) => {
           console.log('ngAfterContentInit: getTemperatures()');
@@ -182,8 +190,8 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         error => console.error(error)
       );
 
-    //先置入資料至溫度的Highstock
-    this.ClimateREST.getRelativeHumidities()
+    //置入資料至溫度的Highstock
+    this.ClimateREST.getRelativeHumidities(params)
       .subscribe(
         (result: HighchartsHumidities[]) => {
           console.log('ngAfterContentInit: getRelativeHumidities()');

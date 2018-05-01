@@ -8,13 +8,14 @@ import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './c
 
 @Injectable()
 export class ClimateService {
-    public StationApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Stations';
-    public TemperatuteApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Temperatures';
-    public HumiditiesApiUrl: string = 'http://localhost/FarmerAPI/api/WeatherData/Humidities';
+    public StationApiUrl: string = 'http://127.0.0.1/FarmerAPI/api/WeatherData/Stations';
+    public TemperatuteApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/WeatherData/Temperatures';
+    public HumiditiesApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/WeatherData/Humidities';
 
     constructor(private http: HttpClient) { }
 
     getSelectItem() {
+        console.log('getSelectItem');
         return this.http.get<WeatherStation[]>(this.StationApiUrl)
     }
 

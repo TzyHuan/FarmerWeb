@@ -5,6 +5,13 @@ export interface WeatherTemperature {
 
 export interface RealtimeData {
     StationId: number;
-    RecTemp: number;
-    RecRH: number;
+    stationName: string;
+    recTemp: number;
+    recRH: number;
+}
+
+export class WeatherStation {
+    public stationId: number;
+    public stationName: string;
+    constructor() { }
 }

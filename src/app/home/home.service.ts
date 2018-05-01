@@ -4,13 +4,13 @@ import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
 
-import { WeatherTemperature, RealtimeData } from './home';
+import { RealtimeData } from './home';
 
 @Injectable()
 export class HomeService {
     //API URL//
-    public RealtimeApiUrl: string = 'http://localhost/FarmerAPI/api/values/Realtime';
-    public RealtimeUpdateApiUrl: string = 'http://localhost/FarmerAPI/api/values/Realtime'
+    public RealtimeApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/values/Realtime/';
+    public RealtimeUpdateApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/values/Realtime'
 
     // public httpOptions = {
     //     headers: new HttpHeaders({
@@ -20,12 +20,11 @@ export class HomeService {
     // };    
 
     constructor(private http: HttpClient) {
-
     }
 
     /** GET realtime data from the server */
-    getRealtimeData(): Observable<WeatherTemperature> {
-        return this.http.get<WeatherTemperature>(this.RealtimeApiUrl);
+    getRealtimeData(stationId:number): Observable<RealtimeData> {        
+        return this.http.get<RealtimeData>(this.RealtimeApiUrl+stationId);
     }
 
     //////// Save methods //////////
