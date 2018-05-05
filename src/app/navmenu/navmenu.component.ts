@@ -19,7 +19,7 @@ export class NavMenuComponent {
         this.navmenuREST.getAllowedMenu(1).subscribe(
             (result: vmMenu[]) => {
                 this.MenuList = result;
-                console.log(this.MenuList);
+                //console.log(this.MenuList);
             },
             error => console.error(error)
         )

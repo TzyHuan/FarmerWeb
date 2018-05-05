@@ -19,7 +19,7 @@
             </li> -->
 
             <li *ngFor="let MenuItem of MenuList" class="nav-item" [routerLinkActive]="['link-active']">
-                <a class="nav-link" [routerLink]="MenuItem?.menuText">
+                <a class="nav-link" [routerLink]="MenuItem?.path">
                     <i class="fa fa-cloud" aria-hidden="true" style="color:white"></i> 
                     {{MenuItem?.menuText}}
                 </a>
