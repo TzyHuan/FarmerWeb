@@ -8,11 +8,11 @@ import { vmMenu } from './navmenu'
 
 @Injectable()
 export class MenuService {
-    public AllowMenuApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/System/GetAllowedMenu/';
+    public AllowMenuApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/System/GetAllowedMenu';
 
     constructor(private http: HttpClient) { }
 
-    getAllowedMenu(RoleId: number) {
-        return this.http.get<vmMenu[]>(this.AllowMenuApiUrl + RoleId)
+    getAllowedMenu(headers: HttpHeaders) {
+        return this.http.get<vmMenu[]>(this.AllowMenuApiUrl, { headers });
     }
 }

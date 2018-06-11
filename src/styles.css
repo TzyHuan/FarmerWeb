@@ -12,18 +12,46 @@ h1 {
     color:#343a40;
 }
 
-body{
-    padding-top: 50px;   
+html, body{    
+    height: 100%;
+    margin: 0; 
+    padding: 0;       
+}
+
+body{        
     font-family: 微軟正黑體 !important; /*設important才不會被bootstrap字型搶去*/
     text-align: center;
 }
+
+.wrapper{    
+    min-height: 100%;
+    padding-bottom: 80px; /*等於footer的高度*/   
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+/*加這段重新定位app-root位置，不然會亂跑*/
+app-root{
+    margin: 0; 
+    padding: 0; 
+    position: relative;
+}
+
+.push{    
+    height: 80px;
+    width: 100%; 
+    margin-top: -80px;
+    background-color: #343a40;
+}
+
 footer{
     text-align: center;
     color: white;
     background-color: #343a40;
     font-family: 微軟正黑體;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
 footer p{    

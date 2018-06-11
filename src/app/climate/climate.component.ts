@@ -220,7 +220,9 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         (result: HighchartsTempratures[]) => {
           console.log('onSelect: getTemperatures()');
           this.DrawTempHighcharts(this.TemperatureChart, result);
-        }, error => console.error(error));
+        }, 
+        error => console.error(error)        
+      );
 
     this.ClimateREST.getRelativeHumidities(params)
       .subscribe(
