@@ -1,8 +1,12 @@
 import { Component, OnInit, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject, Subscription } from 'rxjs';
 //import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { catchError } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
+import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/mergeMap';
 
 import { HomeService } from './home.service';
 import { WeatherTemperature, RealtimeData, WeatherStation } from './home';
@@ -10,6 +14,7 @@ import { ClimateService } from '../climate/climate.service';
 import { HighchartsTempratures, HighchartsHumidities } from '../climate/climate'
 
 import * as Highcharts from 'highcharts';
+import { observableToBeFn } from 'rxjs/testing/TestScheduler';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
@@ -39,13 +44,13 @@ export class HomeComponent implements OnInit, AfterContentInit {
   //氣象站台清單、已選取之站台  
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
-
+  
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
     // 抓Station Selector選項    
     this.StationREST.getSelectItem()
       .subscribe(
-        (result: WeatherStation[]) => {          
-          this.stations = result;          
+        (result: WeatherStation[]) => {
+          this.stations = result;
           //預設初始選項為第一個選項
           this.selectedStations = result[0];
           //得到station id後，馬上初始化即時資料
@@ -108,13 +113,21 @@ export class HomeComponent implements OnInit, AfterContentInit {
     //   (error) => { console.log(error); }
     // );
 
-    //每隔10秒刷新realtime溫溼度資料
-    Observable.interval(10000).subscribe(
-      values => {
-        this.RefreshRealtimeData(this.selectedStations.stationId);
-      },
-      (error) => { console.log(error); }
-    );
+    //每隔10秒刷新realtime溫溼度資料    
+    let source = Observable.interval(10000)    
+      .subscribe(
+        values => {
+          let isSuccess:boolean;
+          this.RefreshRealtimeData(this.selectedStations.stationId, isSuccess);
+          if (!isSuccess){
+            source.unsubscribe();
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        ()=>{console.log('每隔10秒刷新realtime溫溼度資料 complete!'); }
+      );
   }
 
   ngAfterContentInit() {
@@ -299,24 +312,34 @@ export class HomeComponent implements OnInit, AfterContentInit {
       }
     }
     //切換後馬上初始化即時資料，不等observer慢慢跑timeinterval
-    this.RefreshRealtimeData(this.selectedStations.stationId);      
+    this.RefreshRealtimeData(this.selectedStations.stationId);
   }
-  
-  private RefreshRealtimeData(StationId: number) {
+
+  public RefreshRealtimeData(StationId: number, isSuccess?:boolean) {   
+    //Asynchronous execution is pushed out of the synchronous flow. 
+    //That is, the asynchronous code will never execute while the synchronous code stack is executing. 
+    //https://stackoverflow.com/questions/23667086/why-is-my-variable-unaltered-after-i-modify-it-inside-of-a-function-asynchron
+    
     //置入資料至溫度的Highchart
     this.homeREST.getRealtimeData(StationId)
-          .subscribe(
-            (data: RealtimeData) => {
-              this.APIRealtimeDate = data;
-              this.UpdateHighchart(this.RealtimeTempGauge, data, 'Temp');
-              this.UpdateHighchart(this.RealtimeRHGauge, data, 'RH');
-            }
-          )
+      .subscribe(
+        (data: RealtimeData) => {
+          this.APIRealtimeDate = data;
+          this.UpdateHighchart(this.RealtimeTempGauge, data, 'Temp');
+          this.UpdateHighchart(this.RealtimeRHGauge, data, 'RH'); 
+          isSuccess = true;  //執行成功 
+        },
+        (error) => {
+          console.log(error);          
+          isSuccess = false;  //執行失敗          
+        }
+      )      
+      //return this.success
   }
 
   ///mode is Temp(溫度) or RH(濕度)
   private UpdateHighchart(chart: Highcharts.ChartObject, UpdateData: RealtimeData, mode: string) {
-    let Data: any = [];    
+    let Data: any = [];
 
     if (mode == 'Temp') {
       Data.push([

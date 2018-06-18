@@ -16,6 +16,17 @@ export class ClimateService {
 
     getSelectItem() {
         return this.http.get<WeatherStation[]>(this.StationApiUrl)
+            .retryWhen(error => {
+                return error
+                    .mergeMap((error: any) => {
+                        if (error.status === 503) {
+                            return Observable.of(error.status).delay(1000);
+                        }
+                        return Observable.throw({ error: 'No retry' });
+                    })
+            })
+            .take(5)
+            //.concat(Observable.throw({ error: 'Sorry, there was an error (after 5 retries)' }))
     }
 
     getTemperatures(params?: HttpParams) {

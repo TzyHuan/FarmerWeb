@@ -1,9 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class='catagory'>
-  <nav-menu></nav-menu>
+  <nav-menu #navmenu></nav-menu> <!--#navmenu is a template variable-->
 </div>
 <div class='content'>
-  <router-outlet></router-outlet>
+  <router-outlet (activate)='navmenu.rebuildRoutes($event)'></router-outlet><!--todo-->
 </div>
 
 
+<!--Parent listens for child event  :via local variable-->
+<!-- <app-sign-in 
+  (SignEvent)="navmenu.rebuildRoutes($event)">
+</app-sign-in> -->

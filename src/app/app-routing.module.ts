@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { NgModule, ComponentFactoryResolver, OnInit, Injectable } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http'
 import { ClimateComponent } from './climate/climate.component';
@@ -48,29 +48,23 @@ const routes: Routes = [
   providers: [MenuService]
 })
 
+@Injectable()
 export class AppRoutingModule {
-  public factories: any = [];
-  public MenuList: vmMenu[];
-  public headers: HttpHeaders;
-  public token: string = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJHZW5lcmFsIiwiaXNzIjoi55CG5p-l5b635LqC5pCe5pyJ6ZmQ5YWs5Y-4IiwiaWQiOiJhbmR5ODE3MTkiLCJyb2xlSWQiOiIxIiwibmJmIjoxNTI3OTE0NjY3LCJleHAiOjE3NDg4Mzk0NjcsImlhdCI6MTUyNzkxNDY2N30.bS5KsmqMAOk3eORybL6IJZC_yo78lH3RIKChf7vebkM';
+  public factories: any = [];  
 
   constructor(private MenuREST: MenuService, private router: Router, private resolver: ComponentFactoryResolver) {
     // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
     this.factories = Array.from(this.resolver['_factories'].values());
 
-    this.headers = new HttpHeaders({
-      'Authorization': this.token
-    });
-
-    this.MenuREST.getAllowedMenu(this.headers).subscribe(
+    this.MenuREST.getAllowedMenu().subscribe(
       (result: vmMenu[]) => {
-        this.router.resetConfig(this.processRoute(result));
+        this.router.resetConfig(this.processRoute(result, this.factories));
       },
       error => console.error(error)
     )
   }
 
-  processRoute(routes: vmMenu[]) {
+  processRoute(routes: vmMenu[], factories: any) {
     let finalRoutes = [];
 
     //routes會由上而下依照順序比對url路徑
@@ -83,12 +77,12 @@ export class AppRoutingModule {
 
     routes.forEach(r => {
       // 根據 componentType 名字取出對應的 componentType      
-      let factory: any = this.factories.find(
-        (x: any) => {          
+      let factory: any = factories.find(
+        (x: any) => {
           return x.componentType.name === r.component;
         }
       );
-     
+
       //if factory is not undefined
       if (factory) {
         finalRoutes.push({

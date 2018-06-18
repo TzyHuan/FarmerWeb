@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser'; //沒加這列無法使用HttpClientModule
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,10 @@ import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { UserComponent } from './user/user.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
 import { SignUpComponent } from './user/sign-up/sign-up.component';
+
+import { UserService } from './user/shared/user.service';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { MenuService } from './navmenu/navmenu.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,14 @@ import { SignUpComponent } from './user/sign-up/sign-up.component';
     NgbModule.forRoot(),    
     AppRoutingModule
   ],
-  providers: [],
+  providers: [    
+    UserService,
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass : AuthInterceptor,
+      multi : true
+    }
+  ],
   bootstrap: [AppComponent],
   //動態加入components，需要在 @NgModule中加入entryComponents把動態components放入
   //Angular 官網說明：

@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
+import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/catch';
 
 import { RealtimeData } from './home';
 
@@ -24,7 +28,7 @@ export class HomeService {
 
     /** GET realtime data from the server */
     getRealtimeData(stationId:number): Observable<RealtimeData> {        
-        return this.http.get<RealtimeData>(this.RealtimeApiUrl+stationId);
+        return this.http.get<RealtimeData>(this.RealtimeApiUrl+stationId)
     }
 
     //////// Save methods //////////
@@ -34,8 +38,8 @@ export class HomeService {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json; charset=UTF-8'
         })        
-        //.append('Accept','application/json, text/plain')      
-        //.append('Content-Type', 'x-www-form-urlencoded')     
+        //.append('Accept','application/json, text/plain')  
+        //.append('Content-Type', 'x-www-form-urlencoded')
 
         
         return this.http.post<RealtimeData>(

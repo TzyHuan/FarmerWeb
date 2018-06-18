@@ -37,17 +37,21 @@
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-universal-access" aria-hidden="true" style="color:white"></i>
+          <i class="fa fa-universal-access" aria-hidden="true" style="color:white"></i>
           Sign
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a *ngFor="let SignItem of SignList" class="dropdown-item" [routerLink]="SignItem?.path">
-            {{SignItem?.menuText}}
-          </a>         
+          <div *ngIf="!isSignIn">
+            <a *ngFor="let SignItem of SignList" class="dropdown-item" [routerLink]="SignItem?.path">
+              {{SignItem?.menuText}}
+            </a>
+          </div>
+          <div *ngIf="isSignIn">
+            <button class="dropdown-item" (click)="SignOut()">Sign Out</button>
+          </div>
         </div>
       </li>
     </ul>
-
     <!-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

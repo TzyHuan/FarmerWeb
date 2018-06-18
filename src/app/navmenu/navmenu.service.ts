@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { catchError } from 'rxjs/operators';
 
 import { vmMenu } from './navmenu'
 
@@ -12,7 +11,7 @@ export class MenuService {
 
     constructor(private http: HttpClient) { }
 
-    getAllowedMenu(headers: HttpHeaders) {
-        return this.http.get<vmMenu[]>(this.AllowMenuApiUrl, { headers });
+    getAllowedMenu() {
+        return this.http.get<vmMenu[]>(this.AllowMenuApiUrl);
     }
 }
