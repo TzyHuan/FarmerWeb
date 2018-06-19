@@ -3,7 +3,7 @@
   <nav-menu #navmenu></nav-menu> <!--#navmenu is a template variable-->
 </div>
 <div class='content'>
-  <router-outlet (activate)='navmenu.rebuildRoutes($event)'></router-outlet><!--todo-->
+  <router-outlet ></router-outlet><!--(activate)='navmenu.rebuildRoutes($event)' 每切換選單會觸發activate執行-->
 </div>
 
 

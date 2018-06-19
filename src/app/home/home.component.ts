@@ -101,7 +101,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
     //   complete => {
     //     console.log('completed!!!fuck nsb');
     //   });
-
     // //4. 直接監聽API，非同步反應速度最快！比上便都快，不然就是比上面都慢Orz
     // Observable.interval(1000).subscribe(
     //   values => {
@@ -113,7 +112,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
     //   (error) => { console.log(error); }
     // );
 
-    //每隔10秒刷新realtime溫溼度資料    
+    //每隔10秒刷新realtime溫溼度資料
+    //如果失敗便停止訂閱此監聽   
     let source = Observable.interval(10000)    
       .subscribe(
         values => {

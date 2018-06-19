@@ -28,9 +28,10 @@ export class AuthInterceptor implements HttpInterceptor {
                     tap(
                         succ=>{},
                         err=>{
-                            if (err.status === 401)
-                            console.log("userToken 401!")
-                            this.router.navigateByUrl('/SignIn');
+                            if (err.status === 401){
+                                console.log("userToken 401!");
+                                this.router.navigateByUrl('/SignIn');
+                            }                            
                         }
                     )
                 );

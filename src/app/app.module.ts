@@ -15,7 +15,8 @@ import { SignUpComponent } from './user/sign-up/sign-up.component';
 
 import { UserService } from './user/shared/user.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { MenuService } from './navmenu/navmenu.service';
+//import { MenuService } from './navmenu/navmenu.service';
+import { SharedService } from './shared-service'
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MenuService } from './navmenu/navmenu.service';
     AppRoutingModule
   ],
   providers: [    
+    SharedService,
     UserService,
     {
       provide : HTTP_INTERCEPTORS,
