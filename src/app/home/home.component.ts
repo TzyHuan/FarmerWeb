@@ -1,12 +1,6 @@
 import { Component, OnInit, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber, Subject, Subscription } from 'rxjs';
-//import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { catchError, retry } from 'rxjs/operators';
-import 'rxjs/add/operator/retryWhen';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/concat';
-import 'rxjs/add/operator/mergeMap';
 
 import { HomeService } from './home.service';
 import { WeatherTemperature, RealtimeData, WeatherStation } from './home';
@@ -15,6 +9,7 @@ import { HighchartsTempratures, HighchartsHumidities } from '../climate/climate'
 
 import * as Highcharts from 'highcharts';
 import { observableToBeFn } from 'rxjs/testing/TestScheduler';
+import { bindCallback } from 'rxjs/observable/bindCallback';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
@@ -44,7 +39,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
   //氣象站台清單、已選取之站台  
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
-  
+
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
     // 抓Station Selector選項    
     this.StationREST.getSelectItem()
@@ -62,9 +57,9 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     var options = {
-      weekday: "short", year: "numeric", month: "short",
-      day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit",
-      hour12: false
+      //year: "numeric", month: "short", day: "numeric",
+      hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
+      //weekday: "short",
     };
     //1.直接設定param類型為Observable
     this.timeNow = new Observable<string>((observer: Subscriber<string>) => {
@@ -113,20 +108,23 @@ export class HomeComponent implements OnInit, AfterContentInit {
     // );
 
     //每隔10秒刷新realtime溫溼度資料
-    //如果失敗便停止訂閱此監聽   
-    let source = Observable.interval(10000)    
+    //如果失敗便停止訂閱此監聽
+    let source = Observable.interval(10000)
       .subscribe(
         values => {
-          let isSuccess:boolean;
-          this.RefreshRealtimeData(this.selectedStations.stationId, isSuccess);
-          if (!isSuccess){
-            source.unsubscribe();
-          }
+          this.RefreshRealtimeData(this.selectedStations.stationId)
+            .then((val) => {
+              //刷新完，然後要跑甚麼呢??我再想想唷...            
+            })
+            .catch((val) => {
+              console.log('Refresh realtime data failure!');
+              source.unsubscribe();
+            });
         },
         (error) => {
           console.log(error);
         },
-        ()=>{console.log('每隔10秒刷新realtime溫溼度資料 complete!'); }
+        () => { console.log('每隔10秒刷新realtime溫溼度資料 complete!'); }
       );
   }
 
@@ -315,26 +313,26 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.RefreshRealtimeData(this.selectedStations.stationId);
   }
 
-  public RefreshRealtimeData(StationId: number, isSuccess?:boolean) {   
+  public async RefreshRealtimeData(StationId: number) {
     //Asynchronous execution is pushed out of the synchronous flow. 
     //That is, the asynchronous code will never execute while the synchronous code stack is executing. 
     //https://stackoverflow.com/questions/23667086/why-is-my-variable-unaltered-after-i-modify-it-inside-of-a-function-asynchron
-    
+
     //置入資料至溫度的Highchart
-    this.homeREST.getRealtimeData(StationId)
+    await this.homeREST.getRealtimeData(StationId)
       .subscribe(
         (data: RealtimeData) => {
           this.APIRealtimeDate = data;
           this.UpdateHighchart(this.RealtimeTempGauge, data, 'Temp');
-          this.UpdateHighchart(this.RealtimeRHGauge, data, 'RH'); 
-          isSuccess = true;  //執行成功 
+          this.UpdateHighchart(this.RealtimeRHGauge, data, 'RH');
         },
         (error) => {
-          console.log(error);          
-          isSuccess = false;  //執行失敗          
+          console.log(error);
+        },
+        () => {
+          //console.log('RefreshRealtimeData!')
         }
-      )      
-      //return this.success
+      );    
   }
 
   ///mode is Temp(溫度) or RH(濕度)
