@@ -40,6 +40,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
 
+  private $UpdateRealtime:Subscription;
+
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
     // 抓Station Selector選項    
     this.StationREST.getSelectItem()
@@ -109,17 +111,17 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
     //每隔10秒刷新realtime溫溼度資料
     //如果失敗便停止訂閱此監聽
-    let source = Observable.interval(10000)
+    this.$UpdateRealtime = Observable.interval(10000)
       .subscribe(
         values => {
           this.RefreshRealtimeData(this.selectedStations.stationId)
-            .then((val) => {
-              //刷新完，然後要跑甚麼呢??我再想想唷...            
-            })
-            .catch((val) => {
-              console.log('Refresh realtime data failure!');
-              source.unsubscribe();
-            });
+            // .then((val) => {
+            //   //刷新完，然後要跑甚麼呢??我再想想唷...            
+            // })
+            // .catch((val) => {
+            //   console.log('Refresh realtime data failure!');
+            //   this.$UpdateRealtime.unsubscribe();
+            // });            
         },
         (error) => {
           console.log(error);
@@ -328,6 +330,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
         },
         (error) => {
           console.log(error);
+          //錯誤便停止定時訂閱UpdateRealtime
+          this.$UpdateRealtime.unsubscribe();          
         },
         () => {
           //console.log('RefreshRealtimeData!')
