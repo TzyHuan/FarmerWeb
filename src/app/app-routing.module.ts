@@ -1,13 +1,24 @@
-import { NgModule, ComponentFactoryResolver, OnInit, Injectable } from '@angular/core';
+import { NgModule, ComponentFactoryResolver, OnInit, Injectable, RenderComponentType } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http'
+
+//----Component----//
 import { ClimateComponent } from './climate/climate.component';
 import { HomeComponent } from './home/home.component';
+//登入&登出
 import { UserComponent } from './user/user.component';
 import { SignUpComponent } from './user/sign-up/sign-up.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
+//系統管理
+import { SystemComponent } from './system/system.component';
+import { MenuComponent } from './system/menu/menu.component';
+import { ActionComponent } from './system/action/action.component';
+import { CharacterComponent } from './system/character/character.component';
 
+//----Service----//
 import { MenuService } from './navmenu/navmenu.service';
+
+//----ViewModel----//
 import { vmMenu } from './navmenu/navmenu';
 
 //routes會由上而下依照順序比對url路徑
@@ -50,7 +61,7 @@ const routes: Routes = [
 
 @Injectable()
 export class AppRoutingModule {
-  public factories: any = [];  
+  public factories: any = [];
 
   constructor(private MenuREST: MenuService, private router: Router, private resolver: ComponentFactoryResolver) {
     // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
@@ -58,13 +69,13 @@ export class AppRoutingModule {
 
     this.MenuREST.getAllowedMenu().subscribe(
       (result: vmMenu[]) => {
-        this.router.resetConfig(this.processRoute(result, this.factories));
+        this.router.resetConfig(this.processRoute(result));
       },
       error => console.error(error)
     )
   }
 
-  processRoute(routes: vmMenu[], factories: any) {
+  processRoute(routes: vmMenu[]) {
     let finalRoutes = [];
 
     //routes會由上而下依照順序比對url路徑
@@ -76,27 +87,58 @@ export class AppRoutingModule {
     });
 
     routes.forEach(r => {
-      // 根據 componentType 名字取出對應的 componentType      
-      let factory: any = factories.find(
-        (x: any) => {
-          return x.componentType.name === r.component;
-        }
-      );
+      let Tree: any = this.TreeMenu(r);
 
-      //if factory is not undefined
-      if (factory) {
-        finalRoutes.push({
-          path: r.path,
-          component: factory.componentType
-        });
+      //is tree is not undefined
+      if (Tree.length != 0) {
+        finalRoutes.push(Tree[0]);
       }
-    })
+    });
 
     //最後才加入path:'**'路徑導入至Home，佇列在array最下面    
     //若把path:'**'放第一位，就無法去排在後面其他的Component
-    finalRoutes.push({ path: '**', component: HomeComponent })
+    finalRoutes.push({ path: '**', component: HomeComponent });
 
     return finalRoutes;
+  }
+
+
+  private GetComponentType(route: vmMenu): any {
+    // 根據 componentType 名字取出對應的 componentType
+    let factory: any = this.factories.find(
+      (x: any) => {
+        return x.componentType.name == route.component;
+      }
+    );
+    return factory;
+  }
+
+  private TreeMenu(root: vmMenu): any {
+
+    var factory: any = this.GetComponentType(root);
+    var ReturnTree = [];
+    var TreeRoot: vmMenu;
+
+    //if factory is not undefined
+    if (factory) {
+      TreeRoot = {
+        path: root.path,
+        component: factory.componentType
+      }
+      //if root have children
+      if (root.children != null) {
+        let childrenRoutes = [];
+        root.children.forEach(r => {
+          let NodeChild: any = this.TreeMenu(r);
+          if (NodeChild.length != 0) {
+            childrenRoutes.push(NodeChild[0]);
+          }
+          TreeRoot.children = childrenRoutes;
+        })
+      }
+      ReturnTree.push(TreeRoot);
+    }
+    return ReturnTree;
   }
 }
 
@@ -104,6 +146,14 @@ export class AppRoutingModule {
 export const routingComponents = [
   ClimateComponent,
   HomeComponent,
+
+  //登入&登出
   SignInComponent,
   SignUpComponent,
+
+  //系統管理
+  SystemComponent,
+  MenuComponent,
+  ActionComponent,
+  CharacterComponent
 ]

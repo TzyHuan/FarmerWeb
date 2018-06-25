@@ -16,7 +16,7 @@ import { SignUpComponent } from './user/sign-up/sign-up.component';
 import { UserService } from './user/shared/user.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
 //import { MenuService } from './navmenu/navmenu.service';
-import { SharedService } from './shared-service'
+import { SharedService } from './shared-service';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { SharedService } from './shared-service'
     routingComponents,
     UserComponent,
     SignInComponent,
-    SignUpComponent
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,

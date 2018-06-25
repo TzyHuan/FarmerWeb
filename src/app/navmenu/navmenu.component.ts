@@ -17,10 +17,10 @@ import { Observer, Observable, Subscriber } from 'rxjs';
 
 export class NavMenuComponent {
 
-    private MenuList: vmMenu[];
-    private SignList: vmMenu[];
-    private isSignIn: boolean;
-    private timeNow: Observable<string>;
+    public MenuList: vmMenu[];
+    public SignList: vmMenu[];
+    public isSignIn: boolean;
+    public timeNow: Observable<string>;
 
     constructor(
         private MenuREST: MenuService,
@@ -37,6 +37,8 @@ export class NavMenuComponent {
             this.isSignIn = true;
         }
 
+        //雖然第一次執行時app.module.ts會自動執行app-routing.module.ts建立Routers
+        //但需要刷新Menu的button，所以必須執行一次
         this.RebuildRoutes();
 
         //監聽從sign-in.component.ts傳來觸發事件，登入時重新抓Routes
@@ -49,6 +51,8 @@ export class NavMenuComponent {
     }
 
     ngOnInit() {
+        
+
         var options = {
             //year: "numeric", month: "short", day: "numeric",
             hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
