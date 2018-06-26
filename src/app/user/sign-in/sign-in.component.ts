@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router'
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../shared/user.service';
-import { vmMenu } from '../../navmenu/navmenu';
+import { vmNavMenu } from '../../navmenu/navmenu';
 import { SharedService } from '../../shared-service'
 
 
@@ -15,8 +15,8 @@ import { SharedService } from '../../shared-service'
 export class SignInComponent implements OnInit {
 
   isLoginError: boolean = false;
-  AllowedMenuList: vmMenu[];
-  AllowedSignList: vmMenu[];
+  AllowedMenuList: vmNavMenu[];
+  AllowedSignList: vmNavMenu[];
 
   //@Output() SignEvent: EventEmitter<null> = new EventEmitter();
 

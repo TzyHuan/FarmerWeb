@@ -1,3 +1,61 @@
-<p>
-  menu works!
-</p>
+<table border="2">
+  <tr>
+    <td class="MenuNum">
+      <label >
+        <input #MenuID />
+      </label>
+    </td>
+    <td>
+      <label>
+        <input #Path />
+      </label>
+    </td>
+    <td>
+      <label>
+        <input #MenuText />
+      </label>
+    </td>
+    <td class="MenuNum">
+      <label>
+        <input #SortNo />
+      </label>
+    </td>
+    <td>
+      <label>
+        <input #Component />
+      </label>
+    </td>
+    <td class="MenuNum">
+      <label>
+        <input #RootMenuID />
+      </label>
+    </td>
+    <td class="operation">
+      <button title="新增"  class="add">
+        add
+      </button>
+    </td>
+  </tr>
+  <tr class="title">
+    <th class="MenuNum">ID</th>
+    <th>路徑</th>
+    <th>名稱</th>
+    <th class="MenuNum">排序</th>
+    <th>對應元件</th>
+    <th class="MenuNum">隸屬</th>
+    <th>操作</th>
+  </tr>
+<tr *ngFor= "let MenuDetail of MenuList">
+    <th class="MenuNum">{{MenuDetail.menuId}}</th>
+    <th>{{MenuDetail.path}}</th>
+    <th>{{MenuDetail.menuText}}</th>
+    <th class="MenuNum">{{MenuDetail.sortNo}}</th>
+    <th>{{MenuDetail.component}}</th>
+    <th class="MenuNum">{{MenuDetail.rootMenuId}}</th>
+    <th class="operation">
+        <button title="刪除" class="delete">
+            x
+        </button>
+    </th>
+</tr>
+</table>

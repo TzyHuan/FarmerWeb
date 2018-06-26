@@ -16,10 +16,10 @@ import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
 
 //----Service----//
-import { MenuService } from './navmenu/navmenu.service';
+import { NavMenuService } from './navmenu/navmenu.service';
 
 //----ViewModel----//
-import { vmMenu } from './navmenu/navmenu';
+import { vmNavMenu } from './navmenu/navmenu';
 
 //routes會由上而下依照順序比對url路徑
 //若把path:'**'放第一位，就無法去其他Component
@@ -56,26 +56,26 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)], //routes
   exports: [RouterModule],
-  providers: [MenuService]
+  providers: [NavMenuService]
 })
 
 @Injectable()
 export class AppRoutingModule {
   public factories: any = [];
 
-  constructor(private MenuREST: MenuService, private router: Router, private resolver: ComponentFactoryResolver) {
+  constructor(private MenuREST: NavMenuService, private router: Router, private resolver: ComponentFactoryResolver) {
     // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
     this.factories = Array.from(this.resolver['_factories'].values());
 
     this.MenuREST.getAllowedMenu().subscribe(
-      (result: vmMenu[]) => {
+      (result: vmNavMenu[]) => {
         this.router.resetConfig(this.processRoute(result));
       },
       error => console.error(error)
     )
   }
 
-  processRoute(routes: vmMenu[]) {
+  processRoute(routes: vmNavMenu[]) {
     let finalRoutes = [];
 
     //routes會由上而下依照順序比對url路徑
@@ -103,7 +103,7 @@ export class AppRoutingModule {
   }
 
 
-  private GetComponentType(route: vmMenu): any {
+  private GetComponentType(route: vmNavMenu): any {
     // 根據 componentType 名字取出對應的 componentType
     let factory: any = this.factories.find(
       (x: any) => {
@@ -113,11 +113,11 @@ export class AppRoutingModule {
     return factory;
   }
 
-  private TreeMenu(root: vmMenu): any {
+  private TreeMenu(root: vmNavMenu): any {
 
     var factory: any = this.GetComponentType(root);
     var ReturnTree = [];
-    var TreeRoot: vmMenu;
+    var TreeRoot: vmNavMenu;
 
     //if factory is not undefined
     if (factory) {

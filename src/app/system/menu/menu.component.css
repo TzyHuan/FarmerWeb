@@ -1,0 +1,43 @@
+table{
+    width:100%;   
+}
+
+table label input { 
+    display: block; 
+    width: 100%;
+}
+
+table tr.title th{
+    text-align: center;
+}
+
+table .MenuNum {
+    width:5%;
+    text-align: center;
+}
+
+table td.operation {
+    text-align: center;
+}
+table th.operation {
+    text-align: center;
+}
+
+button {
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+}
+  
+button:hover {
+    background-color: #cfd8dc;
+}
+  
+button.delete {     
+    background-color: gray !important;
+    color: white;
+}

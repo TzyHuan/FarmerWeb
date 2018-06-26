@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { MenuService } from './navmenu.service';
-import { vmMenu } from './navmenu';
+import { NavMenuService } from './navmenu.service';
+import { vmNavMenu } from './navmenu';
 import { AppRoutingModule } from '../app-routing.module';
 import { Router } from '@angular/router';
 import { SharedService } from '../shared-service';
@@ -12,18 +12,18 @@ import { Observer, Observable, Subscriber } from 'rxjs';
     selector: 'nav-menu',
     templateUrl: './navmenu.component.html',
     styleUrls: ['./navmenu.component.css'],
-    providers: [MenuService] //SharedService已在app.module
+    providers: [NavMenuService] //SharedService已在app.module
 })
 
 export class NavMenuComponent {
 
-    public MenuList: vmMenu[];
-    public SignList: vmMenu[];
+    public MenuList: vmNavMenu[];
+    public SignList: vmNavMenu[];
     public isSignIn: boolean;
     public timeNow: Observable<string>;
 
     constructor(
-        private MenuREST: MenuService,
+        private MenuREST: NavMenuService,
         private reRouting: AppRoutingModule,
         private router: Router,
         private resolver: ComponentFactoryResolver,
@@ -74,11 +74,10 @@ export class NavMenuComponent {
         this.RebuildRoutes();
     }
 
-    RebuildRoutes() {
-        this.reRouting.factories = Array.from(this.resolver['_factories'].values());
+    RebuildRoutes() {        
         this.MenuREST.getAllowedMenu().subscribe(
-            (result: vmMenu[]) => {
-                this.router.resetConfig(this.reRouting.processRoute(result, this.reRouting.factories));
+            (result: vmNavMenu[]) => {
+                this.router.resetConfig(this.reRouting.processRoute(result));
                 this.MenuList = result.filter(menu => !menu.path.startsWith('Sign'));
                 this.SignList = result.filter(menu => menu.path.startsWith('Sign'));
                 console.log("RebuildRoutes success!!")
