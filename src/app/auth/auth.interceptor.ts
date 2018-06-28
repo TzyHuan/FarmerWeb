@@ -1,5 +1,5 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpUserEvent, HttpEvent } from "@angular/common/http";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { tap } from 'rxjs/operators';
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";

@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files 
 不用@import "~bootstrap/dist/css/bootstrap.min.css";  已加在Angular-cli styles中*/
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 a {
     color: #337ab7;

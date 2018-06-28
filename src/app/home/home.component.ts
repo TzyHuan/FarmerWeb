@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
-import { Observable, Subscriber, Subject, Subscription } from 'rxjs';
+import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
 
 import { HomeService } from './home.service';
 import { WeatherTemperature, RealtimeData, WeatherStation } from './home';
@@ -8,8 +8,6 @@ import { ClimateService } from '../climate/climate.service';
 import { HighchartsTempratures, HighchartsHumidities } from '../climate/climate'
 
 import * as Highcharts from 'highcharts';
-import { observableToBeFn } from 'rxjs/testing/TestScheduler';
-import { bindCallback } from 'rxjs/observable/bindCallback';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
@@ -111,7 +109,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
     //每隔10秒刷新realtime溫溼度資料
     //如果失敗便停止訂閱此監聽
-    this.$UpdateRealtime = Observable.interval(10000)
+    //rxjs 5->6, interval直接繼承observable,不在是observable底下的方法
+    this.$UpdateRealtime = interval(10000)
       .subscribe(
         values => {
           this.RefreshRealtimeData(this.selectedStations.stationId)

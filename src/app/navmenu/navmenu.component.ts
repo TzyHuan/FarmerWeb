@@ -46,12 +46,18 @@ export class NavMenuComponent {
             text => {
                 console.log(text);
                 this.RebuildRoutes();
+
+                if (localStorage.getItem('userToken') == null) {
+                    this.isSignIn = false;
+                }
+                else if (localStorage.getItem('userToken') != null) {
+                    this.isSignIn = true;
+                }
             }
         );
     }
 
-    ngOnInit() {
-        
+    ngOnInit() {        
 
         var options = {
             //year: "numeric", month: "short", day: "numeric",

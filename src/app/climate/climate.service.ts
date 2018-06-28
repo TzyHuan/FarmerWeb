@@ -1,8 +1,8 @@
+
+import {throwError as observableThrowError,  Observable, Subscriber, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-//import { AsyncPipe } from '@angular/common';
-import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { catchError } from 'rxjs/operators';
+import { catchError,retryWhen } from 'rxjs/operators';
 
 import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './climate'
 
@@ -16,16 +16,17 @@ export class ClimateService {
 
     getSelectItem() {
         return this.http.get<WeatherStation[]>(this.StationApiUrl)
-            .retryWhen(error => {
-                return error
-                    .mergeMap((error: any) => {
-                        if (error.status === 503) {
-                            return Observable.of(error.status).delay(1000);
-                        }
-                        return Observable.throw({ error: 'No retry' });
-                    })
-            })
-            .take(5)
+        //rxjs 6 語法不同，todo
+            // .retryWhen(error => {
+            //     return error
+            //         // .mergeMap((error: any) => {
+            //         //     if (error.status === 503) {
+            //         //         return of(error.status);
+            //         //     }
+            //         //     return observableThrowError({ error: 'No retry' });
+            //         // })
+            // })
+            // .take(5)
             //.concat(Observable.throw({ error: 'Sorry, there was an error (after 5 retries)' }))
     }
 

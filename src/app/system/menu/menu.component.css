@@ -1,3 +1,18 @@
+form{
+    border: #5e0251 solid 1px;    
+}
+.insert-form {   
+    min-width: 150px;
+    max-width: 900px;
+    width: 100%; 
+}
+.insert-full-width {
+    width: 20%;
+}
+.formNum{
+    width: 5%;
+}  
+
 table{
     width:100%;   
 }
@@ -11,7 +26,7 @@ table tr.title th{
     text-align: center;
 }
 
-table .MenuNum {
+table .MenuNum{
     width:5%;
     text-align: center;
 }
@@ -26,12 +41,12 @@ table th.operation {
 button {
     background-color: #eee;
     border: none;
-    padding: 5px 10px;
+    padding: 4px 5px;
     border-radius: 4px;
     cursor: pointer;
     cursor: hand;
     font-family: Arial;
-}
+    }
   
 button:hover {
     background-color: #cfd8dc;
@@ -40,4 +55,5 @@ button:hover {
 button.delete {     
     background-color: gray !important;
     color: white;
+    line-height: 50%;
 }

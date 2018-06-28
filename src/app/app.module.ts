@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser'; //沒加這列無法使用HttpClientModule
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -17,6 +18,7 @@ import { UserService } from './user/shared/user.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
 //import { MenuService } from './navmenu/navmenu.service';
 import { SharedService } from './shared-service';
+import { SharedMaterialModule, MatComponents } from './shared-material.module'
 
 @NgModule({
   declarations: [
@@ -26,13 +28,16 @@ import { SharedService } from './shared-service';
     UserComponent,
     SignInComponent,
     SignUpComponent,
+    MatComponents
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,//must put first
     HttpClientModule,
     FormsModule,
     NgbModule.forRoot(),    
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule, //angular material animation
+    SharedMaterialModule //used material
   ],
   providers: [    
     SharedService,
@@ -50,7 +55,10 @@ import { SharedService } from './shared-service';
   // (which means you’re not referencing it in the template), by type. 
   // You specify an entry component by bootstrapping it in an NgModule,
   // or including it in a routing definition.
-  entryComponents:[routingComponents]
+  entryComponents:[
+    routingComponents,
+    MatComponents
+  ]
 })
 
 export class AppModule { }

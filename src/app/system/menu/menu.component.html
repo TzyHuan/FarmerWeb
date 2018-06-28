@@ -1,41 +1,32 @@
+<form #menuForm="ngForm" class="insert-form">
+  <mat-form-field class="insert-full-width formNum">
+    <input matInput type="number" #id [(ngModel)]="FormModel.menuId" name="id" placeholder="ID" required>
+  </mat-form-field>
+  <mat-form-field class="insert-full-width">
+    <input matInput type="text" #path [(ngModel)]="FormModel.path" name="path" placeholder="路徑" required>
+  </mat-form-field>
+  <mat-form-field class="insert-full-width">
+    <input matInput type="text" #menuText [(ngModel)]="FormModel.menuText" name="menuText" placeholder="選單名稱" required>
+  </mat-form-field>
+  <mat-form-field class="insert-full-width formNum">
+    <input matInput type="number" #sortNo [(ngModel)]="FormModel.sortNo" name="sortNo" placeholder="排序" required>
+  </mat-form-field>
+  <mat-form-field class="insert-full-width">
+    <input matInput type="text" #component [(ngModel)]="FormModel.component" name="component" placeholder="對應元件" required>
+  </mat-form-field>
+  <mat-form-field class="insert-full-width">
+    <mat-select #rootMenuId [(ngModel)]="FormModel.rootMenuId" name="rootMenuId" placeholder="隸屬選單">
+      <mat-option *ngFor="let MenuDetail of MenuList" value="{{MenuDetail.menuId}}">{{MenuDetail.menuText}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button type="button" class="add" [disabled]="!menuForm.valid" (click)="addMenu(); menuForm.resetForm()">
+    增加
+  </button>
+</form>
+
+<br>
+
 <table border="2">
-  <tr>
-    <td class="MenuNum">
-      <label >
-        <input #MenuID />
-      </label>
-    </td>
-    <td>
-      <label>
-        <input #Path />
-      </label>
-    </td>
-    <td>
-      <label>
-        <input #MenuText />
-      </label>
-    </td>
-    <td class="MenuNum">
-      <label>
-        <input #SortNo />
-      </label>
-    </td>
-    <td>
-      <label>
-        <input #Component />
-      </label>
-    </td>
-    <td class="MenuNum">
-      <label>
-        <input #RootMenuID />
-      </label>
-    </td>
-    <td class="operation">
-      <button title="新增"  class="add">
-        add
-      </button>
-    </td>
-  </tr>
   <tr class="title">
     <th class="MenuNum">ID</th>
     <th>路徑</th>
@@ -45,7 +36,7 @@
     <th class="MenuNum">隸屬</th>
     <th>操作</th>
   </tr>
-<tr *ngFor= "let MenuDetail of MenuList">
+  <tr *ngFor="let MenuDetail of MenuList">
     <th class="MenuNum">{{MenuDetail.menuId}}</th>
     <th>{{MenuDetail.path}}</th>
     <th>{{MenuDetail.menuText}}</th>
@@ -53,9 +44,13 @@
     <th>{{MenuDetail.component}}</th>
     <th class="MenuNum">{{MenuDetail.rootMenuId}}</th>
     <th class="operation">
-        <button title="刪除" class="delete">
-            x
-        </button>
+
+      <button title="編輯" class="delete" (click)="openUpdateDialog(MenuDetail)">
+        <mat-icon>settings</mat-icon>
+      </button>&nbsp;
+      <button title="刪除" class="delete" (click)="openDeleteDialog(MenuDetail)">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
     </th>
-</tr>
+  </tr>
 </table>

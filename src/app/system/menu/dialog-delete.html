@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>MenuId {{data.menuId}}</h1>
+<div mat-dialog-content>
+  <p>確定刪除 {{data.menuText}} ?</p>  
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onNoClick()">No</button>
+  <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial>Yes</button>
+</div>
