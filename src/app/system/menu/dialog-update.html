@@ -1,28 +1,25 @@
-<h1 mat-dialog-title>修改 {{MenuDetial.menuText}}</h1>
+<h1 mat-dialog-title>修改 {{MenuDetial.menuText}}, ID={{MenuDetial.menuId}}</h1>
 <div mat-dialog-content style="overflow: unset;">  
-    <form #menuForm="ngForm">
-        <mat-form-field class="insert-full-width formNum">
-            <input matInput type="number" #id [(ngModel)]="MenuDetial.menuId" name="id" placeholder="ID" required>
+    <form #menuForm="ngForm">        
+        <mat-form-field class="insert-full-width">
+            <input matInput type="text" [(ngModel)]="MenuDetial.path" name="path" placeholder="路徑" required>
         </mat-form-field>
         <mat-form-field class="insert-full-width">
-            <input matInput type="text" #path [(ngModel)]="MenuDetial.path" name="path" placeholder="路徑" required>
-        </mat-form-field>
-        <mat-form-field class="insert-full-width">
-            <input matInput type="text" #menuText [(ngModel)]="MenuDetial.menuText" name="menuText" placeholder="選單名稱" required>
+            <input matInput type="text" [(ngModel)]="MenuDetial.menuText" name="menuText" placeholder="選單名稱" required>
         </mat-form-field>
         <mat-form-field class="insert-full-width formNum">
-            <input matInput type="number" #sortNo [(ngModel)]="MenuDetial.sortNo" name="sortNo" placeholder="排序" required>
+            <input matInput type="number" [(ngModel)]="MenuDetial.sortNo" name="sortNo" placeholder="排序" required>
         </mat-form-field>
         <mat-form-field class="insert-full-width">
-            <input matInput type="text" #component [(ngModel)]="MenuDetial.component" name="component" placeholder="對應元件" required>
+            <input matInput type="text" [(ngModel)]="MenuDetial.component" name="component" placeholder="對應元件" required>
         </mat-form-field>
         <mat-form-field class="insert-full-width">
-            <mat-select #rootMenuId [(ngModel)]="MenuDetial.rootMenuId" [value]="MenuDetial.rootMenuId" name="rootMenuId" placeholder="隸屬選單">
+            <mat-select [(ngModel)]="MenuDetial.rootMenuId" [compareWith]="compareObjects" name="rootMenuId" placeholder="隸屬選單">
                 <mat-option *ngFor="let Menu of MenuList" value="{{Menu.menuId}}">{{Menu.menuText}}</mat-option>
             </mat-select>
         </mat-form-field>       
         <div mat-dialog-actions>
-            <button mat-raised-button color="primary" [disabled]="!menuForm.valid" (click)="onNoClick()">No</button>
+            <button mat-raised-button color="primary" (click)="onNoClick()">No</button>
             <button mat-raised-button color="primary" [disabled]="!menuForm.valid" (click)="onYesClick()" cdkFocusInitial>Yes</button>
         </div>
     </form>

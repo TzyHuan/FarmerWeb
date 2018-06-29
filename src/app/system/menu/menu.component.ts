@@ -138,4 +138,8 @@ export class DialogUpdateMenuComponent {
       }
     )
   }
+
+  compareObjects(o1: any, o2: any): boolean {    
+    return o1 == o2;
+  }
 }
