@@ -26,5 +26,5 @@ export class SharedMaterialModule { }
 export const MatComponents = [  
   //系統管理-選單權限
   DialogDeleteMenuComponent,
-  DialogUpdateMenuComponent
+  DialogUpdateMenuComponent  
 ]

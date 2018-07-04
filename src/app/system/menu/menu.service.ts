@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-
 import { Menu } from './menu'
 
 @Injectable()
@@ -12,6 +11,18 @@ export class MenuService {
 
     constructor(private http: HttpClient) { }
 
+    //#region Transfer asyc parameter between menu.component and menu-create.component
+    // Observable string sources
+    private emitChangeSource = new Subject<any>();
+    // Observable string streams
+    changeEmitted$ = this.emitChangeSource.asObservable();
+    // Service message commands
+    emitChange(change: any) {
+        this.emitChangeSource.next(change);
+    }
+    //#endregion
+    
+    //#region RESTful APIs
     GetMenu() {
         return this.http.get<Menu[]>(this.RestfulApiUrl_Menu);
     }
@@ -37,4 +48,5 @@ export class MenuService {
     DeleteMenu(id: number) {
         return this.http.delete<Menu>(this.RestfulApiUrl_Menu + "/" + id);
     }
+    //#endregion
 }

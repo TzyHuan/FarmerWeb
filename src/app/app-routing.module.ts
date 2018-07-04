@@ -14,6 +14,8 @@ import { SystemComponent } from './system/system.component';
 import { MenuComponent } from './system/menu/menu.component';
 import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
+//子選單
+import { MenuCreateComponent } from './system/menu/menu-create.component';
 
 //----Service----//
 import { NavMenuService } from './navmenu/navmenu.service';
@@ -50,7 +52,6 @@ const routes: Routes = [
 //       children: [{ path: '', component: SignInComponent }]
 //   },
 //   { path : '', redirectTo:'/login', pathMatch : 'full'}
-
 // ];
 
 @NgModule({
@@ -155,5 +156,8 @@ export const routingComponents = [
   SystemComponent,
   MenuComponent,
   ActionComponent,
-  CharacterComponent
+  CharacterComponent,
+
+  //子選單
+  MenuCreateComponent
 ]

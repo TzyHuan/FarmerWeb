@@ -1,27 +1,54 @@
 <form #menuForm="ngForm" class="insert-form">
   <mat-form-field class="insert-full-width formNum">
-    <input matInput type="number" #id [(ngModel)]="FormModel.menuId" name="id" placeholder="ID" required>
+    <input matInput type="number" #id [(ngModel)]="FormMenu.menuId" name="id" placeholder="ID" required>
   </mat-form-field>
   <mat-form-field class="insert-full-width">
-    <input matInput type="text" #path [(ngModel)]="FormModel.path" name="path" placeholder="路徑" required>
+    <input matInput type="text" #path [(ngModel)]="FormMenu.path" name="path" placeholder="路徑" required>
   </mat-form-field>
   <mat-form-field class="insert-full-width">
-    <input matInput type="text" #menuText [(ngModel)]="FormModel.menuText" name="menuText" placeholder="選單名稱" required>
+    <input matInput type="text" #menuText [(ngModel)]="FormMenu.menuText" name="menuText" placeholder="選單名稱" required>
   </mat-form-field>
   <mat-form-field class="insert-full-width formNum">
-    <input matInput type="number" #sortNo [(ngModel)]="FormModel.sortNo" name="sortNo" placeholder="排序" required>
+    <input matInput type="number" #sortNo [(ngModel)]="FormMenu.sortNo" name="sortNo" placeholder="排序" required>
   </mat-form-field>
   <mat-form-field class="insert-full-width">
-    <input matInput type="text" #component [(ngModel)]="FormModel.component" name="component" placeholder="對應元件" required>
+    <input matInput type="text" #component [(ngModel)]="FormMenu.component" name="component" placeholder="對應元件" required>
   </mat-form-field>
   <mat-form-field class="insert-full-width">
-    <mat-select #rootMenuId [(ngModel)]="FormModel.rootMenuId" name="rootMenuId" placeholder="隸屬選單">
+    <mat-select #rootMenuId [(ngModel)]="FormMenu.rootMenuId" name="rootMenuId" placeholder="隸屬選單">
       <mat-option *ngFor="let MenuDetail of MenuList" value="{{MenuDetail.menuId}}">{{MenuDetail.menuText}}</mat-option>
     </mat-select>
   </mat-form-field>
   <button type="button" class="add" [disabled]="!menuForm.valid" (click)="addMenu(); menuForm.resetForm()">
-    增加
+    確定新增
   </button>
+</form>
+
+<br>
+<form [formGroup]="addMenuForm">
+  <div formArrayName="containLists">
+    <div *ngFor="let containList of addMenuForm.controls.containLists.controls; let i =index">       
+      <div>
+        <span>Menu {{i + 1}}</span>
+        <span *ngIf="addMenuForm.controls.containLists.controls.length > 1" (click)="removeMenuList(i)">
+          <i class="material-icons">cancel</i>
+        </span>
+      </div>
+
+      <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+      <div [formGroupName]="i">
+          <MenuCreateUnit [Group]="addMenuForm.controls.containLists.controls[i]" [MenuList]="MenuList"></MenuCreateUnit>
+      </div>      
+    </div>
+  </div>
+  <div class="margin-20">
+      <a (click)="addMenuList()" style="cursor: default">
+        <i class="material-icons">add_circle</i>
+      </a>
+      <button type="button" class="add" [disabled]="!addMenuForm.valid" (click)="save(addMenuForm.value.containLists)">
+          確定新增
+        </button>
+    </div>
 </form>
 
 <br>
