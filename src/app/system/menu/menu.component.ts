@@ -1,32 +1,81 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog, MenuPositionX } from '@angular/material';
 import { Menu } from './menu';
 import { MenuService } from './menu.service'
 import { error } from 'protractor';
+import { Observable, observable, merge, fromEvent } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged, mergeMap, switchMap, tap } from 'rxjs/operators'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
-  providers: [ MenuService ]
+  providers: [MenuService]
 })
 export class MenuComponent implements OnInit {
 
   public MenuList: Menu[];
   public FormMenu: Menu = new Menu();
   public addMenuForm: FormGroup;
+  //public dataSource: MenuDataSource | null;
+  public dataSource:MatTableDataSource<Menu> | null;
+  public dataLength = 0;
+  public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'component', 'rootMenuId', 'actions'];
 
-  constructor(private MenuREST: MenuService, public dialog: MatDialog, public _fb: FormBuilder) {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('filter') filter: ElementRef;
+
+  constructor(private MenuREST: MenuService, public httpClient: HttpClient, public dialog: MatDialog, public _fb: FormBuilder) {
+  
   }
 
   ngOnInit() {
+
+    this.loadData();
+
     this.rebuildMenuList();
     this.addMenuForm = this._fb.group({
       containLists: this._fb.array([
         this.initaddMenuForm(),
       ])
     });
+    //console.log(this.MenuList);
+    //this.dataSource = new MatTableDataSource(this.MenuList);
+    //console.log(this.dataSource);
+  }
+
+  refresh() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.MenuREST = new MenuService(this.httpClient);
+    //this.dataSource = new MenuDataSource(this.MenuREST, this.paginator, this.sort);
+    this.MenuREST.GetMenu().subscribe((data:Menu[])=>{
+      this.dataSource = new MatTableDataSource<Menu>(data);      
+      this.dataLength = data.length;
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    })
+
+
+    fromEvent(this.filter.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        if (!this.dataSource) {
+          return;
+        }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      });
   }
 
   initaddMenuForm() {
@@ -60,7 +109,7 @@ export class MenuComponent implements OnInit {
     model.forEach(menu => {
       this.MenuREST.PostMenu(menu).subscribe(
         (result: any) => {
-          console.log('Menu: ' + menu.menuText + ' ok!');          
+          console.log('Menu: ' + menu.menuText + ' ok!');
         },
         error => {
           console.log(error);
@@ -89,7 +138,7 @@ export class MenuComponent implements OnInit {
     this.MenuREST.GetMenu().subscribe(
       (result: Menu[]) => {
         //console.log(result);
-        this.MenuList = result;        
+        this.MenuList = result;
       },
       error => {
         console.log(error);
@@ -118,6 +167,102 @@ export class MenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       this.rebuildMenuList();
+    });
+  }
+}
+
+export class MenuDataSource extends DataSource<any> {
+
+  _filterChange = new BehaviorSubject('');
+
+  get filter(): string {
+    return this._filterChange.value;
+  }
+
+  set filter(filter: string) {
+    console.log(filter);
+    this._filterChange.next(filter);
+  }
+
+  filteredData: Menu[] = [];
+  renderedData: Menu[] = [];
+  returnConnected: Observable<Menu[]>;
+
+  constructor(private MenuREST: MenuService, public _paginator: MatPaginator, public _sort: MatSort) {
+    super();
+
+    // Reset to the first page when the user changes the filter.
+    console.log('constructor')
+    this._filterChange.subscribe(() => {
+      this._paginator.pageIndex = 0;
+      console.log('Reset to the first page');
+      this.connect().subscribe();
+    });
+  }
+  connect(): Observable<Menu[]> {
+    // Listen for any changes in the base data, sorting, filtering, or pagination
+    const displayDataChanges = [
+      this.MenuREST.dataChange,
+      this._sort.sortChange,
+      this._filterChange,
+      this._paginator.page
+    ];
+    console.log("Connect!!!")
+    return merge(displayDataChanges).pipe(
+      mergeMap(() => {
+        //Call API to recieve data First!!!
+        return this.MenuREST.GetMenu().pipe(
+          map((data) => {
+            this.MenuREST.dataChange.next(data);
+
+            // Filter data
+            this.filteredData = this.MenuREST.data.slice().filter((menu: Menu) => {
+              const searchStr = (menu.menuId + menu.menuText + menu.path + menu.component + menu.sortNo + menu.rootMenuId).toLowerCase();
+              return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+            });
+
+            // Sort filtered data
+            const sortedData = this.sortData(this.filteredData.slice());
+
+            // Grab the page's slice of the filtered sorted data.
+            const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+            this.renderedData = sortedData.splice(startIndex, this._paginator.pageSize);
+            return this.renderedData;
+          })
+        );
+      })
+    )
+  }
+
+  disconnect() { }
+
+  /** Returns a sorted copy of the database data. */
+  sortData(data: Menu[]): Menu[] {
+    console.log('sortData')
+    if (!this._sort.active || this._sort.direction === '') {
+      return data;
+    }
+
+    return data.sort((a, b) => {
+      //a:small, b:large
+      let propertyA: number | string = '';
+      let propertyB: number | string = '';
+
+      switch (this._sort.active) {
+        case 'menuId': [propertyA, propertyB] = [a.menuId, b.menuId]; break;
+        case 'menuText': [propertyA, propertyB] = [a.menuText, b.menuText]; break;
+        case 'path': [propertyA, propertyB] = [a.path, b.path]; break;
+        case 'sortNo': [propertyA, propertyB] = [a.sortNo, b.sortNo]; break;
+        case 'component': [propertyA, propertyB] = [a.component, b.component]; break;
+        case 'rootMenuId': [propertyA, propertyB] = [a.rootMenuId, b.rootMenuId]; break;
+      }
+
+      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+      console.log(propertyA);
+      console.log(+propertyA);
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
 }
@@ -159,7 +304,6 @@ export class DialogDeleteMenuComponent {
   templateUrl: 'dialog-update.html',
   providers: [MenuService]
 })
-
 export class DialogUpdateMenuComponent {
   public MenuDetial: Menu;
   public MenuList: Menu[];

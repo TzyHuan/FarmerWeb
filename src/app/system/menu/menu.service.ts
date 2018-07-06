@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber, Subject } from 'rxjs';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Menu } from './menu'
 
 @Injectable()
 export class MenuService {
 
-    public RestfulApiUrl_Menu: string = 'http://192.168.1.170/FarmerAPI/api/Menus';
+    private readonly RestfulApiUrl_Menu: string = 'http://192.168.1.170/FarmerAPI/api/Menus';
+    public dataChange: BehaviorSubject<Menu[]> = new BehaviorSubject<Menu[]>([]);
 
     constructor(private http: HttpClient) { }
+
+    get data(): Menu[] {
+        // console.log('MenuService-get-data:');
+        // console.log(this.dataChange.getValue());
+        return this.dataChange.value;
+    }
 
     //#region Transfer asyc parameter between menu.component and menu-create.component
     // Observable string sources
@@ -23,6 +31,18 @@ export class MenuService {
     //#endregion
     
     //#region RESTful APIs
+    GetAllMenu():void{
+        this.http.get<Menu[]>(this.RestfulApiUrl_Menu).subscribe(data=>{
+            this.dataChange.next(data);
+            console.log(this.dataChange);
+            console.log(this.dataChange.getValue());
+            console.log(this.dataChange.value);
+        },
+        (error:HttpErrorResponse)=>{
+            console.log(error.name+':'+error.message);
+        });
+    }
+
     GetMenu() {
         return this.http.get<Menu[]>(this.RestfulApiUrl_Menu);
     }
