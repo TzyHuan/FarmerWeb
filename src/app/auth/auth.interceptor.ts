@@ -30,7 +30,8 @@ export class AuthInterceptor implements HttpInterceptor {
                         err=>{
                             //有token卻無法通過驗證代表過期或偽造
                             if (err.status === 401){
-                                console.log("userToken 401!");
+                                console.log("Local userToken 401!");
+                                localStorage.removeItem('userToken');                                
                                 this.router.navigateByUrl('/SignIn');
                             }                            
                         }

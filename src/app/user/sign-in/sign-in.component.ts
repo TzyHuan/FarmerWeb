@@ -37,10 +37,11 @@ export class SignInComponent implements OnInit {
           //this.SignEvent.emit(null);      
           this._sharedService.emitChange('sign-in OnSubmitemit=>navmenu')
 
-          //重新導向至首頁
+          //登入成功後重新導向至首頁
           this.router.navigate(['/Home']);
         },
         (err: HttpErrorResponse) => {
+          localStorage.removeItem('userToken');
           this.isLoginError = true;
         }
       );
