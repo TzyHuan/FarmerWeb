@@ -9,37 +9,10 @@ import { Menu } from './menu'
 export class MenuService {
 
     private readonly RestfulApiUrl_Menu: string = 'http://192.168.1.170/FarmerAPI/api/Menus';
-    public dataChange: BehaviorSubject<Menu[]> = new BehaviorSubject<Menu[]>([]);
-
-    constructor(private http: HttpClient) { }
-
-    get data(): Menu[] {
-        // console.log('MenuService-get-data:');
-        // console.log(this.dataChange.getValue());
-        return this.dataChange.value;
-    }
-
-    //#region Transfer asyc parameter between menu.component and menu-create.component
-    // Observable string sources
-    private emitChangeSource = new Subject<any>();
-    // Observable string streams
-    changeEmitted$ = this.emitChangeSource.asObservable();
-    // Service message commands
-    emitChange(change: any) {
-        this.emitChangeSource.next(change);
-    }
-    //#endregion
     
-    //#region RESTful APIs
-    GetAllMenu():void{
-        this.http.get<Menu[]>(this.RestfulApiUrl_Menu).subscribe(data=>{
-            this.dataChange.next(data);            
-        },
-        (error:HttpErrorResponse)=>{
-            console.log(error.name+':'+error.message);
-        });
-    }
-
+    constructor(private http: HttpClient) { }
+   
+    //#region RESTful APIs    
     GetMenu() {
         return this.http.get<Menu[]>(this.RestfulApiUrl_Menu);
     }

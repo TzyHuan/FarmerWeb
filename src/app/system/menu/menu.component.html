@@ -1,30 +1,3 @@
-<form #menuForm="ngForm" class="insert-form">
-  <mat-form-field class="insert-full-width formNum">
-    <input matInput type="number" #id [(ngModel)]="FormMenu.menuId" name="id" placeholder="ID" required>
-  </mat-form-field>
-  <mat-form-field class="insert-full-width">
-    <input matInput type="text" #path [(ngModel)]="FormMenu.path" name="path" placeholder="路徑" required>
-  </mat-form-field>
-  <mat-form-field class="insert-full-width">
-    <input matInput type="text" #menuText [(ngModel)]="FormMenu.menuText" name="menuText" placeholder="選單名稱" required>
-  </mat-form-field>
-  <mat-form-field class="insert-full-width formNum">
-    <input matInput type="number" #sortNo [(ngModel)]="FormMenu.sortNo" name="sortNo" placeholder="排序" required>
-  </mat-form-field>
-  <mat-form-field class="insert-full-width">
-    <input matInput type="text" #component [(ngModel)]="FormMenu.component" name="component" placeholder="對應元件" required>
-  </mat-form-field>
-  <mat-form-field class="insert-full-width">
-    <mat-select #rootMenuId [(ngModel)]="FormMenu.rootMenuId" name="rootMenuId" placeholder="隸屬選單">
-      <mat-option *ngFor="let MenuDetail of MenuList" value="{{MenuDetail.menuId}}">{{MenuDetail.menuText}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button type="button" class="add" [disabled]="!menuForm.valid" (click)="addMenu(); menuForm.resetForm()">
-    確定新增
-  </button>
-</form>
-
-<br>
 <form [formGroup]="addMenuForm">
   <div formArrayName="containLists">
     <div *ngFor="let containList of addMenuForm.controls.containLists.controls; let i =index">
@@ -34,7 +7,6 @@
           <i class="material-icons">cancel</i>
         </span>
       </div>
-
       <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
       <div [formGroupName]="i">
         <MenuCreateUnit [Group]="addMenuForm.controls.containLists.controls[i]" [MenuList]="MenuList"></MenuCreateUnit>
@@ -52,7 +24,7 @@
 </form>
 
 <br>
-<div>
+<div class="filters">
   <mat-form-field>
     <input matInput [formControl]="menuIdFilter" placeholder="Filter Id">
   </mat-form-field>
@@ -123,11 +95,10 @@
       <button mat-icon-button class="delete" (click)="addNew()">
         <mat-icon>add</mat-icon>
       </button>&nbsp;
-      <button mat-icon-button class="delete" (click)="refresh()">
+      <button mat-icon-button class="delete" (click)="loadData()">
         <mat-icon>refresh</mat-icon>
       </button>
     </th>
-
     <td mat-cell *matCellDef="let row; let i=index;" class="operation">
       <button mat-icon-button class="delete" (click)="openUpdateDialog(row)">
         <mat-icon>edit</mat-icon>
@@ -141,39 +112,10 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
 <div class="no-results" [style.display]="paginator.length == 0 ? '' : 'none'">
   No results
 </div>
+
 <mat-paginator #paginator showFirstLastButtons [length]="dataLength" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
-
-<!-- 沒用Mat-Table直接顯示，醜醜的 -->
-<!--
-<table border="2">
-  <tr class="title">
-    <th class="MenuNum">ID</th>
-    <th>路徑</th>
-    <th>名稱</th>
-    <th class="MenuNum">排序</th>
-    <th>對應元件</th>
-    <th class="MenuNum">隸屬</th>
-    <th>操作</th>
-  </tr>
-  <tr *ngFor="let MenuDetail of MenuList">
-    <th class="MenuNum">{{MenuDetail.menuId}}</th>
-    <th>{{MenuDetail.path}}</th>
-    <th>{{MenuDetail.menuText}}</th>
-    <th class="MenuNum">{{MenuDetail.sortNo}}</th>
-    <th>{{MenuDetail.component}}</th>
-    <th class="MenuNum">{{MenuDetail.rootMenuId}}</th>
-    <th class="operation">
-
-      <button title="編輯" class="delete" (click)="openUpdateDialog(MenuDetail)">
-        <mat-icon>settings</mat-icon>
-      </button>&nbsp;
-      <button title="刪除" class="delete" (click)="openDeleteDialog(MenuDetail)">
-        <mat-icon>delete_forever</mat-icon>
-      </button>
-    </th>
-  </tr>
-</table> -->
