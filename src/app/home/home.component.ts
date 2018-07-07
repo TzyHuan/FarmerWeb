@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterContentInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 //import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
 
@@ -19,7 +19,7 @@ require('highcharts/modules/export-data')(Highcharts);
   styleUrls: ['./home.component.css'],
   providers: [HomeService, ClimateService]
 })
-export class HomeComponent implements OnInit, AfterContentInit {
+export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   public timeNow: Observable<string>;
   //public RealtimeData: Observable<WeatherTemperature>;
   public APIRealtimeDate: RealtimeData;
@@ -111,8 +111,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
     //如果失敗便停止訂閱此監聽
     //rxjs 5->6, interval直接繼承observable,不在是observable底下的方法
     this.$UpdateRealtime = interval(10000)
-      .subscribe(
-        values => {
+      .subscribe(() => {
           this.RefreshRealtimeData(this.selectedStations.stationId)
             // .then((val) => {
             //   //刷新完，然後要跑甚麼呢??我再想想唷...            
@@ -302,6 +301,11 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.RealtimeTempGauge = Highcharts.chart(this.RealtimeTempGaugeEle.nativeElement, optionsTemp);
     this.RealtimeRHGauge = Highcharts.chart(this.RealtimeRHGaugeEle.nativeElement, optionsRH);
 
+  }
+
+  ngOnDestroy(){
+    console.log('ngOnDestroy');
+    this.$UpdateRealtime.unsubscribe();
   }
 
   onSelect(StationId: number) {
