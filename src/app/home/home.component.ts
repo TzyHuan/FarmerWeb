@@ -1,11 +1,9 @@
 import { Component, OnInit, AfterContentInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-//import { AsyncPipe } from '@angular/common';
 import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
 
 import { HomeService } from './home.service';
-import { WeatherTemperature, RealtimeData, WeatherStation } from './home';
+import { RealtimeData, WeatherStation } from './home';
 import { ClimateService } from '../climate/climate.service';
-import { HighchartsTempratures, HighchartsHumidities } from '../climate/climate'
 
 import * as Highcharts from 'highcharts';
 declare var require: any;
@@ -17,16 +15,12 @@ require('highcharts/modules/export-data')(Highcharts);
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [HomeService, ClimateService]
+  providers: [ HomeService, ClimateService ]
 })
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
-  public timeNow: Observable<string>;
-  //public RealtimeData: Observable<WeatherTemperature>;
-  public APIRealtimeDate: RealtimeData;
-  //public RealtimeDate: string;
-  //public RealtimeTemp: string;
-  //public DataFromAPI: WeatherTemperature;
-  public updata: RealtimeData;
+  public timeNow: Observable<string>;  
+  public APIRealtimeDate: RealtimeData; 
+  private $UpdateRealtime: Subscription;
 
   //Highchart 
   public RealtimeTempGauge: any;
@@ -38,16 +32,16 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
 
-  private $UpdateRealtime:Subscription;
-
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
     // 抓Station Selector選項    
     this.StationREST.getSelectItem()
       .subscribe(
         (result: WeatherStation[]) => {
           this.stations = result;
+
           //預設初始選項為第一個選項
           this.selectedStations = result[0];
+
           //得到station id後，馬上初始化即時資料
           this.RefreshRealtimeData(this.selectedStations.stationId);
         },
@@ -61,7 +55,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
       //weekday: "short",
     };
-    //1.直接設定param類型為Observable
+
+    //直接設定param類型為Observable
     this.timeNow = new Observable<string>((observer: Subscriber<string>) => {
       setInterval(() => observer.next(
         //反應速度差不多
@@ -69,89 +64,20 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       ), 1000);
     });
 
-    // //每隔一秒監聽呼叫API一次
-    // var observable = Observable.create((observer) => {
-    //   var id = setInterval(() => {
-    //     //do somethings here
-    //     observer.next(this.homeREST.getRealtimeData());
-    //   }, 1000);
-    //   setTimeout(() => {
-    //     clearInterval(id);
-    //     observer.complete();
-    //   }, 5000);
-    // });
-    // //訂閱監聽
-    // observable.subscribe(
-    //   (data: Observable<WeatherTemperature>) => {
-    //     console.log('data received');
-    // //2. 用Observable介面包裝，畫面會閃動~，反應速度差不多
-    //     this.RealtimeData = data;
-    // //3. 分開給兩個參數，反應速度差不多
-    //     data.subscribe(x => this.RealtimeDate = x.dateFormatted);
-    //     data.subscribe(y => this.RealtimeTemp = y.temperatureC);
-    //   },
-    //   error => {
-    //     console.log('幹!!!');
-    //   },
-    //   complete => {
-    //     console.log('completed!!!fuck nsb');
-    //   });
-    // //4. 直接監聽API，非同步反應速度最快！比上便都快，不然就是比上面都慢Orz
-    // Observable.interval(1000).subscribe(
-    //   values => {
-    //     this.homeREST.getRealtimeData()
-    //       .subscribe(
-    //         data => { this.DataFromAPI = data }
-    //       )
-    //   },
-    //   (error) => { console.log(error); }
-    // );
-
     //每隔10秒刷新realtime溫溼度資料
     //如果失敗便停止訂閱此監聽
     //rxjs 5->6, interval直接繼承observable,不在是observable底下的方法
     this.$UpdateRealtime = interval(10000)
       .subscribe(() => {
-          this.RefreshRealtimeData(this.selectedStations.stationId)
-            // .then((val) => {
-            //   //刷新完，然後要跑甚麼呢??我再想想唷...            
-            // })
-            // .catch((val) => {
-            //   console.log('Refresh realtime data failure!');
-            //   this.$UpdateRealtime.unsubscribe();
-            // });            
-        },
+        this.RefreshRealtimeData(this.selectedStations.stationId);
+      },
         (error) => {
           console.log(error);
-        },
-        () => { console.log('每隔10秒刷新realtime溫溼度資料 complete!'); }
+        }
       );
   }
 
   ngAfterContentInit() {
-    // this.updata = {
-    //   StationId: 1,
-    //   RecTemp: 33,
-    //   RecRH: 22
-    // };
-
-    // this.homeREST.updateRealtime(this.updata)
-    //   .subscribe(
-    //     // val => {
-    //     //   console.log("hi budy")
-    //     //   console.log(val)
-    //     //   this.updata=undefined;
-
-    //     //   console.log("PUT call successful value returned in body",
-    //     //     val);
-    //     // },
-    //     // response => {
-    //     //   console.log("PUT call in error", response);
-    //     // },
-    //     // () => {
-    //     //   console.log("The PUT observable is now completed.");
-    //     // }
-    //   );    
     //設定Highstock屬性
     const optionsTemp: Highcharts.Options = {
       chart: {
@@ -300,10 +226,9 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
     //將基本參數代入，初始化Highchart畫面格式    
     this.RealtimeTempGauge = Highcharts.chart(this.RealtimeTempGaugeEle.nativeElement, optionsTemp);
     this.RealtimeRHGauge = Highcharts.chart(this.RealtimeRHGaugeEle.nativeElement, optionsRH);
-
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     console.log('ngOnDestroy');
     this.$UpdateRealtime.unsubscribe();
   }
@@ -334,12 +259,9 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         (error) => {
           console.log(error);
           //錯誤便停止定時訂閱UpdateRealtime
-          this.$UpdateRealtime.unsubscribe();          
-        },
-        () => {
-          //console.log('RefreshRealtimeData!')
+          this.$UpdateRealtime.unsubscribe();
         }
-      );    
+      );
   }
 
   ///mode is Temp(溫度) or RH(濕度)
