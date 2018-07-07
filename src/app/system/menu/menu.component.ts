@@ -28,7 +28,6 @@ export class MenuComponent implements OnInit {
   public FormMenu: Menu = new Menu();
   public addMenuForm: FormGroup;  
   public dataSource: MatTableDataSource<Menu> | null;
-  public dataLength = 0;
   public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'component', 'rootMenuId', 'actions'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -64,8 +63,8 @@ export class MenuComponent implements OnInit {
     this.MenuREST.GetMenu().subscribe((data: Menu[]) => {
       this.MenuList = data;
       this.dataSource = new MatTableDataSource<Menu>(data);
+      
       if (this.dataSource) {
-        this.dataLength = data.length;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
@@ -75,31 +74,37 @@ export class MenuComponent implements OnInit {
         this.menuIdFilter.valueChanges.subscribe(value => {
           this.filterValues.menuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
         //Listen pathFilter
         this.pathFilter.valueChanges.subscribe(value => {
           this.filterValues.path = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
         //Listen menuTextFilter
         this.menuTextFilter.valueChanges.subscribe(value => {
           this.filterValues.menuText = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
         //Listen sortNoFilter
         this.sortNoFilter.valueChanges.subscribe(value => {
           this.filterValues.sortNo = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
         //Listen componentFilter
         this.componentFilter.valueChanges.subscribe(value => {
           this.filterValues.component = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
         //Listen rootMenuIdFilter
         this.rootMenuIdFilter.valueChanges.subscribe(value => {
           this.filterValues.rootMenuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
         });
       }
     });
