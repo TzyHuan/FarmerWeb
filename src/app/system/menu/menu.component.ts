@@ -14,6 +14,7 @@ import { DataSource } from '@angular/cdk/table';
 
 import { DialogMenuDeleteComponent } from '../../dialog/dialog-menu-delete.component';
 import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-menu',
@@ -75,52 +76,75 @@ export class MenuComponent implements OnInit {
     //this.dataSource = new MenuDataSource(this.MenuREST, this.paginator, this.sort);
 
     this.MenuREST.GetMenu().subscribe((data: Menu[]) => {
+      this.MenuList = data;
       this.dataSource = new MatTableDataSource<Menu>(data);
       if (this.dataSource) {
         this.dataLength = data.length;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-      }
+        this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
-    })
-
-    //監聽filter有無輸入關鍵字
-    // fromEvent(this.filter.nativeElement, 'keyup')
-    //   .pipe(
-    //     debounceTime(1000),
-    //     distinctUntilChanged()
-    //   ).subscribe(() => {
-    //     if (!this.dataSource) {
-    //       return;
-    //     }
-    //     console.log('here')
-    //     //this.dataSource.filter = this.filter.nativeElement.value;
-    //     let filters = this.filter.nativeElement.value
-    //     this.dataSource.filterPredicate = (data:Menu, filters:string) => {
-    //       const matchFilter = [];
-    //       console.log(filters);
-    //       const filterArray = filters.split(',');
-    //       console.log(this.displayedColumns.pop())
-    //       const columns = this.displayedColumns.pop();
-    //       return true
-    //     }
-    //   });
-    this.menuIdFilter.valueChanges.subscribe(value => {
-      if (!this.dataSource) {
-        return;
+        //開始監聽來至各FormControl地filter有無輸入關鍵字
+        //Listen menuIdFilter
+        this.menuIdFilter.valueChanges.subscribe(value => {
+          this.filterValues.menuId = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
+        //Listen pathFilter
+        this.pathFilter.valueChanges.subscribe(value => {
+          this.filterValues.path = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
+        //Listen menuTextFilter
+        this.menuTextFilter.valueChanges.subscribe(value => {
+          this.filterValues.menuText = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
+        //Listen sortNoFilter
+        this.sortNoFilter.valueChanges.subscribe(value => {
+          this.filterValues.sortNo = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
+        //Listen componentFilter
+        this.componentFilter.valueChanges.subscribe(value => {
+          this.filterValues.component = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
+        //Listen rootMenuIdFilter
+        this.rootMenuIdFilter.valueChanges.subscribe(value => {
+          this.filterValues.rootMenuId = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        });
       }
-      console.log(value)
-      this.filterValues.menuId = value;
-      this.dataSource.filter = JSON.stringify(this.filterValues);
-      this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
     });
-
   }
 
   customFilter(Data: Menu, Filter: string): boolean {
+    //取Filter條件
     let searchTerms = JSON.parse(Filter);
-    console.log(Filter)
-    return Data.menuId.toString().indexOf(searchTerms.menuId) != -1
+
+    //先預判是否有沒有值的欄位，無值不篩選進來
+    let JudgedMenuId: boolean = isNullOrUndefined(Data.menuId) ?
+      true : Data.menuId.toString().toLowerCase().indexOf(searchTerms.menuId.toLowerCase()) != -1
+    
+    let JudgedPath: boolean = isNullOrUndefined(Data.path) ?
+      true : Data.path.toString().toLowerCase().indexOf(searchTerms.path.toLowerCase()) != -1
+
+    let JudgedMenuText: boolean = isNullOrUndefined(Data.menuText) ?
+      true : Data.menuText.toString().toLowerCase().indexOf(searchTerms.menuText.toLowerCase()) != -1
+
+    let JudgedSortNo: boolean = isNullOrUndefined(Data.sortNo) ?
+      true : Data.sortNo.toString().toLowerCase().indexOf(searchTerms.sortNo.toLowerCase()) != -1
+
+    let JudgedComponent: boolean = isNullOrUndefined(Data.component) ?
+      true : Data.component.toString().toLowerCase().indexOf(searchTerms.component.toLowerCase()) != -1
+    //Because of data.rootMenuId may contain null, searchTerms without anything should not filter out this data
+    let JudgedRootMenuId: boolean = searchTerms.rootMenuId == "" ?
+      true : (isNullOrUndefined(Data.rootMenuId) ?
+        false : Data.rootMenuId.toString().toLowerCase().indexOf(searchTerms.rootMenuId.toLowerCase()) != -1);
+
+    //交集為true者，才是要顯示的Dat
+    return JudgedMenuId && JudgedPath && JudgedMenuText && JudgedSortNo && JudgedComponent && JudgedRootMenuId
   }
 
 
@@ -207,7 +231,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  openUpdateDialog(MenuDetial: Menu): void {
+  openUpdateDialog(MenuDetial: Menu): void {    
     const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
       width: '400px',
       data: [MenuDetial, this.MenuList]
