@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class SystemComponent implements OnInit {
 public test : string;
   constructor() { 
-    this.test = "fafd";
+   
   }
 
   ngOnInit() {

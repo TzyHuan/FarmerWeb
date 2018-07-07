@@ -10,10 +10,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { DataSource } from '@angular/cdk/table';
 
 import { DialogMenuDeleteComponent } from '../../dialog/dialog-menu-delete.component';
 import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
+import { DialogMenuCreateComponent } from '../../dialog/dialog-menu-create.component';
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
     this.MenuREST.GetMenu().subscribe((data: Menu[]) => {
       this.MenuList = data;
       this.dataSource = new MatTableDataSource<Menu>(data);
-      
+
       if (this.dataSource) {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -193,7 +193,6 @@ export class MenuComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The dialog was closed');
-      //this.rebuildMenuList();
       this.loadData();
     });
   }
@@ -206,7 +205,18 @@ export class MenuComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The dialog was closed');
-      //this.rebuildMenuList();
+      this.loadData();
+    });
+  }
+
+  openCreateDialog(): void {    
+    const dialogRef = this.dialog.open(DialogMenuCreateComponent, {
+      width: '80%',
+      data: this.MenuList
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('The dialog was closed');
       this.loadData();
     });
   }

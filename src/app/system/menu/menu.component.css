@@ -26,7 +26,7 @@ table tr.title th{
     text-align: center;
 }
 
-table .MenuNum{
+.MenuNum{
     width:5%;
     text-align: center;
 }
@@ -46,7 +46,11 @@ table th.operation {
     padding: 14px;
     font-size: 14px;
     font-style: italic;
-  }
+}
+
+.Search{
+    vertical-align: middle !important;
+}
 
 button {
     background-color: #eee;
@@ -56,13 +60,13 @@ button {
     cursor: pointer;
     cursor: hand;
     font-family: Arial;
-    }
+}
   
 button:hover {
     background-color: #cfd8dc;
 }
   
-button.delete {     
+button.TableButton {     
     background-color: gray !important;
     color: white;
     line-height: 50%;

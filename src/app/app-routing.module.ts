@@ -14,8 +14,6 @@ import { SystemComponent } from './system/system.component';
 import { MenuComponent } from './system/menu/menu.component';
 import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
-//子選單
-import { MenuCreateComponent } from './system/menu/menu-create.component';
 
 //----Service----//
 import { NavMenuService } from './navmenu/navmenu.service';
@@ -156,8 +154,5 @@ export const routingComponents = [
   SystemComponent,
   MenuComponent,
   ActionComponent,
-  CharacterComponent,
-
-  //子選單
-  MenuCreateComponent
+  CharacterComponent
 ]

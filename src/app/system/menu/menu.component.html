@@ -1,121 +1,129 @@
-<form [formGroup]="addMenuForm">
-  <div formArrayName="containLists">
-    <div *ngFor="let containList of addMenuForm.controls.containLists.controls; let i =index">
-      <div>
-        <span>Menu {{i + 1}}</span>
-        <span *ngIf="addMenuForm.controls.containLists.controls.length > 1" (click)="removeMenuList(i)">
-          <i class="material-icons">cancel</i>
-        </span>
-      </div>
-      <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
-      <div [formGroupName]="i">
-        <MenuCreateUnit [Group]="addMenuForm.controls.containLists.controls[i]" [MenuList]="MenuList"></MenuCreateUnit>
-      </div>
-    </div>
+<div class="mat-elevation-z8">
+  <div>    
+    <!-- Title -->
+    <mat-icon class="Search">search</mat-icon>搜尋
+
+    <!-- Filter menuId Column -->
+    <mat-form-field class="MenuNum">
+      <input matInput [formControl]="menuIdFilter" placeholder="Filter Id">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>ID
+      </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filter path Column -->
+    <mat-form-field>
+      <input matInput [formControl]="pathFilter" placeholder="Filter 路徑">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>路徑
+      </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filte menuText Column -->
+    <mat-form-field>
+      <input matInput [formControl]="menuTextFilter" placeholder="Filter 名稱">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>名稱
+      </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filter sortNo Column -->
+    <mat-form-field class="MenuNum">
+      <input matInput [formControl]="sortNoFilter" placeholder="Filter 排序">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>排序
+      </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filter component Column -->
+    <mat-form-field>
+      <input matInput [formControl]="componentFilter" placeholder="Filter 對應元件">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>對應元件
+      </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filter rootMenuId Column -->
+    <mat-form-field class="MenuNum">
+      <input matInput [formControl]="rootMenuIdFilter" placeholder="Filter 隸屬">
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>隸屬
+      </mat-label>
+    </mat-form-field>
   </div>
-  <div class="margin-20">
-    <a (click)="addMenuList()" style="cursor: default">
-      <i class="material-icons">add_circle</i>
-    </a>
-    <button type="button" class="add" [disabled]="!addMenuForm.valid" (click)="save(addMenuForm.value.containLists)">
-      確定新增
-    </button>
-  </div>
-</form>
 
-<br>
-<div class="filters">
-  <mat-form-field>
-    <input matInput [formControl]="menuIdFilter" placeholder="Filter Id">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [formControl]="pathFilter" placeholder="Filter 路徑">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [formControl]="menuTextFilter" placeholder="Filter 名稱">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [formControl]="sortNoFilter" placeholder="Filter 排序">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [formControl]="componentFilter" placeholder="Filter 對應元件">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [formControl]="rootMenuIdFilter" placeholder="Filter 隸屬">
-  </mat-form-field>
-</div>
-<br>
+  <table mat-table #table [dataSource]="dataSource" matSort>
 
-<table mat-table #table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-
-  <!-- Note that these columns can be defined in any order.
+    <!-- Note that these columns can be defined in any order.
        The actual rendered columns are set as a property on the row definition" -->
 
-  <!-- menuId Column -->
-  <ng-container matColumnDef="menuId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      ID
-    </th>
-    <td mat-cell *matCellDef="let element"> {{element.menuId}} </td>
-  </ng-container>
+    <!-- menuId Column -->
+    <ng-container matColumnDef="menuId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        ID
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.menuId}} </td>
+    </ng-container>
 
-  <!-- path Column -->
-  <ng-container matColumnDef="path">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> 路徑 </th>
-    <td mat-cell *matCellDef="let element"> {{element.path}} </td>
-  </ng-container>
+    <!-- path Column -->
+    <ng-container matColumnDef="path">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 路徑 </th>
+      <td mat-cell *matCellDef="let element"> {{element.path}} </td>
+    </ng-container>
 
-  <!-- menuText Column -->
-  <ng-container matColumnDef="menuText">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> 名稱 </th>
-    <td mat-cell *matCellDef="let element"> {{element.menuText}} </td>
-  </ng-container>
+    <!-- menuText Column -->
+    <ng-container matColumnDef="menuText">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 名稱 </th>
+      <td mat-cell *matCellDef="let element"> {{element.menuText}} </td>
+    </ng-container>
 
-  <!-- sortNo Column -->
-  <ng-container matColumnDef="sortNo">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> 排序 </th>
-    <td mat-cell *matCellDef="let element"> {{element.sortNo}} </td>
-  </ng-container>
+    <!-- sortNo Column -->
+    <ng-container matColumnDef="sortNo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 排序 </th>
+      <td mat-cell *matCellDef="let element"> {{element.sortNo}} </td>
+    </ng-container>
 
-  <!-- component Column -->
-  <ng-container matColumnDef="component">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> 對應元件 </th>
-    <td mat-cell *matCellDef="let element"> {{element.component}} </td>
-  </ng-container>
+    <!-- component Column -->
+    <ng-container matColumnDef="component">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 對應元件 </th>
+      <td mat-cell *matCellDef="let element"> {{element.component}} </td>
+    </ng-container>
 
-  <!-- rootMenuId Column -->
-  <ng-container matColumnDef="rootMenuId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> 隸屬 </th>
-    <td mat-cell *matCellDef="let element"> {{element.rootMenuId}} </td>
-  </ng-container>
+    <!-- rootMenuId Column -->
+    <ng-container matColumnDef="rootMenuId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 隸屬 </th>
+      <td mat-cell *matCellDef="let element"> {{element.rootMenuId}} </td>
+    </ng-container>
 
-  <!-- actions -->
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef class="operation">
-      <button mat-icon-button class="delete" (click)="addNew()">
-        <mat-icon>add</mat-icon>
-      </button>&nbsp;
-      <button mat-icon-button class="delete" (click)="loadData()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-    </th>
-    <td mat-cell *matCellDef="let row; let i=index;" class="operation">
-      <button mat-icon-button class="delete" (click)="openUpdateDialog(row)">
-        <mat-icon>edit</mat-icon>
-      </button>&nbsp;
-      <button mat-icon-button class="delete" (click)="openDeleteDialog(row)">
-        <mat-icon>delete_forever</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="operation">
+        <button mat-icon-button class="TableButton" (click)="openCreateDialog()">
+          <mat-icon>add</mat-icon>
+        </button>&nbsp;
+        <button mat-icon-button class="TableButton" (click)="loadData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let row; let i=index;" class="operation">
+        <button mat-icon-button class="TableButton" (click)="openUpdateDialog(row)">
+          <mat-icon>edit</mat-icon>
+        </button>&nbsp;
+        <button mat-icon-button class="TableButton" (click)="openDeleteDialog(row)">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-<div class="no-results" [style.display]="paginator.length == 0 ? '' : 'none'">
-  No results
+  <div class="no-results" [style.display]="paginator.length == 0 ? '' : 'none'">
+    No results
+  </div>
+
+  <mat-paginator #paginator showFirstLastButtons [length]="dataLength" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+  
 </div>
-
-<mat-paginator #paginator showFirstLastButtons [length]="dataLength" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>

@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>新增選單</h1>
+<div mat-dialog-content>
+    <form [formGroup]="addMenuForm">
+        <div formArrayName="containLists">
+            <div *ngFor="let containList of addMenuForm.controls.containLists.controls; let i =index">
+                <div>
+                    <span>Menu {{i + 1}}</span>
+                    <span *ngIf="addMenuForm.controls.containLists.controls.length > 1" (click)="removeMenuList(i)">
+                        <i class="material-icons">cancel</i>
+                    </span>
+                </div>
+                <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+                <div [formGroupName]="i">
+                    <MenuCreateUnit [Group]="addMenuForm.controls.containLists.controls[i]" [MenuList]="MenuList"></MenuCreateUnit>
+                </div>
+            </div>
+        </div>
+        <div class="margin-20">
+            <a (click)="addMenuList()" style="cursor: default">
+                <i class="material-icons">add_circle</i>
+            </a>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onNoClick()">取消</button>
+    <button mat-raised-button color="primary" (click)="onYesClick(addMenuForm.value.containLists)" [disabled]="!addMenuForm.valid">確定新增</button>
+</div>
