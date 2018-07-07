@@ -33,10 +33,7 @@ export class MenuService {
     //#region RESTful APIs
     GetAllMenu():void{
         this.http.get<Menu[]>(this.RestfulApiUrl_Menu).subscribe(data=>{
-            this.dataChange.next(data);
-            console.log(this.dataChange);
-            console.log(this.dataChange.getValue());
-            console.log(this.dataChange.value);
+            this.dataChange.next(data);            
         },
         (error:HttpErrorResponse)=>{
             console.log(error.name+':'+error.message);

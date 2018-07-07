@@ -10,10 +10,10 @@ import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatToolbarModule } from "@angular/material/toolbar";
 
 //Component inside Component
-import { DialogDeleteMenuComponent, DialogUpdateMenuComponent } from './system/menu/menu.component'
+import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component'
+import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
 
 @NgModule({
   //imports: [MatButtonModule], // import內用
@@ -36,6 +36,6 @@ export class SharedMaterialModule { }
 // 這邊宣告所有Material的Components
 export const MatComponents = [  
   //系統管理-選單權限
-  DialogDeleteMenuComponent,
-  DialogUpdateMenuComponent
+  DialogMenuDeleteComponent,
+  DialogMenuUpdateComponent
 ]

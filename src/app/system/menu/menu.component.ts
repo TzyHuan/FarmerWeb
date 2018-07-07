@@ -7,10 +7,13 @@ import { error } from 'protractor';
 import { Observable, observable, merge, fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, mergeMap, switchMap, tap } from 'rxjs/operators'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
+
+import { DialogMenuDeleteComponent } from '../../dialog/dialog-menu-delete.component';
+import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
 
 @Component({
   selector: 'app-menu',
@@ -24,31 +27,42 @@ export class MenuComponent implements OnInit {
   public FormMenu: Menu = new Menu();
   public addMenuForm: FormGroup;
   //public dataSource: MenuDataSource | null;
-  public dataSource:MatTableDataSource<Menu> | null;
+  public dataSource: MatTableDataSource<Menu> | null;
   public dataLength = 0;
   public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'component', 'rootMenuId', 'actions'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('filter') filter: ElementRef;
+  //@ViewChild('filter') filter: ElementRef;
+
+  //Parameters of filters
+  private menuIdFilter = new FormControl();
+  private pathFilter = new FormControl();
+  private menuTextFilter = new FormControl();
+  private sortNoFilter = new FormControl();
+  private componentFilter = new FormControl();
+  private rootMenuIdFilter = new FormControl();
+  private filterValues = { menuId: '', path: '', menuText: '', sortNo: '', component: '', rootMenuId: '' }
 
   constructor(private MenuREST: MenuService, public httpClient: HttpClient, public dialog: MatDialog, public _fb: FormBuilder) {
-  
+
   }
 
   ngOnInit() {
 
+    //重新讀取Mat-Table資料
     this.loadData();
 
-    this.rebuildMenuList();
+    //重新讀取Table資料
+    //this.rebuildMenuList();
+
+    //將新增form先加入一張填寫欄位
     this.addMenuForm = this._fb.group({
       containLists: this._fb.array([
         this.initaddMenuForm(),
       ])
     });
-    //console.log(this.MenuList);
-    //this.dataSource = new MatTableDataSource(this.MenuList);
-    //console.log(this.dataSource);
+
   }
 
   refresh() {
@@ -56,28 +70,61 @@ export class MenuComponent implements OnInit {
   }
 
   loadData() {
-    this.MenuREST = new MenuService(this.httpClient);
+
+    //利用自訂class的方式實作Mat-Table的dataSource
     //this.dataSource = new MenuDataSource(this.MenuREST, this.paginator, this.sort);
-    this.MenuREST.GetMenu().subscribe((data:Menu[])=>{
-      this.dataSource = new MatTableDataSource<Menu>(data);      
-      this.dataLength = data.length;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+
+    this.MenuREST.GetMenu().subscribe((data: Menu[]) => {
+      this.dataSource = new MatTableDataSource<Menu>(data);
+      if (this.dataSource) {
+        this.dataLength = data.length;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
+
     })
 
+    //監聽filter有無輸入關鍵字
+    // fromEvent(this.filter.nativeElement, 'keyup')
+    //   .pipe(
+    //     debounceTime(1000),
+    //     distinctUntilChanged()
+    //   ).subscribe(() => {
+    //     if (!this.dataSource) {
+    //       return;
+    //     }
+    //     console.log('here')
+    //     //this.dataSource.filter = this.filter.nativeElement.value;
+    //     let filters = this.filter.nativeElement.value
+    //     this.dataSource.filterPredicate = (data:Menu, filters:string) => {
+    //       const matchFilter = [];
+    //       console.log(filters);
+    //       const filterArray = filters.split(',');
+    //       console.log(this.displayedColumns.pop())
+    //       const columns = this.displayedColumns.pop();
+    //       return true
+    //     }
+    //   });
+    this.menuIdFilter.valueChanges.subscribe(value => {
+      if (!this.dataSource) {
+        return;
+      }
+      console.log(value)
+      this.filterValues.menuId = value;
+      this.dataSource.filter = JSON.stringify(this.filterValues);
+      this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
+    });
 
-    fromEvent(this.filter.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged()
-      ).subscribe(() => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      });
   }
 
+  customFilter(Data: Menu, Filter: string): boolean {
+    let searchTerms = JSON.parse(Filter);
+    console.log(Filter)
+    return Data.menuId.toString().indexOf(searchTerms.menuId) != -1
+  }
+
+
+  //#region 新增Form相關項目
   initaddMenuForm() {
     //若此地不加require，而在子component加入，則會發生前後不一致的警告！
     let DefaultRow = {
@@ -145,32 +192,36 @@ export class MenuComponent implements OnInit {
       }
     )
   }
+  //#endregion
 
   openDeleteDialog(MenuDetial: Menu): void {
-    const dialogRef = this.dialog.open(DialogDeleteMenuComponent, {
+    const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
       width: '250px',
       data: MenuDetial
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.rebuildMenuList();
+      //console.log('The dialog was closed');
+      //this.rebuildMenuList();
+      this.loadData();
     });
   }
 
   openUpdateDialog(MenuDetial: Menu): void {
-    const dialogRef = this.dialog.open(DialogUpdateMenuComponent, {
+    const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
       width: '400px',
       data: [MenuDetial, this.MenuList]
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.rebuildMenuList();
+      //console.log('The dialog was closed');
+      //this.rebuildMenuList();
+      this.loadData();
     });
   }
 }
 
+//#region 自定義Mat-Table DataSource
 export class MenuDataSource extends DataSource<any> {
 
   _filterChange = new BehaviorSubject('');
@@ -265,77 +316,5 @@ export class MenuDataSource extends DataSource<any> {
       return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
-}
-
-@Component({
-  selector: 'dialog-delete',
-  templateUrl: 'dialog-delete.html',
-  providers: [MenuService]
-})
-export class DialogDeleteMenuComponent {
-
-  constructor(public dialogRef: MatDialogRef<DialogDeleteMenuComponent>,
-    private MenuREST: MenuService,
-    @Inject(MAT_DIALOG_DATA) public data: Menu) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onYesClick(): void {
-    this.deleteMenu(this.data.menuId);
-    this.dialogRef.close();
-  }
-
-  deleteMenu(id: number) {
-    this.MenuREST.DeleteMenu(id).subscribe(
-      (result: any) => {
-        console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  }
-}
-
-@Component({
-  selector: 'dialog-update',
-  templateUrl: 'dialog-update.html',
-  providers: [MenuService]
-})
-export class DialogUpdateMenuComponent {
-  public MenuDetial: Menu;
-  public MenuList: Menu[];
-  constructor(public dialogRef: MatDialogRef<DialogUpdateMenuComponent>,
-    private MenuREST: MenuService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.MenuDetial = this.data[0];
-    this.MenuList = this.data[1];
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onYesClick(): void {
-    console.log(this.MenuDetial.menuId);
-    this.putMenu(this.MenuDetial.menuId, this.MenuDetial);
-    this.dialogRef.close();
-  }
-
-  putMenu(id: number, UpdatedMenu: Menu) {
-    this.MenuREST.PutMenu(id, UpdatedMenu).subscribe(
-      (result: any) => {
-        console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  }
-
-  compareObjects(o1: any, o2: any): boolean {
-    return o1 == o2;
-  }
+  //#endregion
 }
