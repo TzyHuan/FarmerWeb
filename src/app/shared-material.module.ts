@@ -10,6 +10,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 //Component inside Component
 import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component'
@@ -32,7 +33,8 @@ import { MenuCreateComponent } from './dialog/menu-create.component';
     CdkTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatSidenavModule
   ]
 })
 

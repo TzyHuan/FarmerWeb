@@ -34,13 +34,13 @@ export class MenuComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;  
 
   //Parameters of filters
-  private menuIdFilter = new FormControl();
-  private pathFilter = new FormControl();
-  private menuTextFilter = new FormControl();
-  private sortNoFilter = new FormControl();
-  private componentFilter = new FormControl();
-  private rootMenuIdFilter = new FormControl();
-  private filterValues = { menuId: '', path: '', menuText: '', sortNo: '', component: '', rootMenuId: '' }
+  public menuIdFilter = new FormControl();
+  public pathFilter = new FormControl();
+  public menuTextFilter = new FormControl();
+  public sortNoFilter = new FormControl();
+  public componentFilter = new FormControl();
+  public rootMenuIdFilter = new FormControl();
+  public filterValues = { menuId: '', path: '', menuText: '', sortNo: '', component: '', rootMenuId: '' }
 
   constructor(private MenuREST: MenuService, public httpClient: HttpClient, public dialog: MatDialog, public _fb: FormBuilder) {
 
@@ -48,14 +48,8 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     //重新讀取Mat-Table資料
-    this.loadData();
-    
-    //將新增form先加入一張填寫欄位
-    this.addMenuForm = this._fb.group({
-      containLists: this._fb.array([
-        this.initaddMenuForm(),
-      ])
-    });
+    this.loadData();    
+   
   }
 
   loadData() {
@@ -156,33 +150,6 @@ export class MenuComponent implements OnInit {
     this.loadData();
     this.ngOnInit();
   }
-
-  //#region 新增Form相關項目
-  initaddMenuForm() {
-    //若此地不加require，而在子component加入，則會發生前後不一致的警告！
-    let DefaultRow = {
-      menuId: ['', Validators.required],
-      path: ['', Validators.required],
-      menuText: ['', Validators.required],
-      sortNo: ['', Validators.required],
-      component: ['', Validators.required],
-      rootMenuId: null
-    }
-    return this._fb.group(DefaultRow);
-  }
-
-  addMenuList() {
-    // add address to the list   
-    const control = <FormArray>this.addMenuForm.controls['containLists'];
-    control.push(this.initaddMenuForm());
-  }
-
-  removeMenuList(i: number) {
-    // remove address from the list
-    const control = <FormArray>this.addMenuForm.controls['containLists'];
-    control.removeAt(i);
-  }
-  //#endregion
 
   //#region dialog patterns
   openDeleteDialog(MenuDetial: Menu): void {

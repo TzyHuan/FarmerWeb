@@ -1,0 +1,25 @@
+.system-drawer-container{
+    min-height: 600px;    
+}
+
+.system-drawer-side{
+    height: 100%;
+}
+
+.system-drawer-content {
+    margin: 0;
+    padding: 20px;
+    background: white;
+}
+
+.system-drawer-side ul{
+    list-style: none;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.system-drawer-side ul li{
+    list-style: none;
+    list-style-type: none;
+    padding: 0px 16px 8px 0px;
+}

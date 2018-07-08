@@ -28,6 +28,7 @@ table tr.title th{
 
 .MenuNum{
     width:5%;
+    min-width: 60px; /*60px可以剛好讓註解完整顯示*/
     text-align: center;
 }
 
@@ -67,7 +68,7 @@ button:hover {
 }
   
 button.TableButton {     
-    background-color: gray !important;
+    background-color:#673ab7 !important;
     color: white;
     line-height: 50%;
 }
