@@ -6,7 +6,6 @@ import { RoleGroup, ImenuRole } from './character';
 export class CharacterService {
 
     public RestfulApiUrl_RoleGroup: string = 'http://192.168.1.170/FarmerAPI/api/RoleGroups';
-    public RestfulApiUrl_ImemRole: string = 'http://192.168.1.170/FarmerAPI/api/ImemRoles';
     public RestfulApiUrl_ImenuRole: string = 'http://192.168.1.170/FarmerAPI/api/ImenuRoles';
     
     constructor(private http: HttpClient) { }
@@ -41,7 +40,7 @@ export class CharacterService {
 
     //#region ImenuRole RESTful API
     GetImenuRole() {
-        return this.http.get<ImenuRole[]>(this.RestfulApiUrl_ImemRole);
+        return this.http.get<ImenuRole[]>(this.RestfulApiUrl_ImenuRole);
     }
 
     GetOneImenuRole(id: number) {

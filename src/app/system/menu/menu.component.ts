@@ -24,14 +24,14 @@ import { isNullOrUndefined } from 'util';
 })
 export class MenuComponent implements OnInit {
 
+  //列舉選項傳至Dialog
   public MenuList: Menu[];
-  public FormMenu: Menu = new Menu();
-  public addMenuForm: FormGroup;  
+
+  //Parameters of Mat-Table
   public dataSource: MatTableDataSource<Menu> | null;
   public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'component', 'rootMenuId', 'actions'];
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;  
+  @ViewChild(MatSort) sort: MatSort;
 
   //Parameters of filters
   public menuIdFilter = new FormControl();
@@ -48,14 +48,14 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     //重新讀取Mat-Table資料
-    this.loadData();    
-   
+    this.loadData();
+
   }
 
   loadData() {
     //Call api reload data
     this.MenuREST.GetMenu().subscribe((data: Menu[]) => {
-      this.MenuList = data;
+
       this.dataSource = new MatTableDataSource<Menu>(data);
 
       if (this.dataSource) {
@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
-        //開始監聽來至各FormControl地filter有無輸入關鍵字
+        //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
         //Listen menuIdFilter
         this.menuIdFilter.valueChanges.subscribe(value => {
           this.filterValues.menuId = value;
@@ -100,7 +100,13 @@ export class MenuComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+        //#endregion
       }
+
+      //把選單資料代入Dialog選項 且 增加"無隸屬"的選項
+      this.MenuList = data;
+      this.MenuList.unshift({ menuId: null, path: null, menuText: '無', sortNo: null, component: null, rootMenuId: null });
+
     });
   }
 
@@ -111,7 +117,7 @@ export class MenuComponent implements OnInit {
     //先預判是否有沒有值的欄位，無值不篩選進來
     let JudgedMenuId: boolean = isNullOrUndefined(Data.menuId) ?
       true : Data.menuId.toString().toLowerCase().indexOf(searchTerms.menuId.toLowerCase()) != -1
-    
+
     let JudgedPath: boolean = isNullOrUndefined(Data.path) ?
       true : Data.path.toString().toLowerCase().indexOf(searchTerms.path.toLowerCase()) != -1
 
@@ -145,13 +151,12 @@ export class MenuComponent implements OnInit {
       )
     });
 
-    //重置畫面
-    this.addMenuForm.reset();
+    //重置畫面    
     this.loadData();
     this.ngOnInit();
   }
 
-  //#region dialog patterns
+  //#region Dialog patterns
   openDeleteDialog(MenuDetial: Menu): void {
     const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
       width: '250px',
@@ -164,7 +169,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  openUpdateDialog(MenuDetial: Menu): void {    
+  openUpdateDialog(MenuDetial: Menu): void {
     const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
       width: '400px',
       data: [MenuDetial, this.MenuList]
@@ -176,7 +181,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  openCreateDialog(): void {    
+  openCreateDialog(): void {
     const dialogRef = this.dialog.open(DialogMenuCreateComponent, {
       width: '80%',
       data: this.MenuList

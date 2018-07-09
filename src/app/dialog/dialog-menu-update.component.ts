@@ -39,7 +39,8 @@ import { MenuService } from '../system/menu/menu.service'
       )
     }
   
-    compareObjects(o1: any, o2: any): boolean {
+    compareObjects(o1: any, o2: any): boolean {      
+      if(o1=='')o1=null;
       return o1 == o2;
     }
   }
