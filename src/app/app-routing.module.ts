@@ -96,6 +96,7 @@ export class AppRoutingModule {
 
     //最後才加入path:'**'路徑導入至Home，佇列在array最下面    
     //若把path:'**'放第一位，就無法去排在後面其他的Component
+    //path '**' should direct to PageNotFoundComponent!
     finalRoutes.push({ path: '**', component: HomeComponent });
 
     return finalRoutes;
@@ -112,7 +113,7 @@ export class AppRoutingModule {
     return factory;
   }
 
-  private TreeMenu(root: vmNavMenu): any {
+  private TreeMenu(root: vmNavMenu): any[] {
 
     var factory: any = this.GetComponentType(root);
     var ReturnTree = [];
@@ -126,13 +127,27 @@ export class AppRoutingModule {
       }
       //if root have children
       if (root.children != null) {
+        var first_iteration: boolean = true;
         let childrenRoutes = [];
         root.children.forEach(r => {
+
+          //若有不只一個children,路徑path=''自動轉跳至第一個child路徑
+          //讓第一筆foreach，加入path=''、redirectTo 第一個子componet路徑
+          if (first_iteration) {
+            childrenRoutes.push({
+              path: '',
+              redirectTo: r.path,
+              pathMatch: 'full'
+            })
+            first_iteration = false;
+          }
+
           let NodeChild: any = this.TreeMenu(r);
           if (NodeChild.length != 0) {
             childrenRoutes.push(NodeChild[0]);
           }
           TreeRoot.children = childrenRoutes;
+
         })
       }
       ReturnTree.push(TreeRoot);
