@@ -5,9 +5,8 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
 import { DialogCharacterCreateComponent } from '../../dialog/dialog-character-create.component';
+import { DialogCharacterDeleteComponent } from '../../dialog/dialog-character-delete.component';
 import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
-import { DialogMenuCreateComponent } from '../../dialog/dialog-menu-create.component';
-import { DialogMenuDeleteComponent } from '../../dialog/dialog-menu-delete.component';
 
 @Component({
   selector: 'app-character',
@@ -42,8 +41,7 @@ export class CharacterComponent implements OnInit {
   loadData() {
     //Call api reload data
     this.CharacterREST.GetRoleGroup().subscribe((data: RoleGroup[]) => {
-
-      console.log(data);
+      
       this.dataSource = new MatTableDataSource<RoleGroup>(data);
 
       if (this.dataSource) {
@@ -68,10 +66,10 @@ export class CharacterComponent implements OnInit {
   }
 
   //#region Dialog patterns
-  openDeleteDialog(MenuDetial: RoleGroup): void {
-    const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
+  openDeleteDialog(RoleDetial: RoleGroup): void {
+    const dialogRef = this.dialog.open(DialogCharacterDeleteComponent, {
       width: '250px',
-      data: MenuDetial
+      data: RoleDetial
     });
 
     dialogRef.afterClosed().subscribe(result => {

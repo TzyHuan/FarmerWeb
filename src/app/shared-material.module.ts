@@ -13,11 +13,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 
-//Component inside Component
+//Dialogs' Component inside Component
 import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component'
 import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
 import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
 import { DialogCharacterCreateComponent } from './dialog/dialog-character-create.component';
+import { DialogCharacterDeleteComponent } from './dialog/dialog-character-delete.component';
 
 //Child components in dialogs
 import { MenuCreateComponent } from './dialog/menu-create.component';
@@ -54,5 +55,6 @@ export const MatComponents = [
 
   //系統管理-角色權限
   DialogCharacterCreateComponent,
+  DialogCharacterDeleteComponent,
   CharacterCreateComponent
 ]
