@@ -131,8 +131,8 @@ export class AppRoutingModule {
         let childrenRoutes = [];
         root.children.forEach(r => {
 
-          //若有不只一個children,路徑path=''自動轉跳至第一個child路徑
-          //讓第一筆foreach，加入path=''、redirectTo 第一個子componet路徑
+          //若有不只一個children，路徑path=''時自動轉跳至第一個child路徑
+          //因此第一筆foreach需加入path=''且redirectTo 第一個子componet之路徑
           if (first_iteration) {
             childrenRoutes.push({
               path: '',
