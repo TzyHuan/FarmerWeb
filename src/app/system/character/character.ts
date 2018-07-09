@@ -1,18 +1,19 @@
+//老bug，宣告矩陣塞資料後，屬性第一字母會自動變小這樣！
 export class RoleGroup {
-    public RoleId: number;
-    public RoleName: string;
-    public SortNo: number;
-    public AccessScope: number;
-    public Description?: string;
-    public ParentRoleId?: number;
-    public RejectScope: boolean;
-    public ApproveScope: boolean;
-    public publicSubmitScope: boolean;
-    public PassScope: boolean;
-    public PrintScope: boolean;
+    public roleId?: number;
+    public roleName: string;
+    public sortNo?: number;
+    public accessScope?: number;
+    public description?: string;
+    public parentRoleId?: number;
+    public rejectScope?: boolean;
+    public approveScope?: boolean;
+    public submitScope?: boolean;
+    public passScope?: boolean;
+    public printScope?: boolean;
 }
 
 export class ImenuRole {
-    public MenuId: number;
-    public RoleId: number;
+    public menuId: number;
+    public roleId: number;
 }
