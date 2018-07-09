@@ -16,8 +16,3 @@ export class ImenuRole {
     public MenuId: number;
     public RoleId: number;
 }
-
-export class ImemRole {
-    public Account: string;
-    public RoleId: number;
-}
