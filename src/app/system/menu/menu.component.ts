@@ -138,24 +138,6 @@ export class MenuComponent implements OnInit {
     return JudgedMenuId && JudgedPath && JudgedMenuText && JudgedSortNo && JudgedComponent && JudgedRootMenuId
   }
 
-  save(model: Menu[]) {
-    // call API to save
-    model.forEach(menu => {
-      this.MenuREST.PostMenu(menu).subscribe(
-        (result: any) => {
-          console.log('Menu: ' + menu.menuText + ' ok!');
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    });
-
-    //重置畫面    
-    this.loadData();
-    this.ngOnInit();
-  }
-
   //#region Dialog patterns
   openDeleteDialog(MenuDetial: Menu): void {
     const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
