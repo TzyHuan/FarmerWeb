@@ -17,9 +17,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component'
 import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
 import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
+import { DialogCharacterCreateComponent } from './dialog/dialog-character-create.component';
 
-//子選單
+//Child components in dialogs
 import { MenuCreateComponent } from './dialog/menu-create.component';
+import { CharacterCreateComponent } from './dialog/character-create.component';
 
 @NgModule({
   //imports: [MatButtonModule], // import內用
@@ -48,5 +50,9 @@ export const MatComponents = [
   DialogMenuDeleteComponent,
   DialogMenuUpdateComponent,
   DialogMenuCreateComponent,
-  MenuCreateComponent
+  MenuCreateComponent,
+
+  //系統管理-角色權限
+  DialogCharacterCreateComponent,
+  CharacterCreateComponent
 ]

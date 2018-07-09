@@ -1,21 +1,21 @@
 <form [formGroup]="MenuForm">
     <mat-form-field class="insert-full-width formNum">
-        <input matInput type="number" #id formControlName="menuId" name="id" placeholder="ID" required>
+        <input matInput type="number" formControlName="menuId"  placeholder="ID" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width">
-        <input matInput type="text" #path formControlName="path" name="path" placeholder="路徑" required>
+        <input matInput type="text"  formControlName="path"  placeholder="路徑" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width">
-        <input matInput type="text" #menuText formControlName="menuText" name="menuText" placeholder="選單名稱" required>
+        <input matInput type="text" formControlName="menuText"  placeholder="選單名稱" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width formNum">
-        <input matInput type="number" #sortNo formControlName="sortNo" name="sortNo" placeholder="排序" required>
+        <input matInput type="number"  formControlName="sortNo"  placeholder="排序" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width">
-        <input matInput type="text" #component formControlName="component" name="component" placeholder="對應元件" required>
+        <input matInput type="text" formControlName="component" placeholder="對應元件" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width">
-        <mat-select #rootMenuId formControlName="rootMenuId" name="rootMenuId" placeholder="隸屬選單">
+        <mat-select formControlName="rootMenuId" placeholder="隸屬選單">
             <mat-option *ngFor="let MenuDetail of MenuList" value="{{MenuDetail.menuId}}">{{MenuDetail.menuText}}</mat-option>
         </mat-select>
     </mat-form-field>
