@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Menu } from '../system/menu/menu';
-import { MenuService } from '../system/menu/menu.service'
+import { Menu } from '../menu';
+import { MenuService } from '../menu.service'
 
 
 @Component({

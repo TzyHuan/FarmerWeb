@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Menu } from '../system/menu/menu';
-import { MenuService } from '../system/menu/menu.service'
+import { Menu } from '../menu';
+import { MenuService } from '../menu.service'
 
 @Component({
     selector: 'dialog-menu-update',
@@ -23,7 +23,7 @@ import { MenuService } from '../system/menu/menu.service'
     }
   
     onYesClick(): void {
-      console.log(this.MenuDetial.menuId);
+      //console.log(this.MenuDetial.menuId);
       this.putMenu(this.MenuDetial.menuId, this.MenuDetial);
       this.dialogRef.close();
     }

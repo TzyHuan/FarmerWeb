@@ -4,9 +4,9 @@ import { CharacterService } from './character.service'
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
-import { DialogCharacterCreateComponent } from '../../dialog/dialog-character-create.component';
-import { DialogCharacterDeleteComponent } from '../../dialog/dialog-character-delete.component';
-import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
+import { DialogCharacterCreateComponent } from './dialog/dialog-character-create.component';
+import { DialogCharacterDeleteComponent } from './dialog/dialog-character-delete.component';
+import { DialogCharacterUpdateComponent } from './dialog/dialog-character-update.component';
 
 @Component({
   selector: 'app-character',
@@ -79,7 +79,7 @@ export class CharacterComponent implements OnInit {
   }
 
   openUpdateDialog(RoleDetial: RoleGroup): void {
-    const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
+    const dialogRef = this.dialog.open(DialogCharacterUpdateComponent, {
       width: '400px',
       data: [RoleDetial, this.RoleList]
     });

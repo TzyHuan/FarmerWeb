@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Menu } from '../system/menu/menu';
+import { Menu } from '../menu';
 
 @Component({
     moduleId: module.id,
     selector: 'MenuCreateUnit',
     templateUrl: 'menu-create.component.html',
-    styleUrls: ['../system/menu/menu.component.css']
+    styleUrls: ['../menu.component.css']
 })
 
 export class MenuCreateComponent {

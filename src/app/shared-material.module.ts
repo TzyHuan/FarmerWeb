@@ -14,15 +14,16 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 
 //Dialogs' Component inside Component
-import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component'
-import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
-import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
-import { DialogCharacterCreateComponent } from './dialog/dialog-character-create.component';
-import { DialogCharacterDeleteComponent } from './dialog/dialog-character-delete.component';
+import { DialogMenuDeleteComponent } from './system/menu/dialog/dialog-menu-delete.component'
+import { DialogMenuUpdateComponent } from './system/menu/dialog/dialog-menu-update.component';
+import { DialogMenuCreateComponent } from './system/menu/dialog/dialog-menu-create.component';
+import { DialogCharacterCreateComponent } from './system/character/dialog/dialog-character-create.component';
+import { DialogCharacterDeleteComponent } from './system/character/dialog/dialog-character-delete.component';
+import { DialogCharacterUpdateComponent } from './system/character/dialog/dialog-character-update.component';
 
 //Child components in dialogs
-import { MenuCreateComponent } from './dialog/menu-create.component';
-import { CharacterCreateComponent } from './dialog/character-create.component';
+import { MenuCreateComponent } from './system/menu/dialog/menu-create.component';
+import { CharacterCreateComponent } from './system/character/dialog/character-create.component';
 
 @NgModule({
   //imports: [MatButtonModule], // import內用
@@ -56,5 +57,6 @@ export const MatComponents = [
   //系統管理-角色權限
   DialogCharacterCreateComponent,
   DialogCharacterDeleteComponent,
+  DialogCharacterUpdateComponent,
   CharacterCreateComponent
 ]

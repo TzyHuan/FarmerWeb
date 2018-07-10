@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { RoleGroup } from '../system/character/character';
+import { RoleGroup } from '../character';
 
 @Component({
     moduleId: module.id,
     selector: 'CharacterCreateUnit',
     templateUrl: 'chatacter-create.component.html',
-    styleUrls: ['../system/character/character.component.css']
+    styleUrls: ['../character.component.css']
 })
 
 export class CharacterCreateComponent {

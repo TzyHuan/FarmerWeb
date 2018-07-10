@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>修改 {{RoleDetail.roleName}}, ID={{RoleDetail.roleId}}</h1>
+<div mat-dialog-content style="overflow: unset;">  
+    <form #RoleForm="ngForm">
+        <mat-form-field class="insert-full-width formNum">
+            <input matInput type="number" [(ngModel)]="RoleDetail.roleId" name="roleId" placeholder="ID" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <input matInput type="text" [(ngModel)]="RoleDetail.roleName" name="roleName" placeholder="角色名稱" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <input matInput type="number" [(ngModel)]="RoleDetail.sortNo" name="sortNo" placeholder="排序" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width formNum">
+            <input matInput type="number" [(ngModel)]="RoleDetail.accessScope" name="accessScope" placeholder="存取" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <input matInput #inputDes type="text" maxlength="20" [(ngModel)]="RoleDetail.description" name="description" placeholder="描述">
+            <mat-hint align="end">{{inputDes.value?.length || 0}}/20</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <mat-select [(ngModel)]="RoleDetail.parentRoleId" [compareWith]="compareObjects" name="parentRoleId" placeholder="隸屬角色">
+                <mat-option *ngFor="let Role of RoleList" value="{{Role.roleId}}">{{RoleDetail.roleName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-checkbox  [(ngModel)]="RoleDetail.rejectScope" name="rejectScope" [checked]="RoleDetail.rejectScope">
+        </mat-checkbox>退回 &nbsp;
+        <mat-checkbox  [(ngModel)]="RoleDetail.approveScope" name="approveScope" [checked]="RoleDetail.approveScope">
+        </mat-checkbox>核准 &nbsp;
+        <mat-checkbox  [(ngModel)]="RoleDetail.submitScope" name="submitScope" [checked]="RoleDetail.submitScope">
+        </mat-checkbox>送出 &nbsp;
+        <mat-checkbox  [(ngModel)]="RoleDetail.passScope" name="passScope" [checked]="RoleDetail.passScope">
+        </mat-checkbox>上陳 &nbsp;
+        <mat-checkbox  [(ngModel)]="RoleDetail.printScope" name="printScope" [checked]="RoleDetail.printScope">
+        </mat-checkbox>影印
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onNoClick()">No</button>
+    <button mat-raised-button color="primary" [disabled]="!RoleForm.valid" (click)="onYesClick()">Yes</button>
+</div>

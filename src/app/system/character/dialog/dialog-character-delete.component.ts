@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { RoleGroup } from '../system/character/character';
-import { CharacterService } from '../system/character/character.service'
+import { RoleGroup } from '../character';
+import { CharacterService } from '../character.service'
 
 
 @Component({

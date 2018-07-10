@@ -11,9 +11,9 @@ import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@ang
 
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
-import { DialogMenuDeleteComponent } from '../../dialog/dialog-menu-delete.component';
-import { DialogMenuUpdateComponent } from '../../dialog/dialog-menu-update.component';
-import { DialogMenuCreateComponent } from '../../dialog/dialog-menu-create.component';
+import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component';
+import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
+import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
 import { isNullOrUndefined } from 'util';
 
 @Component({
