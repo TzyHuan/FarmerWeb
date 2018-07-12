@@ -7,3 +7,18 @@ export class Menu {
     public component?: string;
     public rootMenuId?: number;   
 }
+
+export class MenuNode {   
+    public menuText: string; 
+    public menuId: number;
+    public children:MenuNode[];
+}
+
+export class MenuFlatNode {
+    constructor(
+        public menuText: string,
+        public menuId: number,
+        public level: number,
+        public expandable: boolean
+    ){}    
+  }

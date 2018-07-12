@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscriber, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Menu } from './menu'
+import { Menu, MenuNode } from './menu'
 
 @Injectable()
 export class MenuService {
@@ -12,7 +12,11 @@ export class MenuService {
     
     constructor(private http: HttpClient) { }
    
-    //#region RESTful APIs    
+    //#region RESTful APIs 
+    GetTreeMenu() {
+        return this.http.get<MenuNode[]>(this.RestfulApiUrl_Menu + "/GetMenuTree");
+    }
+
     GetMenu() {
         return this.http.get<Menu[]>(this.RestfulApiUrl_Menu);
     }

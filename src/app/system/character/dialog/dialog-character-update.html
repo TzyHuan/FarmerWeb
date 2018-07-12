@@ -19,7 +19,7 @@
         </mat-form-field>
         <mat-form-field class="insert-full-width">
             <mat-select [(ngModel)]="RoleDetail.parentRoleId" [compareWith]="compareObjects" name="parentRoleId" placeholder="隸屬角色">
-                <mat-option *ngFor="let Role of RoleList" value="{{Role.roleId}}">{{RoleDetail.roleName}}</mat-option>
+                <mat-option *ngFor="let Role of RoleList" value="{{Role.roleId}}">{{Role.roleName}}</mat-option>
             </mat-select>
         </mat-form-field>
         <br>

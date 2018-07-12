@@ -11,7 +11,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTreeModule } from '@angular/material/tree';
+import { CdkTreeModule } from '@angular/cdk/tree';
 
 //Dialogs' Component inside Component
 import { DialogMenuDeleteComponent } from './system/menu/dialog/dialog-menu-delete.component'
@@ -20,6 +22,7 @@ import { DialogMenuCreateComponent } from './system/menu/dialog/dialog-menu-crea
 import { DialogCharacterCreateComponent } from './system/character/dialog/dialog-character-create.component';
 import { DialogCharacterDeleteComponent } from './system/character/dialog/dialog-character-delete.component';
 import { DialogCharacterUpdateComponent } from './system/character/dialog/dialog-character-update.component';
+import { DialogImenuRoleComponent } from './system/character/dialog/dialog-ImenuRole.component';
 
 //Child components in dialogs
 import { MenuCreateComponent } from './system/menu/dialog/menu-create.component';
@@ -40,7 +43,9 @@ import { CharacterCreateComponent } from './system/character/dialog/character-cr
     MatPaginatorModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTreeModule,
+    CdkTreeModule
   ]
 })
 
@@ -58,5 +63,8 @@ export const MatComponents = [
   DialogCharacterCreateComponent,
   DialogCharacterDeleteComponent,
   DialogCharacterUpdateComponent,
-  CharacterCreateComponent
+  CharacterCreateComponent,
+  //系統管理-角色權限-角色選單
+  DialogImenuRoleComponent
+  
 ]

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RoleGroup, ImenuRole } from './character';
+import { MenuNode } from '../menu/menu';
 
 @Injectable()
 export class CharacterService {
@@ -16,7 +17,7 @@ export class CharacterService {
     }
 
     GetOneRoleGroup(id: number) {
-        return this.http.get<RoleGroup[]>(this.RestfulApiUrl_RoleGroup + "/" + id);
+        return this.http.get<RoleGroup>(this.RestfulApiUrl_RoleGroup + "/" + id);
     }
 
     PostRoleGroup(body: RoleGroup) {
@@ -38,13 +39,13 @@ export class CharacterService {
     }
     //#endregion
 
-    //#region ImenuRole RESTful API
+    //#region ImenuRole RESTful API  
     GetImenuRole() {
         return this.http.get<ImenuRole[]>(this.RestfulApiUrl_ImenuRole);
     }
 
     GetOneImenuRole(id: number) {
-        return this.http.get<ImenuRole[]>(this.RestfulApiUrl_ImenuRole + "/" + id);
+        return this.http.get<ImenuRole>(this.RestfulApiUrl_ImenuRole + "/" + id);
     }
 
     PostImenuRole(body: ImenuRole) {
@@ -54,15 +55,8 @@ export class CharacterService {
         return this.http.post<ImenuRole>(this.RestfulApiUrl_ImenuRole, body, { headers });
     }
 
-    PutImenuRole(id: number, body: ImenuRole) {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json; charset=UTF-8'
-        });
-        return this.http.put<ImenuRole>(this.RestfulApiUrl_ImenuRole + "/" + id, body, { headers });
-    }
-
-    DeleteImenuRole(id: number) {
-        return this.http.delete<ImenuRole>(this.RestfulApiUrl_ImenuRole + "/" + id);
+    DeleteImenuRole(MenuId: number, RoleId:number) {
+        return this.http.delete<ImenuRole>(this.RestfulApiUrl_ImenuRole + "/" + MenuId + "/" + RoleId);
     }
     //#endregion
 }

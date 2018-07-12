@@ -1,0 +1,37 @@
+<h1 mat-dialog-title> {{RoleDetail.roleName}} 頁面權限</h1>
+<div mat-dialog-content> 
+  
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+    <!--if nodes has no child will run here-->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+
+      <mat-checkbox class="checklist-leaf-node"
+                  [checked]="checklistSelection.isSelected(node)"
+                  (change)="checklistSelection.toggle(node);">{{node.menuText}}</mat-checkbox>
+      
+    </mat-tree-node>
+  
+    <!--if nodes has child will run here-->
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'toggle ' + node.menuText">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+
+      <mat-checkbox [checked]="descendantsPartiallySelected(node)"
+                  [indeterminate]="IndeterminateSelected(node)"
+                  (change)="CheckParentSelection(node)">{{node.menuText}}</mat-checkbox>
+      
+    </mat-tree-node>
+
+  </mat-tree>
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onNoClick()" cdkFocusInitial>取消</button>
+  <button mat-raised-button color="primary" (click)="onYesClick()" >儲存</button>
+</div>
