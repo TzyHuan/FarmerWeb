@@ -2,15 +2,12 @@
 <mat-drawer-container class="system-drawer-container" autosize>
 
   <mat-drawer #drawer class="system-drawer-side" mode="side">
-    <ul>
-      <li>
-        <a routerLink='Menu'> 選單權限 </a>
-      </li>
-      <li>
-        <a routerLink='Action'> 功能權限 </a>
-      </li>
-      <li>
-        <a routerLink='Character'> 角色權限 </a>
+    <ul>         
+      <li *ngFor="let MenuItem of MenuList" class="nav-item" [routerLinkActive]="['link-active']">
+        <a class="nav-link" [routerLink]="MenuItem?.path">
+          <mat-icon style="vertical-align: top">label</mat-icon>
+          {{MenuItem?.menuText}}
+        </a>
       </li>
     </ul>
   </mat-drawer>
