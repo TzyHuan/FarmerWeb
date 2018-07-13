@@ -123,7 +123,8 @@ export class AppRoutingModule {
     if (factory) {
       TreeRoot = {
         path: root.path,
-        component: factory.componentType
+        component: factory.componentType,
+        children:[]
       }
       //if root have children
       if (root.children != null) {
