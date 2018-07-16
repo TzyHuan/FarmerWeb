@@ -4,6 +4,11 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Action } from '../action';
 import { isNullOrUndefined } from 'util';
+import { MatDialog } from '@angular/material';
+
+import { DialogActionCreateComponent } from './dialog/dialog-action-create.component';
+import { DialogActionDeleteComponent } from './dialog/dialog-action-delete.component';
+import { DialogActionUpdateComponent } from './dialog/dialog-action-update.component';
 
 @Component({
     selector: 'mat-table-action',
@@ -28,7 +33,7 @@ export class ActionTableComponent implements OnInit {
     public descriptionFilter = new FormControl();
     public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' }
 
-    constructor(private ActionREST: ActionService) {
+    constructor(private ActionREST: ActionService, public dialog:MatDialog) {
 
     }
 
@@ -109,39 +114,39 @@ export class ActionTableComponent implements OnInit {
 
     //#region Dialog patterns
     openDeleteDialog(ActionDetial: Action): void {
-        // const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
-        //   width: '250px',
-        //   data: MenuDetial
-        // });
+        const dialogRef = this.dialog.open(DialogActionDeleteComponent, {
+          width: '250px',
+          data: ActionDetial
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {
+          //console.log('The dialog was closed');
+          this.loadData();
+        });
     }
 
     openUpdateDialog(ActionDetial: Action): void {
-        // const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
-        //   width: '400px',
-        //   data: [MenuDetial, this.MenuList]
-        // });
+        const dialogRef = this.dialog.open(DialogActionUpdateComponent, {
+          width: '400px',
+          data: ActionDetial
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {
+          //console.log('The dialog was closed');
+          this.loadData();
+        });
     }
 
     openCreateDialog(): void {
-        // const dialogRef = this.dialog.open(DialogMenuCreateComponent, {
-        //   width: '80%',
-        //   data: this.MenuList
-        // });
+        const dialogRef = this.dialog.open(DialogActionCreateComponent, {
+          width: '80%',
+          data: []
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {
+          //console.log('The dialog was closed');
+          this.loadData();
+        });
     }
     //#endregion
 

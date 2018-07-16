@@ -66,3 +66,38 @@ export class ActionService {
     }
     //#endregion
 }
+
+@Injectable()
+export class CtrlService {
+    private readonly RestfulApiUrl_Ctrl: string = 'http://192.168.1.170/FarmerAPI/api/Ctrls';
+
+    constructor(private http: HttpClient) { }
+    
+    //#region Ctrls RESTful APIs    
+    GetCtrls() {
+        return this.http.get<Ctrl[]>(this.RestfulApiUrl_Ctrl);
+    }
+
+    GetOneCtrl(id: number) {
+        return this.http.get<Ctrl[]>(this.RestfulApiUrl_Ctrl + "/" + id);
+    }
+
+    PostCtrl(body: Ctrl) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=UTF-8'
+        });
+        return this.http.post<Ctrl>(this.RestfulApiUrl_Ctrl, body, { headers });
+    }
+
+    PutCtrl(id: number, body: Ctrl) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=UTF-8'
+        });
+        return this.http.put<Ctrl>(this.RestfulApiUrl_Ctrl + "/" + id, body, { headers });
+    }
+
+    DeleteCtrl(id: number) {
+        return this.http.delete<Ctrl>(this.RestfulApiUrl_Ctrl + "/" + id);
+    }
+    //#endregion
+}

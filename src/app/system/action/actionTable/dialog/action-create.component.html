@@ -1,0 +1,24 @@
+<form [formGroup]="ActionForm">
+    <mat-form-field class="insert-full-width formNum">
+        <input matInput type="number" formControlName="id" placeholder="ID" required>
+    </mat-form-field>
+    <mat-form-field class="insert-full-width">
+        <input matInput type="text" formControlName="name" placeholder="名稱" required>
+    </mat-form-field>
+
+    
+    <mat-form-field class="insert-full-width">
+        <mat-select formControlName="method" [compareWith]="compareObjects" placeholder="隸屬選單" required>
+            <mat-option *ngFor="let Method of MethodList" value="{{Method}}">{{Method}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="insert-full-width formNum">
+        <input matInput type="number" formControlName="controllerId" placeholder="控制器" required>
+    </mat-form-field>
+    <mat-form-field class="insert-full-width">
+        <input matInput type="text" formControlName="description" placeholder="描述">
+    </mat-form-field>
+
+   
+</form>

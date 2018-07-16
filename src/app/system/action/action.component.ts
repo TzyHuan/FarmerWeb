@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionService } from './action.service';
 import { Action, Ctrl } from './action';
-import { BehaviorSubject  } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { MatPaginator } from '@angular/material';
+import { zip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-action',
@@ -15,8 +16,9 @@ export class ActionComponent implements OnInit {
   //監聽Tab切換，初始值第一頁
   private emitTabChange = new BehaviorSubject<number>(0);
   private TabChangeEmitted$ = this.emitTabChange.asObservable();
+  public tabLoadedData: any[] = [];
 
-  @ViewChild('Paginator') paginator:MatPaginator;
+  @ViewChild('Paginator') paginator: MatPaginator;
 
   /** 每更動DOM(按排序或下一頁都算)都會自動重新偵測，若該變數在非選擇的tab，得到 ms 則為 undefine 
    * angular有bug，每切tab時 dataSource.sort自動歸零對應
@@ -56,11 +58,40 @@ export class ActionComponent implements OnInit {
 
   constructor(private ActionREST: ActionService) { }
 
-  ngOnInit() {    
+  ngOnInit() {
+    //初始讀第一個tab的資料
+    this.loadData(0);
   }
-  
+
+
+  loadData(index: number) {
+
+    switch (index) {
+      case 0: {
+        //statements; 
+        break;
+      }
+      case 1: {
+        //statements; 
+        break;
+      }
+      default: {
+        //statements; 
+        break;
+      }
+    }
+
+  }
+
+  /** 統一在parent頁面讀取tabs的資料暫存  //todo
+   * 要是在tab的component讀，每切換就會重新讀取API浪費資源*/
   setDataSourceAttributes(index: number) {
-    this.emitTabChange.next(index);
+
+    // if (!this.tabLoadedData[index]) {
+    //   this.tabLoadedData[index] = new Date();
+    // }
+    // return this.tabLoadedData[index];
+
     this.paginator.firstPage();
   }
 }

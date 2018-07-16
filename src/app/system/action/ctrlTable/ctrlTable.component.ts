@@ -1,13 +1,19 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ActionService } from '../action.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { CtrlService } from '../action.service';
 import { Ctrl } from '../action';
+
+import { DialogCtrlDeleteComponent } from './dialog/dialog-ctrl-delete.component';
+import { DialogCtrlUpdateComponent } from './dialog/dialog-ctrl-update.component';
+import { DialogCtrlCreateComponent } from './dialog/dialog-ctrl-create.component';
+
+import { MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
 @Component({
     selector: 'mat-table-ctrl',
     templateUrl: './ctrlTable.component.html',
     styleUrls: ['../action.component.css'],
-    providers: [ActionService]
+    providers: [CtrlService]
 })
 
 export class CtrlTableComponent implements OnInit {
@@ -18,12 +24,11 @@ export class CtrlTableComponent implements OnInit {
     public CtrlDataSource: MatTableDataSource<Ctrl> | null;
     public CtrlDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
 
-    constructor(private CtrlREST: ActionService) {
+    constructor(private CtrlREST: CtrlService, public dialog: MatDialog) {
 
     }
 
-
-    ngOnInit() {
+    ngOnInit() {       
         this.loadData();
     }
 
@@ -40,39 +45,35 @@ export class CtrlTableComponent implements OnInit {
 
     //#region Dialog patterns
     openDeleteDialog(CtrlDetial: Ctrl): void {
-        // const dialogRef = this.dialog.open(DialogMenuDeleteComponent, {
-        //   width: '250px',
-        //   data: MenuDetial
-        // });
+        const dialogRef = this.dialog.open(DialogCtrlDeleteComponent, {
+          width: '250px',
+          data: CtrlDetial
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {          
+          this.loadData();
+        });
     }
 
     openUpdateDialog(CtrlDetial: Ctrl): void {
-        // const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
-        //   width: '400px',
-        //   data: [MenuDetial, this.MenuList]
-        // });
+        const dialogRef = this.dialog.open(DialogCtrlUpdateComponent, {
+          width: '400px',
+          data: CtrlDetial
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {         
+          this.loadData();
+        });
     }
 
     openCreateDialog(): void {
-        // const dialogRef = this.dialog.open(DialogMenuCreateComponent, {
-        //   width: '80%',
-        //   data: this.MenuList
-        // });
+        const dialogRef = this.dialog.open(DialogCtrlCreateComponent, {
+          width: '80%'         
+        });
 
-        // dialogRef.afterClosed().subscribe(result => {
-        //   //console.log('The dialog was closed');
-        //   this.loadData();
-        // });
+        dialogRef.afterClosed().subscribe(result => {         
+          this.loadData();
+        });
     }
     //#endregion
 }

@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>新增控制器</h1>
+<div mat-dialog-content>
+    <form [formGroup]="CtrlForm">
+
+        <mat-form-field class="insert-full-width formNum">
+            <input matInput type="number" formControlName="id"  placeholder="ID" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <input matInput type="text" formControlName="name" placeholder="控制器名稱" required>
+        </mat-form-field>
+        <mat-form-field class="insert-full-width">
+            <input matInput #inputDes type="text" maxlength="20" formControlName="description"  placeholder="描述">
+            <mat-hint align="end">{{inputDes.value?.length || 0}}/20</mat-hint>
+        </mat-form-field>
+
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onNoClick()">取消</button>
+    <button mat-raised-button color="primary" (click)="onYesClick(CtrlForm.value)" [disabled]="!CtrlForm.valid">確定新增</button>
+</div>
