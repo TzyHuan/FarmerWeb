@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CtrlService } from '../action.service';
 import { Ctrl } from '../action';
+import { FormControl } from '@angular/forms';
+import { isNullOrUndefined } from 'util';
 
 import { DialogCtrlDeleteComponent } from './dialog/dialog-ctrl-delete.component';
 import { DialogCtrlUpdateComponent } from './dialog/dialog-ctrl-update.component';
@@ -24,6 +26,12 @@ export class CtrlTableComponent implements OnInit {
     public CtrlDataSource: MatTableDataSource<Ctrl> | null;
     public CtrlDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
 
+    //Parameters of filters
+    public idFilter = new FormControl();
+    public nameFilter = new FormControl();    
+    public descriptionFilter = new FormControl();
+    public filterValues = { id: '', name: '', description: '' };
+
     constructor(private CtrlREST: CtrlService, public dialog: MatDialog) {
 
     }
@@ -38,10 +46,52 @@ export class CtrlTableComponent implements OnInit {
             if (this.CtrlDataSource) {
                 this.CtrlDataSource.sort = this.sort;
                 this.CtrlDataSource.paginator = this.paginator;
-                //this.ActionDataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
+                this.CtrlDataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
+
+                //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
+                //Listen idFilter
+                this.idFilter.valueChanges.subscribe(value => {
+                    this.filterValues.id = value;
+                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                    this.CtrlDataSource.paginator.firstPage();
+                });
+                //Listen nameFilter
+                this.nameFilter.valueChanges.subscribe(value => {
+                    this.filterValues.name = value;
+                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                    this.CtrlDataSource.paginator.firstPage();
+                });               
+                //Listen descriptionFilter
+                this.descriptionFilter.valueChanges.subscribe(value => {
+                    this.filterValues.description = value;
+                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                    this.CtrlDataSource.paginator.firstPage();
+                });                
+                //#endregion
+
             }
         });
     }
+
+    customFilter(Data: Ctrl, Filter: string): boolean {
+        //取Filter條件
+        let searchTerms:Ctrl = JSON.parse(Filter);
+
+        //先預判是否有沒有值的欄位，無值不篩選進來
+        let JudgedId: boolean = isNullOrUndefined(Data.id) ?
+          true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
+    
+        let JudgedName: boolean = isNullOrUndefined(Data.name) ?
+          true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1
+       
+        //Because of data.description may contain null, searchTerms without anything should not filter out this data
+        let JudgedDescription: boolean = searchTerms.description == "" ?
+          true : (isNullOrUndefined(Data.description) ?
+            false : Data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) != -1);
+    
+        //交集為true者，才是要顯示的Dat
+        return JudgedId && JudgedName && JudgedDescription
+      }
 
     //#region Dialog patterns
     openDeleteDialog(CtrlDetial: Ctrl): void {

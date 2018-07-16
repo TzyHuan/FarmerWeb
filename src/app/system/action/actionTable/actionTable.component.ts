@@ -31,7 +31,7 @@ export class ActionTableComponent implements OnInit {
     public methodFilter = new FormControl();
     public controllerIdFilter = new FormControl();
     public descriptionFilter = new FormControl();
-    public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' }
+    public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' };
 
     constructor(private ActionREST: ActionService, public dialog:MatDialog) {
 

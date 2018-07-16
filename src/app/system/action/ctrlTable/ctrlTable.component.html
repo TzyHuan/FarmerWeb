@@ -1,3 +1,32 @@
+<div>
+    <!-- Title -->
+    <mat-icon class="Search">search</mat-icon>搜尋
+
+    <!-- Filter id Column -->
+    <mat-form-field class="MenuNum">
+        <input matInput [formControl]="idFilter" placeholder="Filter Id">
+        <mat-label>
+            <mat-icon class="Search">search</mat-icon>ID
+        </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filte name Column -->
+    <mat-form-field>
+        <input matInput [formControl]="nameFilter" placeholder="Filter 名稱">
+        <mat-label>
+            <mat-icon class="Search">search</mat-icon>名稱
+        </mat-label>
+    </mat-form-field>&nbsp;
+
+    <!-- Filter description Column -->
+    <mat-form-field>
+        <input matInput [formControl]="descriptionFilter" placeholder="Filter 描述">
+        <mat-label>
+            <mat-icon class="Search">search</mat-icon>描述
+        </mat-label>
+    </mat-form-field>
+</div>
+
 <table mat-table [dataSource]="CtrlDataSource" matSort>
 
     <!-- Note that these columns can be defined in any order.
