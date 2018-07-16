@@ -28,7 +28,7 @@ export class SharedService {
         this.http.get<vmNavMenu[]>(this.AllowMenuApiUrl).subscribe((menus: vmNavMenu[]) => {
             let ParentMenu = menus.find(x => x.component === event.constructor.name);
             if (ParentMenu.children) {
-                console.log(ParentMenu);                
+                //console.log(ParentMenu);                
                 this.emitChildRoutesSource.next(ParentMenu.children);
             }
         });

@@ -14,6 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkTreeModule } from '@angular/cdk/tree';
+import { MatTabsModule } from '@angular/material/tabs';
 
 //Dialogs' Component inside Component
 import { DialogMenuDeleteComponent } from './system/menu/dialog/dialog-menu-delete.component'
@@ -27,6 +28,10 @@ import { DialogImenuRoleComponent } from './system/character/dialog/dialog-Imenu
 //Child components in dialogs
 import { MenuCreateComponent } from './system/menu/dialog/menu-create.component';
 import { CharacterCreateComponent } from './system/character/dialog/character-create.component';
+
+//Child components in Tab
+import { ActionTableComponent } from './system/action/actionTable/actionTable.component';
+import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.component';
 
 @NgModule({
   //imports: [MatButtonModule], // import內用
@@ -45,7 +50,8 @@ import { CharacterCreateComponent } from './system/character/dialog/character-cr
     MatSidenavModule,
     MatCheckboxModule,
     MatTreeModule,
-    CdkTreeModule
+    CdkTreeModule,
+    MatTabsModule
   ]
 })
 
@@ -65,6 +71,9 @@ export const MatComponents = [
   DialogCharacterUpdateComponent,
   CharacterCreateComponent,
   //系統管理-角色權限-角色選單
-  DialogImenuRoleComponent
-  
+  DialogImenuRoleComponent,
+
+  //系統管理-控制動作
+  ActionTableComponent,
+  CtrlTableComponent
 ]

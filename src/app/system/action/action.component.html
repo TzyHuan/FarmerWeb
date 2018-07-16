@@ -1,6 +1,30 @@
-<p>
-  action works!
-</p><br>
-Controller<br>
-Actions<br>
-IActionAllowed
+<div class="mat-elevation-z8">
+
+  <mat-tab-group (selectedIndexChange)="setDataSourceAttributes($event)">
+
+    <!-- Actions Tab -->
+    <mat-tab label="Actions">
+      <ng-template matTabContent>
+
+        <!-- MatTable component of actions-->
+        <mat-table-action [Paginator]="Paginator"></mat-table-action>
+
+      </ng-template>
+    </mat-tab>
+
+    <!-- Controllers Tab -->
+    <mat-tab label="Controllers">
+      <ng-template matTabContent>
+
+        <!-- MatTable component of controllers-->
+        <mat-table-ctrl [Paginator]="Paginator"></mat-table-ctrl>
+
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!--Common paginator-->
+  <mat-paginator #Paginator showFirstLastButtons [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
+</div>
