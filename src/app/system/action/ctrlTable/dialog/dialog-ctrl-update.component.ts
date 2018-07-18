@@ -30,7 +30,7 @@ export class DialogCtrlUpdateComponent {
   putCtrl(id: number, UpdatedCtrl: Ctrl) {
     this.CtrlREST.PutCtrl(id, UpdatedCtrl).subscribe(
       (result: any) => {
-        console.log(result);
+        //console.log(result);
       },
       error => {
         console.log(error);

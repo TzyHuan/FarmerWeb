@@ -14,6 +14,7 @@ import { SystemComponent } from './system/system.component';
 import { MenuComponent } from './system/menu/menu.component';
 import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
+import { MemberComponent } from './system/member/member.component'
 
 //----Service----//
 import { NavMenuService } from './navmenu/navmenu.service';
@@ -170,5 +171,6 @@ export const routingComponents = [
   SystemComponent,
   MenuComponent,
   ActionComponent,
-  CharacterComponent
+  CharacterComponent,
+  MemberComponent
 ]

@@ -34,6 +34,10 @@ import { DialogCtrlUpdateComponent } from './system/action/ctrlTable/dialog/dial
 import { DialogActionCreateComponent } from './system/action/actionTable/dialog/dialog-action-create.component';
 import { DialogActionDeleteComponent } from './system/action/actionTable/dialog/dialog-action-delete.component';
 import { DialogActionUpdateComponent } from './system/action/actionTable/dialog/dialog-action-update.component';
+//Members
+import { DialogMemberCreateComponent } from './system/member/dialog/dialog-member-create.component';
+import { DialogMemberUpdateComponent } from './system/member/dialog/dialog-member-update.component';
+import { DialogMemberDeleteComponent } from './system/member/dialog/dialog-member-delete.component';
 
 /** Child components in dialogs */
 import { MenuCreateComponent } from './system/menu/dialog/menu-create.component';
@@ -93,6 +97,11 @@ export const MatComponents = [
   DialogActionCreateComponent,
   DialogActionDeleteComponent,
   DialogActionUpdateComponent,
-  ActionCreateComponent
+  ActionCreateComponent,
+
+  //系統館力-帳戶管理
+  DialogMemberCreateComponent,
+  DialogMemberUpdateComponent,
+  DialogMemberDeleteComponent
 
 ]
