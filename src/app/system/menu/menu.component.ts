@@ -103,8 +103,8 @@ export class MenuComponent implements OnInit {
         //#endregion
       }
 
-      //把選單資料代入Dialog選項 且 增加"無隸屬"的選項
-      this.MenuList = data;
+      //把選單資料代入Dialog選項 且 增加"無隸屬"的選項。Deep copy!不然MatTable也會多一個"無"的資料
+      this.MenuList = JSON.parse(JSON.stringify(data));
       this.MenuList.unshift({ menuId: null, path: null, menuText: '無', sortNo: null, component: null, rootMenuId: null });
 
     });
