@@ -13,7 +13,7 @@ export class MenuService {
     constructor(private http: HttpClient) { }
    
     //#region RESTful APIs 
-    GetTreeMenu() {
+    GetMenuTree() {
         return this.http.get<MenuNode[]>(this.RestfulApiUrl_Menu + "/GetMenuTree");
     }
 

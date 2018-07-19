@@ -18,7 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 /** Dialogs' Component inside Component */
 //Menu
-import { DialogMenuDeleteComponent } from './system/menu/dialog/dialog-menu-delete.component'
+import { DialogMenuDeleteComponent } from './system/menu/dialog/dialog-menu-delete.component';
 import { DialogMenuUpdateComponent } from './system/menu/dialog/dialog-menu-update.component';
 import { DialogMenuCreateComponent } from './system/menu/dialog/dialog-menu-create.component';
 //Character
@@ -26,6 +26,7 @@ import { DialogCharacterCreateComponent } from './system/character/dialog/dialog
 import { DialogCharacterDeleteComponent } from './system/character/dialog/dialog-character-delete.component';
 import { DialogCharacterUpdateComponent } from './system/character/dialog/dialog-character-update.component';
 import { DialogImenuRoleComponent } from './system/character/dialog/dialog-ImenuRole.component';
+import { DialogIactionRoleComponent } from './system/character/dialog/dialog-IactionRole.component';
 //Controller
 import { DialogCtrlCreateComponent } from './system/action/ctrlTable/dialog/dialog-ctrl-create.component';
 import { DialogCtrlDeleteComponent } from './system/action/ctrlTable/dialog/dialog-ctrl-delete.component';
@@ -87,6 +88,7 @@ export const MatComponents = [
   CharacterCreateComponent,
   //系統管理-角色權限-角色選單
   DialogImenuRoleComponent,
+  DialogIactionRoleComponent,
 
   //系統管理-控制動作
   ActionTableComponent,

@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RoleGroup, ImenuRole } from './character';
+import { RoleGroup, ImenuRole, IactionRole, ActionNode } from './character';
 import { Menu, MenuNode } from '../menu/menu';
-import { CharacterService } from './character.service';
+import { Action } from '../action/action';
+
+import { CharacterService, ImenuRolesService, IactionRolesService } from './character.service';
 import { MenuService } from '../menu/menu.service';
+import { ActionService } from '../action/action.service';
+
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
@@ -10,23 +14,26 @@ import { DialogCharacterCreateComponent } from './dialog/dialog-character-create
 import { DialogCharacterDeleteComponent } from './dialog/dialog-character-delete.component';
 import { DialogCharacterUpdateComponent } from './dialog/dialog-character-update.component';
 import { DialogImenuRoleComponent } from './dialog/dialog-ImenuRole.component';
+import { DialogIactionRoleComponent } from './dialog/dialog-IactionRole.component';
 import { zip } from 'rxjs/observable/zip';
 
 @Component({
   selector: 'app-character',
   templateUrl: './character.component.html',
   styleUrls: ['./character.component.css'],
-  providers: [ CharacterService, MenuService ]
+  providers: [ CharacterService, ImenuRolesService, IactionRolesService, MenuService, ActionService ]
 })
 export class CharacterComponent implements OnInit {
 
   /** 傳至Dialog */
   //列舉選項
   public RoleList: RoleGroup[];
-  //ImenuRol
-  public MenuList: Menu[];
+  //ImenuRole
   public ImenuRoleList: ImenuRole[];
   public TreeMenu: MenuNode[];
+  //IactionRole
+  public IactionRoleList: IactionRole[];
+  public TreeAction: ActionNode[];
 
   /** Parameters of Mat-Table */
   public dataSource: MatTableDataSource<RoleGroup> | null;
@@ -38,8 +45,12 @@ export class CharacterComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-
-  constructor(private CharacterREST: CharacterService, private MenuREST: MenuService, public dialog: MatDialog) { }
+  constructor(private CharacterREST: CharacterService, 
+    private ImenuRoleREST:ImenuRolesService, 
+    private IactionRoleREST:IactionRolesService, 
+    private MenuREST: MenuService, 
+    private ActionREST: ActionService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     //讀取Mat-Table資料
@@ -74,10 +85,12 @@ export class CharacterComponent implements OnInit {
     });
 
     /** 由於 ImenuRoleDialog 需要同時需要ImenuRole、Menu的資料，先call再傳到children Components節省流量 */
-    zip(this.CharacterREST.GetImenuRole(), this.MenuREST.GetMenu(), this.MenuREST.GetTreeMenu()).subscribe(value => {
-      this.MenuList = value[1];
-      this.ImenuRoleList = value[0];
-      this.TreeMenu = value[2];
+    zip(this.ImenuRoleREST.GetImenuRole(), this.MenuREST.GetMenuTree(), this.IactionRoleREST.GetIactionRole(), this.ActionREST.GetActionTree())
+    .subscribe(value => {      
+      this.ImenuRoleList = value[0];      
+      this.TreeMenu = value[1];
+      this.IactionRoleList = value[2];
+      this.TreeAction = value[3];
     });
   }
 
@@ -118,7 +131,18 @@ export class CharacterComponent implements OnInit {
   openImenuRoleDialog(RoleDetial): void {
     const dialogRef = this.dialog.open(DialogImenuRoleComponent, {
       width: '300px',
-      data: [RoleDetial, this.ImenuRoleList, this.MenuList, this.TreeMenu]
+      data: [RoleDetial, this.ImenuRoleList, this.TreeMenu]
+    });
+
+    dialogRef.afterClosed().subscribe(result => {      
+      this.loadData();
+    });
+  }
+
+  openIactionRoleDialog(RoleDetial): void {
+    const dialogRef = this.dialog.open(DialogIactionRoleComponent, {
+      width: '300px',
+      data: [RoleDetial, this.IactionRoleList, this.TreeAction]
     });
 
     dialogRef.afterClosed().subscribe(result => {      

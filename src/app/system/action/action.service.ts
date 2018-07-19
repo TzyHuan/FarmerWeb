@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Action, Ctrl } from './action'
+import { Action, Ctrl } from './action';
+import { ActionNode } from '../character/character';
 
 @Injectable()
 export class ActionService {
@@ -10,6 +11,10 @@ export class ActionService {
     constructor(private http: HttpClient) { }
    
     //#region Actions RESTful APIs
+    GetActionTree() {
+        return this.http.get<ActionNode[]>(this.RestfulApiUrl_Action + "/GetActionTree" );
+    }
+
     GetActions() {
         return this.http.get<Action[]>(this.RestfulApiUrl_Action);
     }

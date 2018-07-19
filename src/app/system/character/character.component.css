@@ -9,11 +9,11 @@ table{
 }
 
 table td.actions {
-    width:15%;
+    width:230px;    
     text-align: center;
 }
 table th.actions {
-    width:15%;
+    width:230px;    
     text-align: center;
 }
 button.TableButton {     
@@ -27,4 +27,14 @@ button.TableButton {
     padding: 14px;
     font-size: 14px;
     font-style: italic;
+}
+
+@media (max-width: 767px) {
+    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+    table td.actions {        
+        min-width: 15%;        
+    }
+    table th.actions {        
+        min-width: 15%;       
+    }
 }

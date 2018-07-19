@@ -4,7 +4,7 @@ export class Action {
     public name?: string;
     public method?: string;
     public controllerId?: number;
-    public description?: string;
+    public description?: string;    
 }
 
 export class Ctrl {
@@ -12,4 +12,9 @@ export class Ctrl {
     public id: number;
     public name?: string;
     public description?: string;
+
+    constructor(id, name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { RoleGroup, ImenuRole } from '../character';
 import { Menu, MenuNode, MenuFlatNode } from '../../menu/menu';
-import { CharacterService } from '../character.service';
+import { ImenuRolesService } from '../character.service';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -12,14 +12,13 @@ import { Observable, of as observableOf } from 'rxjs';
 @Component({
     selector: 'dialog-ImenuRole',
     templateUrl: 'dialog-ImenuRole.html',
-    providers: [ CharacterService ]
+    providers: [ ImenuRolesService ]
 })
 export class DialogImenuRoleComponent implements OnInit {
 
-    public RoleDetail: RoleGroup;
-    public MenuList: Menu[];
+    public RoleDetail: RoleGroup;    
     public ImenuRoleList: ImenuRole[];
-    public AllowedMenuList: Menu[] = [];
+    public AllowedMenu: ImenuRole[] = [];
     public TreeMenu: MenuNode[] = [];    
 
     /** Parameters of MatTreeFlatDataSource */
@@ -38,19 +37,11 @@ export class DialogImenuRoleComponent implements OnInit {
 
 
     constructor(public dialogRef: MatDialogRef<DialogImenuRoleComponent>,
-        private CharacterREST: CharacterService,
+        private ImenuRoleREST: ImenuRolesService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         this.RoleDetail = data[0];
-        this.ImenuRoleList = data[1];
-        this.MenuList = data[2];
-        this.TreeMenu = data[3];
-
-        /** 取出角色清單可用Memu清單 */
-        this.ImenuRoleList.filter(x => x.roleId == this.RoleDetail.roleId).forEach(y => {
-            if (this.MenuList.filter(z => z.menuId == y.menuId)) {
-                this.AllowedMenuList.push(y);
-            }
-        });
+        this.ImenuRoleList = data[1];        
+        this.TreeMenu = data[2];        
 
         this.treeFlattener = new MatTreeFlattener(
             this.transformer,
@@ -64,12 +55,15 @@ export class DialogImenuRoleComponent implements OnInit {
     }
 
     ngOnInit() {
-        // 先將database該角色資料show on the tree
-        this.AllowedMenuList.forEach(menu =>
+        /** 取出角色清單可用Memu清單 */
+        // 先將database該角色資料show on the tree        
+        this.ImenuRoleList.filter(x => x.roleId == this.RoleDetail.roleId).forEach(y => {            
+            this.AllowedMenu.push(y);    
             this.checklistSelection.select(
-                this.treeControl.dataNodes.find(x => x.menuId == menu.menuId)
-            )
-        );
+                this.treeControl.dataNodes.find(x => x.menuId == y.menuId)
+            )        
+        });
+       
     }
 
     transformer = (node: MenuNode, level: number) => {
@@ -136,7 +130,7 @@ export class DialogImenuRoleComponent implements OnInit {
         let NewMenuIds: number[] = [];
 
         // 拉出來做一個只含menuId的array
-        this.AllowedMenuList.forEach(menu => {
+        this.AllowedMenu.forEach(menu => {
             OriginMenuIds.push(menu.menuId);
         });
         this.checklistSelection.selected.forEach(menu => {
@@ -176,7 +170,7 @@ export class DialogImenuRoleComponent implements OnInit {
             roleId: roleId,
             menuId: menuId
         }
-        this.CharacterREST.PostImenuRole(data).subscribe(
+        this.ImenuRoleREST.PostImenuRole(data).subscribe(
             (result: any) => {
                 //console.log(result);
             },
@@ -187,7 +181,7 @@ export class DialogImenuRoleComponent implements OnInit {
     }
 
     DeleteImenuRole(roleId: number, menuId: number) {        
-        this.CharacterREST.DeleteImenuRole(menuId, roleId).subscribe(
+        this.ImenuRoleREST.DeleteImenuRole(menuId, roleId).subscribe(
             (result: any) => {
                 //console.log(result);
             },

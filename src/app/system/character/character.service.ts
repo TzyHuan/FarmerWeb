@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RoleGroup, ImenuRole } from './character';
-import { MenuNode } from '../menu/menu';
+import { RoleGroup, ImenuRole, IactionRole } from './character';
 
 @Injectable()
 export class CharacterService {
-
     public RestfulApiUrl_RoleGroup: string = 'http://192.168.1.170/FarmerAPI/api/RoleGroups';
-    public RestfulApiUrl_ImenuRole: string = 'http://192.168.1.170/FarmerAPI/api/ImenuRoles';
-    
+  
     constructor(private http: HttpClient) { }
     
     //#region RoleGroup RESTful API
@@ -37,7 +34,14 @@ export class CharacterService {
     DeleteRoleGroup(id: number) {
         return this.http.delete<RoleGroup>(this.RestfulApiUrl_RoleGroup + "/" + id);
     }
-    //#endregion
+    //#endregion   
+}
+
+@Injectable()
+export class ImenuRolesService {
+    public RestfulApiUrl_ImenuRole: string = 'http://192.168.1.170/FarmerAPI/api/ImenuRoles';
+    
+    constructor(private http: HttpClient) { }
 
     //#region ImenuRole RESTful API  
     GetImenuRole() {
@@ -57,6 +61,34 @@ export class CharacterService {
 
     DeleteImenuRole(MenuId: number, RoleId:number) {
         return this.http.delete<ImenuRole>(this.RestfulApiUrl_ImenuRole + "/" + MenuId + "/" + RoleId);
+    }
+    //#endregion
+}
+
+@Injectable()
+export class IactionRolesService {
+    public RestfulApiUrl_IactionRole: string = 'http://192.168.1.170/FarmerAPI/api/IactionRoles';
+    
+    constructor(private http: HttpClient) { }
+
+    //#region ImenuRole RESTful API  
+    GetIactionRole() {
+        return this.http.get<IactionRole[]>(this.RestfulApiUrl_IactionRole);
+    }
+
+    GetOneIactionRole(id: number) {
+        return this.http.get<IactionRole>(this.RestfulApiUrl_IactionRole + "/" + id);
+    }
+
+    PostIactionRole(body: IactionRole) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=UTF-8'
+        });
+        return this.http.post<IactionRole>(this.RestfulApiUrl_IactionRole, body, { headers });
+    }
+
+    DeleteIactionRole(ActionId: number, RoleId:number) {
+        return this.http.delete<IactionRole>(this.RestfulApiUrl_IactionRole + "/" + ActionId + "/" + RoleId);
     }
     //#endregion
 }
