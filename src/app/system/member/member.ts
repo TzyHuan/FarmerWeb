@@ -1,7 +1,3 @@
-export class ImemRole {
-    public account: string;
-    public roleId: number;
-}
 
 export class Member {
     public domain?: string = null;
@@ -15,3 +11,4 @@ export class Member {
     public addTime?: Date = null
     public updatedTime?: Date= null
 }
+

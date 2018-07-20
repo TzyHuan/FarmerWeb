@@ -21,7 +21,7 @@ import { zip } from 'rxjs/observable/zip';
   selector: 'app-character',
   templateUrl: './character.component.html',
   styleUrls: ['./character.component.css'],
-  providers: [ CharacterService, ImenuRolesService, IactionRolesService, MenuService, ActionService ]
+  providers: [CharacterService, ImenuRolesService, IactionRolesService, MenuService, ActionService]
 })
 export class CharacterComponent implements OnInit {
 
@@ -45,10 +45,10 @@ export class CharacterComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private CharacterREST: CharacterService, 
-    private ImenuRoleREST:ImenuRolesService, 
-    private IactionRoleREST:IactionRolesService, 
-    private MenuREST: MenuService, 
+  constructor(private CharacterREST: CharacterService,
+    private ImenuRoleREST: ImenuRolesService,
+    private IactionRoleREST: IactionRolesService,
+    private MenuREST: MenuService,
     private ActionREST: ActionService,
     public dialog: MatDialog) { }
 
@@ -86,12 +86,12 @@ export class CharacterComponent implements OnInit {
 
     /** 由於 ImenuRoleDialog 需要同時需要ImenuRole、Menu的資料，先call再傳到children Components節省流量 */
     zip(this.ImenuRoleREST.GetImenuRole(), this.MenuREST.GetMenuTree(), this.IactionRoleREST.GetIactionRole(), this.ActionREST.GetActionTree())
-    .subscribe(value => {      
-      this.ImenuRoleList = value[0];      
-      this.TreeMenu = value[1];
-      this.IactionRoleList = value[2];
-      this.TreeAction = value[3];
-    });
+      .subscribe(value => {
+        this.ImenuRoleList = value[0];
+        this.TreeMenu = value[1];
+        this.IactionRoleList = value[2];
+        this.TreeAction = value[3];
+      });
   }
 
   //#region Dialog patterns
@@ -101,7 +101,7 @@ export class CharacterComponent implements OnInit {
       data: RoleDetial
     });
 
-    dialogRef.afterClosed().subscribe(result => {     
+    dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
   }
@@ -112,7 +112,7 @@ export class CharacterComponent implements OnInit {
       data: [RoleDetial, this.RoleList]
     });
 
-    dialogRef.afterClosed().subscribe(result => {      
+    dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
   }
@@ -123,7 +123,7 @@ export class CharacterComponent implements OnInit {
       data: this.RoleList
     });
 
-    dialogRef.afterClosed().subscribe(result => {      
+    dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
   }
@@ -134,18 +134,18 @@ export class CharacterComponent implements OnInit {
       data: [RoleDetial, this.ImenuRoleList, this.TreeMenu]
     });
 
-    dialogRef.afterClosed().subscribe(result => {      
+    dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
   }
 
   openIactionRoleDialog(RoleDetial): void {
     const dialogRef = this.dialog.open(DialogIactionRoleComponent, {
-      width: '300px',
+      width: '350px',
       data: [RoleDetial, this.IactionRoleList, this.TreeAction]
     });
 
-    dialogRef.afterClosed().subscribe(result => {      
+    dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
   }

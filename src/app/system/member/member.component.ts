@@ -1,21 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MatDialog } from '@angular/material';
-import { Member, ImemRole } from './member';
-import { MemberService, ImemRoleService } from './member.service';
-import { isNullOrUndefined } from 'util';
+import { Member } from './member';
+import { RoleGroup, ImemRole, RoleGroupNode } from '../character/character';
+import { MemberService } from './member.service';
+import { CharacterService, ImemRoleService } from '../character/character.service';
 
 import { DialogMemberCreateComponent } from './dialog/dialog-member-create.component';
 import { DialogMemberUpdateComponent } from './dialog/dialog-member-update.component';
 import { DialogMemberDeleteComponent } from './dialog/dialog-member-delete.component';
+import { DialogImemRoleComponent } from './dialog/dialog-ImemRole.component';
+import { zip } from 'rxjs/observable/zip';
 
 @Component({
     selector: 'app-member',
     templateUrl: './member.component.html',
     styleUrls: ['./member.component.css'],
-    providers: [MemberService, ImemRoleService]
+    providers: [MemberService, ImemRoleService, CharacterService]
 })
 export class MemberComponent implements OnInit {
+
+
+    /** 傳至dialog */
+    //ImemRole
+    public ImemRoleList: ImemRole[];
+    public TreeRole: RoleGroupNode[];
 
     /** Parameters of Mat-Table */
     public dataSource: MatTableDataSource<Member> | null;
@@ -28,7 +37,8 @@ export class MemberComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private MemberREST: MemberService, private ImemRoleService: ImemRoleService, public dialog: MatDialog) {
+    constructor(private MemberREST: MemberService, private ImemRoleService: ImemRoleService,
+        private CharacterService: CharacterService, public dialog: MatDialog) {
         var MemberProperty: Member = new Member();
         //console.log(test)
 
@@ -92,9 +102,13 @@ export class MemberComponent implements OnInit {
                 // });
                 // //#endregion
             }
-
-
         });
+
+        zip(this.ImemRoleService.GetImemRole(), this.CharacterService.GetRoleGroupTree())
+            .subscribe(value => {
+                this.ImemRoleList = value[0];
+                this.TreeRole = value[1];
+            });
     }
 
     customFilter(Data: Member, Filter: string): boolean {
@@ -162,16 +176,16 @@ export class MemberComponent implements OnInit {
         });
     }
 
-    openImemRoleDialog(MemberDetial:Member): void {
-        // const dialogRef = this.dialog.open(DialogImemRoleComponent, {
-        //   width: '300px',
-        //   data: [RoleDetial, this.ImenuRoleList, this.MenuList, this.TreeMenu]
-        // });
-    
-        // dialogRef.afterClosed().subscribe(result => {      
-        //   this.loadData();
-        // });
-      }
+    openImemRoleDialog(MemberDetial: Member): void {
+        const dialogRef = this.dialog.open(DialogImemRoleComponent, {
+            width: '350px',
+            data: [MemberDetial, this.ImemRoleList, this.TreeRole]
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.loadData();
+        });
+    }
     //#endregion
 
 }

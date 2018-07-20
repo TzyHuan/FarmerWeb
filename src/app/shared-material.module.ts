@@ -39,13 +39,18 @@ import { DialogActionUpdateComponent } from './system/action/actionTable/dialog/
 import { DialogMemberCreateComponent } from './system/member/dialog/dialog-member-create.component';
 import { DialogMemberUpdateComponent } from './system/member/dialog/dialog-member-update.component';
 import { DialogMemberDeleteComponent } from './system/member/dialog/dialog-member-delete.component';
+import { DialogImemRoleComponent } from './system/member/dialog/dialog-ImemRole.component';
 
 /** Child components in dialogs */
+//Menus
 import { MenuCreateComponent } from './system/menu/dialog/menu-create.component';
+//Characters
 import { CharacterCreateComponent } from './system/character/dialog/character-create.component';
+//Actions
 import { ActionCreateComponent } from './system/action/actionTable/dialog/action-create.component';
 
 /** Child components in Tab */
+//Actions
 import { ActionTableComponent } from './system/action/actionTable/actionTable.component';
 import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.component';
 
@@ -101,9 +106,10 @@ export const MatComponents = [
   DialogActionUpdateComponent,
   ActionCreateComponent,
 
-  //系統館力-帳戶管理
+  //系統館理-帳戶管理
   DialogMemberCreateComponent,
   DialogMemberUpdateComponent,
-  DialogMemberDeleteComponent
+  DialogMemberDeleteComponent,
+  DialogImemRoleComponent
 
 ]

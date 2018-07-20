@@ -1,4 +1,4 @@
-import {Action, Ctrl} from '../action/action'
+import { Action, Ctrl } from '../action/action'
 
 //老bug，宣告矩陣塞資料後，屬性第一字母會自動變小這樣！
 export class RoleGroup {
@@ -25,9 +25,15 @@ export class IactionRole {
     public roleId: number;
 }
 
+export class ImemRole {
+    public account: string;
+    public roleId: number;
+}
+
 export class ActionNode extends Ctrl {
-    public children:ActionNode[]
-    constructor(id, name){
+    public children: ActionNode[]
+    public method: string
+    constructor(id, name) {
         super(id, name)
     };
 }
@@ -36,7 +42,23 @@ export class ActionFlatNode {
     constructor(
         public name: string,
         public id: number,
+        public method: string,
         public level: number,
         public expandable: boolean
-    ){}    
-  }
+    ) { }
+}
+
+export class RoleGroupNode {
+    public id: number;
+    public name: string;
+    public children: RoleGroupNode[];
+}
+
+export class RoleGroupFlatNode {
+    constructor(
+        public name: string,
+        public id: number,
+        public level: number,
+        public expandable: boolean
+    ) { }
+}

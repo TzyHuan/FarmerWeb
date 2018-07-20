@@ -54,7 +54,7 @@ export class DialogIactionRoleComponent implements OnInit {
     }
 
     transformer = (node: ActionNode, level: number) => {
-        return new ActionFlatNode(node.name, node.id, level, !!node.children);
+        return new ActionFlatNode(node.name, node.id, node.method, level, !!node.children);
     }
 
     ngOnInit() {

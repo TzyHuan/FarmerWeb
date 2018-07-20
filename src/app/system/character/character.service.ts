@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RoleGroup, ImenuRole, IactionRole } from './character';
+import { RoleGroup, ImenuRole, IactionRole, ImemRole, RoleGroupNode } from './character';
 
 @Injectable()
 export class CharacterService {
@@ -9,6 +9,10 @@ export class CharacterService {
     constructor(private http: HttpClient) { }
     
     //#region RoleGroup RESTful API
+    GetRoleGroupTree() {
+        return this.http.get<RoleGroupNode[]>(this.RestfulApiUrl_RoleGroup + "/GetRoleGroupTree" );
+    }
+
     GetRoleGroup() {
         return this.http.get<RoleGroup[]>(this.RestfulApiUrl_RoleGroup);
     }
@@ -91,4 +95,33 @@ export class IactionRolesService {
         return this.http.delete<IactionRole>(this.RestfulApiUrl_IactionRole + "/" + ActionId + "/" + RoleId);
     }
     //#endregion
+}
+
+@Injectable()
+export class ImemRoleService {
+
+    public RestfulApiUrl_ImemRole: string = 'http://192.168.1.170/FarmerAPI/api/ImemRoles';
+    
+    constructor(private http: HttpClient) { }
+    
+    //#region ImemRole RESTful API
+    GetImemRole() {
+        return this.http.get<ImemRole[]>(this.RestfulApiUrl_ImemRole);
+    }
+
+    GetOneImemRole(id: string) {
+        return this.http.get<ImemRole[]>(this.RestfulApiUrl_ImemRole + "/" + id);
+    }
+
+    PostImemRole(body: ImemRole) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=UTF-8'
+        });
+        return this.http.post<ImemRole>(this.RestfulApiUrl_ImemRole, body, { headers });
+    }
+
+    DeleteImemRole(account:string, id: number) {
+        return this.http.delete<ImemRole>(this.RestfulApiUrl_ImemRole + "/" + account + "/" + id);
+    }
+    //#endregion   
 }
