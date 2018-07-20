@@ -5,7 +5,7 @@ import { Menu } from './menu';
 import { MenuService } from './menu.service'
 import { error } from 'protractor';
 import { Observable, observable, merge, fromEvent } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, mergeMap, switchMap, tap } from 'rxjs/operators'
+import { map, debounceTime, distinctUntilChanged, mergeMap, switchMap, tap, startWith } from 'rxjs/operators'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 
@@ -15,6 +15,7 @@ import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component
 import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
 import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
 import { isNullOrUndefined } from 'util';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -41,6 +42,12 @@ export class MenuComponent implements OnInit {
   public componentFilter = new FormControl();
   public rootMenuIdFilter = new FormControl();
   public filterValues = { menuId: '', path: '', menuText: '', sortNo: '', component: '', rootMenuId: '' }
+  public menuIdFilteredOptions: string[];
+  public pathFilteredOptions: string[];
+  public menuTextFilteredOptions: string[];
+  public sortNoFilteredOptions: string[];
+  public componentFilteredOptions: string[];
+  public rootMenuIdFilteredOptions: string[];
 
   constructor(private MenuREST: MenuService, public httpClient: HttpClient, public dialog: MatDialog, public _fb: FormBuilder) {
 
@@ -64,38 +71,52 @@ export class MenuComponent implements OnInit {
         this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
         //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
+        /** 監聽時給入初始值startwith('')
+         * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 */
         //Listen menuIdFilter
-        this.menuIdFilter.valueChanges.subscribe(value => {
+        this.menuIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.menuIdFilteredOptions = this._autoFilter(data.map(v => v.menuId.toString()), value)
           this.filterValues.menuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
         //Listen pathFilter
-        this.pathFilter.valueChanges.subscribe(value => {
+        this.pathFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.pathFilteredOptions = this._autoFilter(data.map(v => v.path), value)
           this.filterValues.path = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
         //Listen menuTextFilter
-        this.menuTextFilter.valueChanges.subscribe(value => {
+        this.menuTextFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.menuTextFilteredOptions = this._autoFilter(data.map(v => v.menuText), value)
           this.filterValues.menuText = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
         //Listen sortNoFilter
-        this.sortNoFilter.valueChanges.subscribe(value => {
+        this.sortNoFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.sortNoFilteredOptions = this._autoFilter(
+            data.map(v => v.sortNo.toString()),
+            value
+          )
           this.filterValues.sortNo = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
         //Listen componentFilter
-        this.componentFilter.valueChanges.subscribe(value => {
+        this.componentFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.componentFilteredOptions = this._autoFilter(data.map(v => v.component), value)
           this.filterValues.component = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
         //Listen rootMenuIdFilter
-        this.rootMenuIdFilter.valueChanges.subscribe(value => {
+        this.rootMenuIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+          this.rootMenuIdFilteredOptions = this._autoFilter(
+            data.filter(x => x.rootMenuId != null).map(v => v.rootMenuId.toString()),
+            value
+          )
           this.filterValues.rootMenuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
@@ -108,6 +129,15 @@ export class MenuComponent implements OnInit {
       this.MenuList.unshift({ menuId: null, path: null, menuText: '無', sortNo: null, component: null, rootMenuId: null });
 
     });
+  }
+
+  private _autoFilter(options: string[], value: string): string[] {
+    const filterValue = value.toLowerCase();
+    // options = [...new Set(options)]
+    // var myArray = ['a', 1, 'a', 2, '1'];
+    // let unique = [...new Set(myArray)]; 
+    
+    return options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   customFilter(Data: Menu, Filter: string): boolean {

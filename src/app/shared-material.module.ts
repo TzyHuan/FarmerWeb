@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 /** Dialogs' Component inside Component */
 //Menu
@@ -72,7 +73,8 @@ import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.componen
     MatCheckboxModule,
     MatTreeModule,
     CdkTreeModule,
-    MatTabsModule
+    MatTabsModule,
+    MatAutocompleteModule
   ]
 })
 
