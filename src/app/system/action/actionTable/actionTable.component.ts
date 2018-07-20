@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { DialogActionCreateComponent } from './dialog/dialog-action-create.component';
 import { DialogActionDeleteComponent } from './dialog/dialog-action-delete.component';
 import { DialogActionUpdateComponent } from './dialog/dialog-action-update.component';
+import { startWith } from 'rxjs/operators';
 
 @Component({
     selector: 'mat-table-action',
@@ -32,8 +33,13 @@ export class ActionTableComponent implements OnInit {
     public controllerIdFilter = new FormControl();
     public descriptionFilter = new FormControl();
     public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' };
+    public idFilteredOptions: string[];
+    public nameFilteredOptions: string[];
+    public methodFilteredOptions: string[];
+    public controllerIdFilteredOptions: string[];
+    public descriptionFilteredOptions: string[];
 
-    constructor(private ActionREST: ActionService, public dialog:MatDialog) {
+    constructor(private ActionREST: ActionService, public dialog: MatDialog) {
 
     }
 
@@ -50,102 +56,146 @@ export class ActionTableComponent implements OnInit {
                 this.ActionDataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
                 //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
+                /** 監聽時給入初始值startwith('')
+                 * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 */
                 //Listen idFilter
-                this.idFilter.valueChanges.subscribe(value => {
+                this.idFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
+                    this.idFilteredOptions = this._autoFilter(
+                        data.map(v => v.id.toString()),
+                        value
+                    );
+                 
                     this.filterValues.id = value;
                     this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                     this.ActionDataSource.paginator.firstPage();
                 });
+
                 //Listen nameFilter
-                this.nameFilter.valueChanges.subscribe(value => {
+                this.nameFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
+                    this.nameFilteredOptions = this._autoFilter(
+                        data.map(v => v.name),
+                        value
+                    );
+
                     this.filterValues.name = value;
                     this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                     this.ActionDataSource.paginator.firstPage();
                 });
+
                 //Listen methodFilter
-                this.methodFilter.valueChanges.subscribe(value => {
+                this.methodFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
+                    this.methodFilteredOptions = this._autoFilter(
+                        data.map(v => v.method),
+                        value
+                    );
+
                     this.filterValues.method = value;
                     this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                     this.ActionDataSource.paginator.firstPage();
                 });
+
                 //Listen controllerIdFilter
-                this.controllerIdFilter.valueChanges.subscribe(value => {                    
+                this.controllerIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
+                    this.controllerIdFilteredOptions = this._autoFilter(
+                        data.map(v => v.controllerId.toString())
+                            .sort((a, b) => parseFloat(a) - parseFloat(b)),
+                        value
+                    );
+
                     this.filterValues.controllerId = value;
                     this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                     this.ActionDataSource.paginator.firstPage();
                 });
+
                 //Listen descriptionFilter
-                this.descriptionFilter.valueChanges.subscribe(value => {
+                this.descriptionFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+                    
+                    this.descriptionFilteredOptions = this._autoFilter(
+                        data.filter(x =>x.description != null && x.description.length>0)
+                            .map(v => v.description),
+                        value
+                    );
+
                     this.filterValues.description = value;
                     this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                     this.ActionDataSource.paginator.firstPage();
-                });                
+                });
                 //#endregion
             }
         });
     }
 
+    private _autoFilter(options: string[], value: string): string[] {
+        const filterValue = value.toLowerCase();
+        options = [...new Set(options)];//distinct the array  
+        return options.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
     customFilter(Data: Action, Filter: string): boolean {
         //取Filter條件
-        let searchTerms:Action = JSON.parse(Filter);
+        let searchTerms: Action = JSON.parse(Filter);
 
         //先預判是否有沒有值的欄位，無值不篩選進來
         let JudgedId: boolean = isNullOrUndefined(Data.id) ?
-          true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
-    
+            true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
+
         let JudgedName: boolean = isNullOrUndefined(Data.name) ?
-          true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1
-    
+            true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1
+
         let JudgedMethod: boolean = isNullOrUndefined(Data.method) ?
-          true : Data.method.toString().toLowerCase().indexOf(searchTerms.method.toLowerCase()) != -1
-    
+            true : Data.method.toString().toLowerCase().indexOf(searchTerms.method.toLowerCase()) != -1
+
         let JudgedControllerId: boolean = isNullOrUndefined(Data.controllerId) ?
-          true : Data.controllerId.toString().indexOf(searchTerms.controllerId.toString()) != -1
-    
-       
+            true : Data.controllerId.toString().indexOf(searchTerms.controllerId.toString()) != -1
+
+
         //Because of data.description may contain null, searchTerms without anything should not filter out this data
         let JudgedDescription: boolean = searchTerms.description == "" ?
-          true : (isNullOrUndefined(Data.description) ?
-            false : Data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) != -1);
-    
+            true : (isNullOrUndefined(Data.description) ?
+                false : Data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) != -1);
+
         //交集為true者，才是要顯示的Dat
         return JudgedId && JudgedName && JudgedMethod && JudgedControllerId && JudgedDescription
-      }
+    }
 
     //#region Dialog patterns
     openDeleteDialog(ActionDetial: Action): void {
         const dialogRef = this.dialog.open(DialogActionDeleteComponent, {
-          width: '250px',
-          data: ActionDetial
+            width: '250px',
+            data: ActionDetial
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          //console.log('The dialog was closed');
-          this.loadData();
+            //console.log('The dialog was closed');
+            this.loadData();
         });
     }
 
     openUpdateDialog(ActionDetial: Action): void {
         const dialogRef = this.dialog.open(DialogActionUpdateComponent, {
-          width: '400px',
-          data: ActionDetial
+            width: '400px',
+            data: ActionDetial
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          //console.log('The dialog was closed');
-          this.loadData();
+            //console.log('The dialog was closed');
+            this.loadData();
         });
     }
 
     openCreateDialog(): void {
         const dialogRef = this.dialog.open(DialogActionCreateComponent, {
-          width: '80%',
-          data: []
+            width: '80%',
+            data: []
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          //console.log('The dialog was closed');
-          this.loadData();
+            //console.log('The dialog was closed');
+            this.loadData();
         });
     }
     //#endregion

@@ -2,11 +2,9 @@ import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Menu } from './menu';
-import { MenuService } from './menu.service'
-import { error } from 'protractor';
+import { MenuService } from './menu.service';
 import { Observable, observable, merge, fromEvent } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, mergeMap, switchMap, tap, startWith } from 'rxjs/operators'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { startWith } from 'rxjs/operators';
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
@@ -15,7 +13,6 @@ import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component
 import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';
 import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component';
 import { isNullOrUndefined } from 'util';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -75,48 +72,81 @@ export class MenuComponent implements OnInit {
          * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 */
         //Listen menuIdFilter
         this.menuIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-          this.menuIdFilteredOptions = this._autoFilter(data.map(v => v.menuId.toString()), value)
+
+          this.menuIdFilteredOptions = this._autoFilter(
+            data.map(v => v.menuId.toString()),
+            value
+          );
+
           this.filterValues.menuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
         //Listen pathFilter
         this.pathFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-          this.pathFilteredOptions = this._autoFilter(data.map(v => v.path), value)
+
+          this.pathFilteredOptions = this._autoFilter(
+            data.filter(x => x.path != null).map(v => v.path),
+            value
+          );
+
           this.filterValues.path = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
         //Listen menuTextFilter
         this.menuTextFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-          this.menuTextFilteredOptions = this._autoFilter(data.map(v => v.menuText), value)
+
+          this.menuTextFilteredOptions = this._autoFilter(
+            data.filter(x => x.menuText != null).map(v => v.menuText),
+            value
+          );
+
           this.filterValues.menuText = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
         //Listen sortNoFilter
         this.sortNoFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
           this.sortNoFilteredOptions = this._autoFilter(
-            data.map(v => v.sortNo.toString()),
+            data.filter(x => x.sortNo != null)
+              .map(v => v.sortNo.toString())
+              .sort((a, b) => parseFloat(a) - parseFloat(b)),
             value
-          )
+          );
+
           this.filterValues.sortNo = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
         //Listen componentFilter
         this.componentFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-          this.componentFilteredOptions = this._autoFilter(data.map(v => v.component), value)
+
+          this.componentFilteredOptions = this._autoFilter(
+            data.filter(x => x.component != null).map(v => v.component),
+            value
+          );
+
           this.filterValues.component = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
         //Listen rootMenuIdFilter
         this.rootMenuIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
           this.rootMenuIdFilteredOptions = this._autoFilter(
-            data.filter(x => x.rootMenuId != null).map(v => v.rootMenuId.toString()),
+            data.filter(x => x.rootMenuId != null)
+              .map(v => v.rootMenuId.toString())
+              .sort((a, b) => parseFloat(a) - parseFloat(b)),
             value
-          )
+          );
+
           this.filterValues.rootMenuId = value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
