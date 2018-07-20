@@ -133,10 +133,7 @@ export class MenuComponent implements OnInit {
 
   private _autoFilter(options: string[], value: string): string[] {
     const filterValue = value.toLowerCase();
-    // options = [...new Set(options)]
-    // var myArray = ['a', 1, 'a', 2, '1'];
-    // let unique = [...new Set(myArray)]; 
-    
+    options = [...new Set(options)];//distinct the array  
     return options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
