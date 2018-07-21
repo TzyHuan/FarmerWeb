@@ -20,7 +20,7 @@ export class DialogMenuCreateComponent {
             containLists: this._fb.array([
                 this.initaddMenuForm(),
             ])
-        });
+        });      
     }
 
     initaddMenuForm() {
@@ -39,7 +39,7 @@ export class DialogMenuCreateComponent {
     addMenuList() {
         // add address to the list   
         const control = <FormArray>this.addMenuForm.controls['containLists'];
-        control.push(this.initaddMenuForm());
+        control.push(this.initaddMenuForm());       
     }
 
     removeMenuList(i: number) {

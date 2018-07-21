@@ -17,7 +17,7 @@ export class SignInComponent implements OnInit {
   isLoginError: boolean = false;
   AllowedMenuList: vmNavMenu[];
   AllowedSignList: vmNavMenu[];
-  public hide:string = 'password';
+  public hide:boolean = true;
 
   //@Output() SignEvent: EventEmitter<null> = new EventEmitter();
 

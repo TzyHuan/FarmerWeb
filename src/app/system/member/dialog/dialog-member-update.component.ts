@@ -13,6 +13,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 export class DialogMemberUpdateComponent {
   public MemberDetail: Member;
+
+  public matcher = new MyErrorStateMatcher();
  
   constructor(public dialogRef: MatDialogRef<DialogMemberUpdateComponent>,
     private MemberREST: MemberService,

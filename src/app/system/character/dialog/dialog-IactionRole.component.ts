@@ -41,6 +41,7 @@ export class DialogIactionRoleComponent implements OnInit {
         this.RoleDetail = data[0];
         this.IactionRoleList = data[1];
         this.TreeAction = data[2];
+        
 
         this.treeFlattener = new MatTreeFlattener(
             this.transformer,
@@ -51,6 +52,9 @@ export class DialogIactionRoleComponent implements OnInit {
         this.treeControl = new FlatTreeControl<ActionFlatNode>(this._getLevel, this._isExpandable);
         this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = this.TreeAction;
+
+        
+        console.log(this.dataSource.data)
     }
 
     transformer = (node: ActionNode, level: number) => {

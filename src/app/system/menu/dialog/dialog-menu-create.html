@@ -6,16 +6,16 @@
 <div mat-dialog-content>
     <form [formGroup]="addMenuForm">
         <div formArrayName="containLists">
-            <div *ngFor="let containList of addMenuForm.controls.containLists.controls; let i =index">
+            <div *ngFor="let containList of addMenuForm.get('containLists')['controls']; let i =index">
                 <div>
                     <span>Menu {{i + 1}}</span>
-                    <span *ngIf="addMenuForm.controls.containLists.controls.length > 1" (click)="removeMenuList(i)">
+                    <span *ngIf="addMenuForm.get('containLists')['controls'].length > 1" (click)="removeMenuList(i)">
                         <i class="material-icons">cancel</i>
                     </span>
                 </div>
                 <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
                 <div [formGroupName]="i">
-                    <MenuCreateUnit [Group]="addMenuForm.controls.containLists.controls[i]" [MenuList]="MenuList"></MenuCreateUnit>
+                    <MenuCreateUnit [Group]="this.addMenuForm.get('containLists')['controls'][i]" [MenuList]="MenuList"></MenuCreateUnit>
                 </div>
             </div>
         </div>

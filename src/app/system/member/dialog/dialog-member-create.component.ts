@@ -26,7 +26,7 @@ export class DialogMemberCreateComponent {
         isActive: new FormControl(true)
     });
 
-    matcher = new MyErrorStateMatcher();
+    public matcher = new MyErrorStateMatcher();
 
     constructor(public dialogRef: MatDialogRef<DialogMemberCreateComponent>, private MemberREST: MemberService) {
 
