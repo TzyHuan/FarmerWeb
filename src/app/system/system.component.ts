@@ -16,8 +16,7 @@ export class SystemComponent implements OnInit {
 
   constructor(private _sharedService: SharedService) {
     _sharedService.ChildRoutesEmitted$.subscribe((Menus: vmNavMenu[]) => {
-      this.MenuList = Menus;
-      //console.log(this.MenuList);
+      this.MenuList = Menus;     
     });
   }
 

@@ -13,7 +13,7 @@ import { DialogImemRoleComponent } from './dialog/dialog-ImemRole.component';
 import { zip } from 'rxjs/observable/zip';
 
 @Component({
-    selector: 'app-member',
+    selector: 'system-member',
     templateUrl: './member.component.html',
     styleUrls: ['./member.component.css'],
     providers: [MemberService, ImemRoleService, CharacterService]

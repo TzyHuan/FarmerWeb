@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material';
 import { zip } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-action',
+  selector: 'system-action',
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.css'],
   providers: [ActionService]

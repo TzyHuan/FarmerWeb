@@ -10,7 +10,7 @@ require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
 
 @Component({
-  selector: 'climate',
+  selector: 'app-climate',
   templateUrl: './climate.component.html',
   styleUrls: ['./climate.component.css'],
   providers: [ClimateService]

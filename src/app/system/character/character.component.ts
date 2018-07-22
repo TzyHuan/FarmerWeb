@@ -18,7 +18,7 @@ import { DialogIactionRoleComponent } from './dialog/dialog-IactionRole.componen
 import { zip } from 'rxjs/observable/zip';
 
 @Component({
-  selector: 'app-character',
+  selector: 'system-character',
   templateUrl: './character.component.html',
   styleUrls: ['./character.component.css'],
   providers: [CharacterService, ImenuRolesService, IactionRolesService, MenuService, ActionService]

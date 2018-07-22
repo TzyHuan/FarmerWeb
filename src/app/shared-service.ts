@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, ComponentFactoryResolver } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 //----ViewModel----//
@@ -17,20 +17,41 @@ export class SharedService {
     ChildRoutesEmitted$ = this.emitChildRoutesSource.asObservable();
 
     public AllowMenuApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/System/GetAllowedMenu';
+    public factories: any = [];
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private resolver: ComponentFactoryResolver) { 
+        this.factories = Array.from(this.resolver['_factories'].values());
+    }
 
     // Service message commands
     emitChange(change: any) {
         this.emitChangeSource.next(change);
     }
-    emitChildRoutes(event: object) {
+
+    emitChildRoutes(event: Object) {
         this.http.get<vmNavMenu[]>(this.AllowMenuApiUrl).subscribe((menus: vmNavMenu[]) => {
-            let ParentMenu = menus.find(x => x.component === event.constructor.name);
-            if (ParentMenu.children) {
-                //console.log(ParentMenu);                
+            
+            /**ng build --prod會化簡component的名字減省空間，但不會改selector名字！
+             * 所以利用ComponentFactoryResolver抓此event的selector 
+             * 接著與資料庫比對是event是按下哪個component後，回傳此component的child清單*/
+            let ParentProto: any = Object.getPrototypeOf(event);           
+            var Parentfactory: any = this.GetComponentType(ParentProto.constructor.name);
+            let ParentMenu = menus.filter(x=>x.selector!=null).find(x => x.selector === Parentfactory.selector);
+           
+            if (ParentMenu && ParentMenu.children != null) {
                 this.emitChildRoutesSource.next(ParentMenu.children);
             }
         });
     }
+
+    private GetComponentType(routeName: string): any {
+        // 根據 componentType 名字取出對應的 componentType
+        let factory: any = this.factories.find(
+            (x: any) => {
+                return x.componentType.name == routeName;
+            }
+        );
+        return factory;
+    }
+
 }

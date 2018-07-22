@@ -66,7 +66,7 @@ export class AppRoutingModule {
   constructor(private MenuREST: NavMenuService, private router: Router, private resolver: ComponentFactoryResolver) {
     // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
     this.factories = Array.from(this.resolver['_factories'].values());
-
+    
     this.MenuREST.getAllowedMenu().subscribe(
       (result: vmNavMenu[]) => {
         this.router.resetConfig(this.processRoute(result));
@@ -108,7 +108,7 @@ export class AppRoutingModule {
     // 根據 componentType 名字取出對應的 componentType
     let factory: any = this.factories.find(
       (x: any) => {
-        return x.componentType.name == route.component;
+        return x.selector == route.selector;
       }
     );
     return factory;
@@ -125,7 +125,7 @@ export class AppRoutingModule {
       TreeRoot = {
         path: root.path,
         component: factory.componentType,
-        children:[]
+        children:[]        
       }
       //if root have children
       if (root.children != null) {

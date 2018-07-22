@@ -3,5 +3,6 @@ export class vmNavMenu {
     public path: string;
     public menuText?: string;
     public component: string;
-    public children: vmNavMenu[] = [];
+    public selector?: string;
+    public children?: vmNavMenu[];
 }

@@ -15,7 +15,7 @@ import { DialogMenuCreateComponent } from './dialog/dialog-menu-create.component
 import { isNullOrUndefined } from 'util';
 
 @Component({
-  selector: 'app-menu',
+  selector: 'system-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
   providers: [MenuService]
