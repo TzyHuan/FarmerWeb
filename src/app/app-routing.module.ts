@@ -98,7 +98,7 @@ export class AppRoutingModule {
     //最後才加入path:'**'路徑導入至Home，佇列在array最下面    
     //若把path:'**'放第一位，就無法去排在後面其他的Component
     //path '**' should direct to PageNotFoundComponent!
-    finalRoutes.push({ path: '**', component: HomeComponent });
+    finalRoutes.push({ path: '**', redirectTo:'' });
 
     return finalRoutes;
   }
