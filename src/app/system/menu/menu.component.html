@@ -55,6 +55,19 @@
       </mat-label>
     </mat-form-field>&nbsp;
 
+    <!-- Filter selector Column -->
+    <mat-form-field>
+      <input matInput [formControl]="selectorFilter" placeholder="Filter 排序" [matAutocomplete]="autoSelector">
+      <mat-autocomplete #autoSelector="matAutocomplete">
+        <mat-option *ngFor="let option of selectorFilteredOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-label>
+        <mat-icon class="Search">search</mat-icon>排序
+      </mat-label>
+    </mat-form-field>&nbsp;
+
     <!-- Filter component Column -->
     <mat-form-field>
       <input matInput [formControl]="componentFilter" placeholder="Filter 對應元件" [matAutocomplete]="autoComponent">
@@ -111,6 +124,12 @@
     <ng-container matColumnDef="sortNo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> 排序 </th>
       <td mat-cell *matCellDef="let element"> {{element.sortNo}} </td>
+    </ng-container>
+
+    <!-- selector Column -->
+    <ng-container matColumnDef="selector">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> 標籤 </th>
+      <td mat-cell *matCellDef="let element"> {{element.selector}} </td>
     </ng-container>
 
     <!-- component Column -->

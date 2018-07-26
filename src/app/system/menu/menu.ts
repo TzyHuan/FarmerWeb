@@ -4,6 +4,7 @@ export class Menu {
     public path?: string;
     public menuText?: string;
     public sortNo?: number;
+    public selector?:string;
     public component?: string;
     public rootMenuId?: number;   
 }

@@ -30,6 +30,7 @@ export class DialogMenuCreateComponent {
             path: ['', Validators.required],
             menuText: ['', Validators.required],
             sortNo: ['', Validators.required],
+            selector:[''],
             component: ['', Validators.required],
             rootMenuId: null
         }

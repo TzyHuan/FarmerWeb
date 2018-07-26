@@ -27,7 +27,7 @@ export class MenuComponent implements OnInit {
 
   //Parameters of Mat-Table
   public dataSource: MatTableDataSource<Menu> | null;
-  public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'component', 'rootMenuId', 'actions'];
+  public displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'selector', 'component', 'rootMenuId', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -36,13 +36,15 @@ export class MenuComponent implements OnInit {
   public pathFilter = new FormControl();
   public menuTextFilter = new FormControl();
   public sortNoFilter = new FormControl();
+  public selectorFilter = new FormControl();
   public componentFilter = new FormControl();
   public rootMenuIdFilter = new FormControl();
-  public filterValues = { menuId: '', path: '', menuText: '', sortNo: '', component: '', rootMenuId: '' }
+  public filterValues = { menuId: '', path: '', menuText: '', sortNo: '', selector: '', component: '', rootMenuId: '' }
   public menuIdFilteredOptions: string[];
   public pathFilteredOptions: string[];
   public menuTextFilteredOptions: string[];
   public sortNoFilteredOptions: string[];
+  public selectorFilteredOptions: string[];
   public componentFilteredOptions: string[];
   public rootMenuIdFilteredOptions: string[];
 
@@ -123,6 +125,22 @@ export class MenuComponent implements OnInit {
           this.dataSource.filter = JSON.stringify(this.filterValues);
           this.dataSource.paginator.firstPage();
         });
+
+        //Listen selectorFilter
+        this.selectorFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+
+          this.selectorFilteredOptions = this._autoFilter(
+            data.filter(x => x.selector != null)
+              .map(v => v.selector.toString())
+              .sort((a, b) => parseFloat(a) - parseFloat(b)),
+            value
+          );
+
+          this.filterValues.sortNo = value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.dataSource.paginator.firstPage();
+        });
+
 
         //Listen componentFilter
         this.componentFilter.valueChanges.pipe(startWith('')).subscribe(value => {
