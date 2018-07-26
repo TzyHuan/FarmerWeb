@@ -4,10 +4,26 @@ import { HttpParams } from '@angular/common/http'
 import { ClimateService } from './climate.service'
 import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './climate'
 
-import * as Highcharts from 'highcharts/highstock';
-declare var require: any;
+/** If there isn't a declaration file, the TypeScript compiler 
+ * doesn't know if the module exists, so you need to use require 
+ * instead which lacks the compilation checking.*/
+import Highcharts from 'highcharts/highstock'; 
+//import HighchartsMore from 'highcharts/highcharts-more';
+
+/**https://www.highcharts.com/docs/getting-started/install-from-npm
+ * 兩種方式都可載入，請看highcharts-more.js最上方的code
+ * 其factory定義為返回module的function
+ * if (typeof module === 'object' && module.exports) {
+        module.exports = factory;
+    } else {
+        factory(Highcharts);
+    }*/
+//1.
+//HighchartsMore(Highcharts) 
+/** dirty and quick, set tsconfig.app.ts is better */
+//declare var require: any; 
+//2.
 require('highcharts/highcharts-more')(Highcharts);
-require('highcharts/modules/exporting')(Highcharts);
 
 @Component({
   selector: 'app-climate',

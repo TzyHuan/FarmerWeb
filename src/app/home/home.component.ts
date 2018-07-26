@@ -6,10 +6,11 @@ import { RealtimeData, WeatherStation } from './home';
 import { ClimateService } from '../climate/climate.service';
 
 import * as Highcharts from 'highcharts';
-declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
 require('highcharts/modules/export-data')(Highcharts);
+// require('highcharts/modules/solid-gauge')(Highcharts);
+// require('highcharts/modules/variwide')(Highcharts);
 
 @Component({
   selector: 'app-home',
