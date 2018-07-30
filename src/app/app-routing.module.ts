@@ -16,7 +16,7 @@ import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
 import { MemberComponent } from './system/member/member.component'
 //測試
-import { TestComponent } from './test/test.component';
+import { PrintComponent } from './print/print.component';
 
 //----Service----//
 import { NavMenuService } from './navmenu/navmenu.service';
@@ -102,7 +102,7 @@ export class AppRoutingModule {
     //path '**' should direct to PageNotFoundComponent!
     finalRoutes.push({ path: '**', redirectTo:'' });
 
-    console.log(finalRoutes);
+    //console.log(finalRoutes);
     return finalRoutes;
   }
 
@@ -177,7 +177,7 @@ export const routingComponents = [
   CharacterComponent,
   MemberComponent,
 
-  //Test
-  TestComponent
+  //列印
+  PrintComponent
 
 ]

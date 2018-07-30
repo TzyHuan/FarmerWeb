@@ -31,7 +31,7 @@ import { MenuService } from '../menu.service'
     putMenu(id: number, UpdatedMenu: Menu) {
       this.MenuREST.PutMenu(id, UpdatedMenu).subscribe(
         (result: any) => {
-          console.log(result);
+          //console.log(result);
         },
         error => {
           console.log(error);

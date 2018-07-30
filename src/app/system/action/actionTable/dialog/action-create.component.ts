@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Action } from '../../Action';
+import { Action } from '../../action';
 
 @Component({
     moduleId: module.id,
