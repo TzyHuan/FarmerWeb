@@ -1,0 +1,12 @@
+Zoom
+<mat-slider
+[max]="maxZoom"
+[min]="minZoom"
+[step]="step"
+[thumbLabel]="thumbLabel"
+[value]="initZoom"
+[vertical]="vertical"
+(input) = "adjustZoom($event.value)">
+</mat-slider>
+
+<div id="MapDiv" ></div>

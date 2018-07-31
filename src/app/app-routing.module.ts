@@ -15,7 +15,9 @@ import { MenuComponent } from './system/menu/menu.component';
 import { ActionComponent } from './system/action/action.component';
 import { CharacterComponent } from './system/character/character.component';
 import { MemberComponent } from './system/member/member.component'
-//測試
+//地圖
+import { MapComponet } from './map/map.component';
+//列印
 import { PrintComponent } from './print/print.component';
 
 //----Service----//
@@ -176,6 +178,9 @@ export const routingComponents = [
   ActionComponent,
   CharacterComponent,
   MemberComponent,
+
+  //地圖
+  MapComponet,
 
   //列印
   PrintComponent

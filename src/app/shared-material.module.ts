@@ -17,6 +17,7 @@ import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSliderModule } from '@angular/material/slider';
 
 /** Dialogs' Component inside Component */
 //Menu
@@ -77,7 +78,8 @@ import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.componen
     MatTabsModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    MatSliderModule
   ]
 })
 
