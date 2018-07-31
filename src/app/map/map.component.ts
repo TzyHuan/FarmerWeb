@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import L from 'leaflet';
 
-import * as GEOdata from '../../geojson/custom.geo.json';
+import value, * as GEOdata from '../../geojson/custom.geo.json';
 
 @Component({
     selector: 'app-map',
@@ -12,15 +12,19 @@ import * as GEOdata from '../../geojson/custom.geo.json';
 
 
 export class MapComponet implements OnInit {
-
+    //slider
     maxZoom: number = 18;
     minZoom: number = 3;
     step: number = 0.25;
     thumbLabel: boolean = true;
     initZoom: number = 5;
-    vertical: boolean = false;
+    Zoom:number = 5;
+    vertical: boolean = true;
+
+    //leaflet
     map: any;
     WorldGeoJson: any;
+    infoControl:any;
 
     constructor() {
 
@@ -47,7 +51,7 @@ export class MapComponet implements OnInit {
         var positron = new L.TileLayer(PositronUrl, option);
         var antique = new L.TileLayer(AntiqueUrl, option);
         var eco = new L.TileLayer(EcoUrl, option);
-       
+
         //自訂圖層
         var MyLand = L.polygon([
             [25.272156, 121.492556],
@@ -67,7 +71,7 @@ export class MapComponet implements OnInit {
 
         // GeoJSON圖檔
         this.WorldGeoJson = new L.geoJson(GEOdata, {
-            style: (feature) => {                
+            style: (feature) => {
                 return {
                     weight: 2,
                     opacity: 1,
@@ -76,18 +80,18 @@ export class MapComponet implements OnInit {
                     dashArray: '8',
                     fillOpacity: 0.1
                 };
-            },        
-            onEachFeature: (feature, layer) =>{               
+            },
+            onEachFeature: (feature, layer) => {
                 this.onEachFeature(feature, layer)
-            } 
+            }
         });//.addTo(this.map);
-        
+
         //圖層設定
         var baseMaps = {
             "OpenStreetMap": osm,
             "Positron": positron,
-            "Antique":antique,
-            "Eco":eco
+            "Antique": antique,
+            "Eco": eco
         };
         var overlayMaps = {
             "Boundary": this.WorldGeoJson,
@@ -106,14 +110,40 @@ export class MapComponet implements OnInit {
         });
         this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
         L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+
+        //監聽地圖是否正在調整Zoom
+        this.map.on({
+            zoom: () => {                
+                this.Zoom = this.map.getZoom();
+            }
+        })
+
+        //#region Legend Control
+        this.infoControl = L.control({position: 'bottomright'});       
+
+        this.infoControl.onAdd = function (map) {            
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        this.infoControl.update = function (props) {            
+            this._div.innerHTML = '<h4>Information of the country</h4>' + (props ?
+                '<b>' + props.name + '</b><br />' + props.pop_est + ' people'
+                : 'Hover over a place');
+        };
+
+        this.infoControl.addTo(this.map);
+        //#endregion
     }
-    
-    //#region Event about Leaflet
-    onEachFeature(feature, layer) {        
+
+    //#region Event function about Leaflet
+    onEachFeature(feature, layer) {
         layer.on({
-            mouseover: this.highlightFeature,
-            mouseout: (e)=> this.resetHighlight(e), 
-            click:(e)=> this.zoomToFeature(e)
+            mouseover: (e) => this.highlightFeature(e),
+            mouseout: (e) => this.resetHighlight(e),
+            click: (e) => this.zoomToFeature(e)
         });
     }
 
@@ -124,19 +154,22 @@ export class MapComponet implements OnInit {
     zoomToFeature(e) {
         this.map.fitBounds(e.target.getBounds());
     }
-    
-    resetHighlight(e) {  
+
+    resetHighlight(e) {
         this.WorldGeoJson.resetStyle(e.target);
+        this.infoControl.update();
     }
 
-    highlightFeature(e) {        
+    highlightFeature(e) {
         var layer = e.target;
         layer.setStyle({
-            weight: 5,
+            weight: 4,
             color: '#666',
             dashArray: '',
-            fillOpacity: 0.7
+            fillOpacity: 0.6
         });
+
+        this.infoControl.update(layer.feature.properties);
 
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
             layer.bringToFront();

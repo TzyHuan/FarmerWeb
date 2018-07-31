@@ -1,5 +1,5 @@
-Zoom
-<mat-slider
+<!-- 
+<mat-slider class="slider"
 [max]="maxZoom"
 [min]="minZoom"
 [step]="step"
@@ -7,6 +7,17 @@ Zoom
 [value]="initZoom"
 [vertical]="vertical"
 (input) = "adjustZoom($event.value)">
-</mat-slider>
+</mat-slider> -->
 
-<div id="MapDiv" ></div>
+<div id="MapDiv" >
+    <mat-slider class="slider leaflet-left leaflet-top leaflet-control"
+    [max]="maxZoom"
+    [min]="minZoom"
+    [step]="step"
+    [thumbLabel]="thumbLabel"
+    [(ngModel)]="Zoom"
+    [vertical]="vertical"
+    (input) = "adjustZoom($event.value)">
+    </mat-slider>
+    
+</div>
