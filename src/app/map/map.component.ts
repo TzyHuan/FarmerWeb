@@ -1,8 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
 import L from 'leaflet';
+import markerCluster from 'leaflet.markercluster';
+console.log(markerCluster)
 
-import value, * as GEOdata from '../../geojson/custom.geo.json';
+
+
+import * as icon from 'leaflet/dist/images/marker-icon.png';
+import * as iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+import * as GEOdata from '../../geojson/custom.geo.json';
+
+
 
 @Component({
     selector: 'app-map',
@@ -18,22 +27,35 @@ export class MapComponet implements OnInit {
     step: number = 0.25;
     thumbLabel: boolean = true;
     initZoom: number = 5;
-    Zoom:number = 5;
+    Zoom: number = 5;
     vertical: boolean = true;
 
     //leaflet
     map: any;
     WorldGeoJson: any;
-    infoControl:any;
+    infoControl: any;
 
     constructor() {
 
     }
 
     ngOnInit() {
+
+        // var element = document.getElementsByClassName('push');        
+        // element[0].style.display='none';
+        // console.log(element);
+
         // 建立 Leaflet 地圖，it must create after component is rendered, or Map container would not found
         // 要明確丟入event(e)，不然function內的this會是event而不是global
         //  var self = this;
+
+        // 有bug需手動抓，Webpack在leaflet Icon圖案_getIconUrl抓預設圖案url時字串有問題
+        // https://github.com/Leaflet/Leaflet/issues/4968
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({            
+            iconUrl: icon,
+            shadowUrl: iconShadow,
+        });
 
         // 設定底圖資來源
         var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -69,6 +91,30 @@ export class MapComponet implements OnInit {
             .bindPopup("三芝的地就沒碰到路呀...<br>荒涼~")
         //.openPopup();
 
+        //自訂標籤
+        var ClusterMarkers = L.markerClusterGroup({
+            spiderLegPolylineOptions:{ 
+                weight: 5, color: '#222', opacity: 0.5 
+            },
+            // iconCreateFunction: (cluster)=> {
+            //     return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+            // }
+        });        
+
+        var MyMarker1 = L.marker([25.272156, 121.492556]).bindPopup('1'),
+            MyMarker2 = L.marker([25.272322, 121.492739]).bindPopup('2'),
+            MyMarker3 = L.marker([25.271947, 121.493200]).bindPopup('3'),
+            MyMarker4 = L.marker([25.271692, 121.492967]).bindPopup('4'),
+            MyMarker5 = L.marker([25.271950, 121.492656]).bindPopup('5');
+        //var Markers = L.layerGroup([MyMarker1, MyMarker2, MyMarker3, MyMarker4,MyMarker5]);
+        ClusterMarkers.addLayer(MyMarker1);
+        ClusterMarkers.addLayer(MyMarker2);
+        ClusterMarkers.addLayer(MyMarker3);
+        ClusterMarkers.addLayer(MyMarker4);
+        ClusterMarkers.addLayer(MyMarker5);
+
+        console.log(ClusterMarkers)
+
         // GeoJSON圖檔
         this.WorldGeoJson = new L.geoJson(GEOdata, {
             style: (feature) => {
@@ -95,7 +141,8 @@ export class MapComponet implements OnInit {
         };
         var overlayMaps = {
             "Boundary": this.WorldGeoJson,
-            "MyLand": MyLand
+            "MyLand": MyLand,
+            //"MyMarkers": 
         };
 
         //設定經緯度座標等初始值，匯入html div中
@@ -110,25 +157,27 @@ export class MapComponet implements OnInit {
         });
         this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
         L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+        this.map.addLayer(ClusterMarkers);
 
+
+        //#region Legend Control
         //監聽地圖是否正在調整Zoom
         this.map.on({
-            zoom: () => {                
+            zoom: () => {
                 this.Zoom = this.map.getZoom();
             }
         })
 
-        //#region Legend Control
-        this.infoControl = L.control({position: 'bottomright'});       
+        this.infoControl = L.control({ position: 'bottomright' });
 
-        this.infoControl.onAdd = function (map) {            
+        this.infoControl.onAdd = function (map) {
             this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
             this.update();
             return this._div;
         };
 
         // method that we will use to update the control based on feature properties passed
-        this.infoControl.update = function (props) {            
+        this.infoControl.update = function (props) {
             this._div.innerHTML = '<h4>Information of the country</h4>' + (props ?
                 '<b>' + props.name + '</b><br />' + props.pop_est + ' people'
                 : 'Hover over a place');

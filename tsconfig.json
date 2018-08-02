@@ -9,7 +9,7 @@
     "experimentalDecorators": true,
     "target": "es6",   
     "types": [
-      // add node as an option in order to "require"
+      // add node as an option in order to use "require" syntax
       "node"
     ],
     "typeRoots": [

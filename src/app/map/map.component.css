@@ -18,3 +18,13 @@
     margin: 0 0 5px;
     color: #777;
 }
+
+/* 沒用... */
+.push {
+    display: none !important;
+}
+
+.wrapper{
+    padding-bottom: 0px !important;
+}
+

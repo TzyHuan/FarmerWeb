@@ -230,7 +230,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy');
+    //console.log('ngOnDestroy');
     this.$UpdateRealtime.unsubscribe();
   }
 
