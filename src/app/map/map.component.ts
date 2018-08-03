@@ -1,24 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-
 import L from 'leaflet';
-import markerCluster from 'leaflet.markercluster';
-console.log(markerCluster)
-
-
-
+require('leaflet.markercluster');
 import * as icon from 'leaflet/dist/images/marker-icon.png';
 import * as iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
 import * as GEOdata from '../../geojson/custom.geo.json';
-
-
 
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
 })
-
 
 export class MapComponet implements OnInit {
     //slider
@@ -40,7 +31,7 @@ export class MapComponet implements OnInit {
     }
 
     ngOnInit() {
-
+        // 消除footer
         // var element = document.getElementsByClassName('push');        
         // element[0].style.display='none';
         // console.log(element);
@@ -52,7 +43,7 @@ export class MapComponet implements OnInit {
         // 有bug需手動抓，Webpack在leaflet Icon圖案_getIconUrl抓預設圖案url時字串有問題
         // https://github.com/Leaflet/Leaflet/issues/4968
         delete L.Icon.Default.prototype._getIconUrl;
-        L.Icon.Default.mergeOptions({            
+        L.Icon.Default.mergeOptions({
             iconUrl: icon,
             shadowUrl: iconShadow,
         });
@@ -74,7 +65,25 @@ export class MapComponet implements OnInit {
         var antique = new L.TileLayer(AntiqueUrl, option);
         var eco = new L.TileLayer(EcoUrl, option);
 
-        //自訂圖層
+        // GeoJSON圖檔
+        this.WorldGeoJson = new L.geoJson(GEOdata, {
+            style: (feature) => {
+                return {
+                    weight: 2,
+                    opacity: 1,
+                    color: '#FED976',
+                    fillColor: '#ADFF2F',
+                    dashArray: '8',
+                    fillOpacity: 0.1
+                };
+            },
+            onEachFeature: (feature, layer) => {
+                this.onEachFeature(feature, layer)
+            }
+        });
+
+        //#region Markers標籤
+        //自訂多邊形標籤
         var MyLand = L.polygon([
             [25.272156, 121.492556],
             [25.272322, 121.492739],
@@ -93,14 +102,13 @@ export class MapComponet implements OnInit {
 
         //自訂標籤
         var ClusterMarkers = L.markerClusterGroup({
-            spiderLegPolylineOptions:{ 
-                weight: 5, color: '#222', opacity: 0.5 
+            spiderLegPolylineOptions: {
+                weight: 5, color: '#222', opacity: 0.5
             },
             // iconCreateFunction: (cluster)=> {
             //     return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
             // }
-        });        
-
+        });
         var MyMarker1 = L.marker([25.272156, 121.492556]).bindPopup('1'),
             MyMarker2 = L.marker([25.272322, 121.492739]).bindPopup('2'),
             MyMarker3 = L.marker([25.271947, 121.493200]).bindPopup('3'),
@@ -112,26 +120,10 @@ export class MapComponet implements OnInit {
         ClusterMarkers.addLayer(MyMarker3);
         ClusterMarkers.addLayer(MyMarker4);
         ClusterMarkers.addLayer(MyMarker5);
+        //#endregion
 
-        console.log(ClusterMarkers)
 
-        // GeoJSON圖檔
-        this.WorldGeoJson = new L.geoJson(GEOdata, {
-            style: (feature) => {
-                return {
-                    weight: 2,
-                    opacity: 1,
-                    color: '#FED976',
-                    fillColor: '#ADFF2F',
-                    dashArray: '8',
-                    fillOpacity: 0.1
-                };
-            },
-            onEachFeature: (feature, layer) => {
-                this.onEachFeature(feature, layer)
-            }
-        });//.addTo(this.map);
-
+        //#region 準備產出Map顯示於HTML
         //圖層設定
         var baseMaps = {
             "OpenStreetMap": osm,
@@ -140,31 +132,41 @@ export class MapComponet implements OnInit {
             "Eco": eco
         };
         var overlayMaps = {
-            "Boundary": this.WorldGeoJson,
+            "Countries": this.WorldGeoJson,
             "MyLand": MyLand,
-            //"MyMarkers": 
+            "Cluster": ClusterMarkers
         };
 
         //設定經緯度座標等初始值，匯入html div中
         this.map = L.map('MapDiv', {
             zoomSnap: this.step,
             worldCopyJump: false,
-            layers: [osm, this.WorldGeoJson],
+            layers: [osm, ClusterMarkers],
             maxBounds: [
                 [-90, -180],
                 [90, 180]
             ]
         });
-        this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
-        L.control.layers(baseMaps, overlayMaps).addTo(this.map);
-        this.map.addLayer(ClusterMarkers);
+        this.map.doubleClickZoom.disable();
 
+        //設定初始中心
+        this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
+
+        //加入圖層控制項
+        L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+     
+        //#endregion
 
         //#region Legend Control
         //監聽地圖是否正在調整Zoom
         this.map.on({
             zoom: () => {
                 this.Zoom = this.map.getZoom();
+            },
+            dblclick:(e)=>{
+                //滑鼠座標點擊位置
+                //todo
+                console.log(e.latlng);
             }
         })
 
