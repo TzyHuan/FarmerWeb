@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class UserService {
 
-  public AuthUrl: string = 'http://192.168.1.170/FarmerAPI/api/Auth/Authenticate';
+  public AuthUrl: string = environment.apiUrl + 'Auth/Authenticate';
   constructor(private http: HttpClient) { }
   public data: vmAuth = new vmAuth();
 

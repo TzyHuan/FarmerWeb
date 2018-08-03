@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Member } from './member';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class MemberService {
 
-    public RestfulApiUrl_Member: string = 'http://192.168.1.170/FarmerAPI/api/Members';
+    public RestfulApiUrl_Member: string = environment.apiUrl + 'Members';
     
     constructor(private http: HttpClient) { }
     

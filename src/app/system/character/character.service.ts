@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RoleGroup, ImenuRole, IactionRole, ImemRole, RoleGroupNode } from './character';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CharacterService {
-    public RestfulApiUrl_RoleGroup: string = 'http://192.168.1.170/FarmerAPI/api/RoleGroups';
+    public RestfulApiUrl_RoleGroup: string = environment.apiUrl + 'RoleGroups';
   
     constructor(private http: HttpClient) { }
     

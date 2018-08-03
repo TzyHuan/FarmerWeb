@@ -1,12 +1,14 @@
 import { Subject } from 'rxjs';
 import { Injectable, ComponentFactoryResolver } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 //----ViewModel----//
 import { vmNavMenu } from './navmenu/navmenu';
 
 @Injectable()
 export class SharedService {
+    private readonly AllowMenuApiUrl: string = environment.apiUrl + 'System/GetAllowedMenu';
 
     // Observable string sources
     private emitChangeSource = new Subject<any>();
@@ -15,8 +17,7 @@ export class SharedService {
     // Observable string streams
     changeEmitted$ = this.emitChangeSource.asObservable();
     ChildRoutesEmitted$ = this.emitChildRoutesSource.asObservable();
-
-    public AllowMenuApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/System/GetAllowedMenu';
+    
     public factories: any = [];
 
     constructor(private http: HttpClient, private resolver: ComponentFactoryResolver) { 

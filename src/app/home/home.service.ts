@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators';
-
+import { environment } from '../../environments/environment';
 import { RealtimeData } from './home';
 
 @Injectable()
 export class HomeService {
     //API URL//
-    public RealtimeApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/values/Realtime/';
-    public RealtimeUpdateApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/values/Realtime'
+    public RealtimeApiUrl: string = environment.apiUrl + 'values/Realtime/';
+    public RealtimeUpdateApiUrl: string = environment.apiUrl + 'values/Realtime'
 
     // public httpOptions = {
     //     headers: new HttpHeaders({

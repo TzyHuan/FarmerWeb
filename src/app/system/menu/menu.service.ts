@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscriber, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
-import { Menu, MenuNode } from './menu'
+import { Menu, MenuNode } from './menu';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class MenuService {
 
-    private readonly RestfulApiUrl_Menu: string = 'http://192.168.1.170/FarmerAPI/api/Menus';
+    private readonly RestfulApiUrl_Menu: string = environment.apiUrl + 'Menus';
     
     constructor(private http: HttpClient) { }
    

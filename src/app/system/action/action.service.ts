@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'
 import { Action, Ctrl } from './action';
 import { ActionNode } from '../character/character';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ActionService {
 
-    private readonly RestfulApiUrl_Action: string = 'http://192.168.1.170/FarmerAPI/api/Actions';
+    private readonly RestfulApiUrl_Action: string = environment.apiUrl + 'Actions';
     
     constructor(private http: HttpClient) { }
    

@@ -3,14 +3,14 @@ import {throwError as observableThrowError,  Observable, Subscriber, of } from '
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { catchError,retryWhen } from 'rxjs/operators';
-
+import { environment } from '../../environments/environment';
 import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './climate'
 
 @Injectable()
 export class ClimateService {
-    public StationApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/WeatherData/Stations';
-    public TemperatuteApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/WeatherData/Temperatures';
-    public HumiditiesApiUrl: string = 'http://192.168.1.170/FarmerAPI/api/WeatherData/Humidities';
+    public StationApiUrl: string = environment.apiUrl + 'WeatherData/Stations';
+    public TemperatuteApiUrl: string = environment.apiUrl +  'WeatherData/Temperatures';
+    public HumiditiesApiUrl: string = environment.apiUrl + 'WeatherData/Humidities';
 
     constructor(private http: HttpClient) { }
 
