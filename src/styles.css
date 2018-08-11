@@ -4,6 +4,7 @@
 /* leaflet.markercluster 因為路徑中有「.」，放在.json會讀不到*/
 @import "~leaflet.markercluster/dist/MarkerCluster.css";
 @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+@import "~leaflet-geosearch/assets/css/leaflet.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 a {
@@ -43,14 +44,11 @@ app-root{
     position: relative;
 }
 
-.push{    
+footer{
     height: 80px;
     width: 100%; 
     margin-top: -80px;
-    background-color: #343a40;
-}
 
-footer{
     text-align: center;
     color: white;
     background-color: #343a40;

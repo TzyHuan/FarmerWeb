@@ -19,6 +19,9 @@ import { MemberComponent } from './system/member/member.component'
 import { MapComponet } from './map/map.component';
 //列印
 import { PrintComponent } from './print/print.component';
+//統計
+import { StatisticsComponent } from './statistics/statistics.component';
+
 
 //----Service----//
 import { NavMenuService } from './navmenu/navmenu.service';
@@ -183,6 +186,8 @@ export const routingComponents = [
   MapComponet,
 
   //列印
-  PrintComponent
+  PrintComponent,
 
+  //統計
+  StatisticsComponent
 ]

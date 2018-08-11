@@ -18,6 +18,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 /** Dialogs' Component inside Component */
 //Menu
@@ -43,6 +47,9 @@ import { DialogMemberCreateComponent } from './system/member/dialog/dialog-membe
 import { DialogMemberUpdateComponent } from './system/member/dialog/dialog-member-update.component';
 import { DialogMemberDeleteComponent } from './system/member/dialog/dialog-member-delete.component';
 import { DialogImemRoleComponent } from './system/member/dialog/dialog-ImemRole.component';
+//Map
+import { DialogSupplyChainCreateComponent } from './map/dialog/dialog-supplychain-create.component';
+import { DialogSupplyChainDeleteComponent } from './map/dialog/dialog-supplychain-delete.component';
 
 /** Child components in dialogs */
 //Menus
@@ -51,6 +58,9 @@ import { MenuCreateComponent } from './system/menu/dialog/menu-create.component'
 import { CharacterCreateComponent } from './system/character/dialog/character-create.component';
 //Actions
 import { ActionCreateComponent } from './system/action/actionTable/dialog/action-create.component';
+//Map
+import { CustomerCreateComponent } from './map/dialog/customer-create.component';
+import { VendorCreateComponent } from './map/dialog/vendor-create.component';
 
 /** Child components in Tab */
 //Actions
@@ -79,7 +89,11 @@ import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.componen
     MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSliderModule
+    MatSliderModule,
+    MatRadioModule,
+    MatDividerModule,
+    MatCardModule,
+    MatExpansionModule
   ]
 })
 
@@ -117,6 +131,11 @@ export const MatComponents = [
   DialogMemberCreateComponent,
   DialogMemberUpdateComponent,
   DialogMemberDeleteComponent,
-  DialogImemRoleComponent
+  DialogImemRoleComponent,
 
+  //地圖-供應商
+  DialogSupplyChainCreateComponent,
+  VendorCreateComponent,
+  CustomerCreateComponent,
+  DialogSupplyChainDeleteComponent,
 ]

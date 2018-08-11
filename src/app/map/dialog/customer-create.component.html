@@ -1,0 +1,122 @@
+<div mat-dialog-content>
+    <form [formGroup]="CustomerForm">
+        <mat-form-field>
+            <input matInput type="text" formControlName="v3401" placeholder="客戶代號" required>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="text" formControlName="v3402" placeholder="客戶名稱">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3403" placeholder="簡稱">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="客戶區分" formControlName="v3405">
+                <mat-option [value]="1">
+                    供應商
+                </mat-option>
+                <mat-option [value]="2">
+                    其他
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3408" placeholder="統一編號">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3424" placeholder="客戶類別">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3416" placeholder="國別">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3411" placeholder="業務員">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3409" placeholder="地區別">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3417" placeholder="幣別">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="付款方式" formControlName="v3427">
+                <mat-option [value]="1">
+                    月結
+                </mat-option>
+                <mat-option [value]="2">
+                    貨到
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" formControlName="v3428" placeholder="付款天數">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" formControlName="v3432" placeholder="結帳日數">
+        </mat-form-field>
+        <br>
+
+        <mat-divider></mat-divider>
+
+        <mat-form-field>
+            <input matInput formControlName="v3412" placeholder="Tel No.">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3413" placeholder="Fax No.">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3415" placeholder="Mobile No.">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="email" formControlName="v3414" placeholder="Email">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3425" placeholder="Tel1 No.">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3426" placeholder="Tel2 No.">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput formControlName="v3407" placeholder="聯絡人">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="v3406" placeholder="負責人">
+        </mat-form-field>
+
+        <mat-divider></mat-divider>
+
+        <mat-form-field>
+            <input matInput formControlName="v3420" placeholder="公司地址">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <input matInput formControlName="v3421" placeholder="發票地址">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <input matInput formControlName="v3422" placeholder="工廠地址">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <input matInput formControlName="v3423" placeholder="備註">
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onNoClick()">取消</button>
+    <button mat-raised-button color="primary" (click)="onYesClick(CustomerForm.value)" [disabled]="!CustomerForm.valid">確定新增</button>    
+</div>

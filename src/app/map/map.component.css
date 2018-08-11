@@ -1,10 +1,88 @@
-#MapDiv{
-    height: 800px;    
+#MapContent{
+    width:100%; 
+    position:relative;
 }
 
-.slider{   
-    top: 80px;
+
+.system-drawer-side{
+    width: 30%;   
 }
+
+.system-drawer-content{   
+    position: relative;  
+}
+
+#MapDiv{
+    width: 100%;   
+    float: left;
+}
+/*沒反應*/
+#MapDiv #slider.mat-slider-vertical .mat-slider-wrapper{    
+    left: 16px;
+}
+#MapDiv .action{
+    float: right;
+    position: relative;
+    bottom: 0px;
+    right: 10px;
+    z-index: 1001;
+}
+#MapDiv .action button{
+    margin-top: 5px;
+}
+#MapDiv .application{
+    float: left;
+    position: relative;
+    bottom: 0px;
+    right: 10px;
+    z-index: 1000;
+}
+
+
+#MapDetail{
+    width: 100%;   
+    float: right;
+}
+#MapDetail .search{
+    height: 6%; 
+    text-align: center;
+}
+#MapDetail .detail{
+    height: 93%;
+    overflow-y: scroll;
+}
+#MapDetail .detail card{
+   margin-bottom: 1px;
+}
+
+
+
+
+
+.dragDiv {        
+    /* position: absolute;
+    bottom: 0px; */
+    width: 300px;
+    cursor: move;
+    z-index: 1000;
+    background-color: blueviolet;
+    color: #fff;
+    border-radius: 5px;
+}
+.dragDiv p {    
+    padding: 5px;
+    margin: 0px;  
+}
+.dragDiv .dragDivContent {    
+    z-index: 1001;
+    background-color: #f1f1f1;
+    text-align: center;
+    border: 1px solid #d3d3d3; 
+    color: blueviolet;   
+    cursor: text ;
+    width: 100%
+}
+
 
 .info {
     padding: 6px 8px;
@@ -17,14 +95,5 @@
 .info h4 {
     margin: 0 0 5px;
     color: #777;
-}
-
-/* 沒用... */
-.push {
-    display: none !important;
-}
-
-.wrapper{
-    padding-bottom: 0px !important;
 }
 

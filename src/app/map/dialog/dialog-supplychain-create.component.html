@@ -1,0 +1,22 @@
+<mat-radio-group [(ngModel)]="data.v3404">
+  <mat-radio-button *ngFor="let Type of CompanyTypeList" [value]="Type.value">
+    {{Type.typeName}}&nbsp;&nbsp;&nbsp;&nbsp;
+  </mat-radio-button>
+</mat-radio-group>
+
+<mat-form-field>
+    <input matInput readonly disabled type="text" [value] ="data.v3435"  placeholder="經度">
+</mat-form-field>
+<mat-form-field>
+    <input matInput readonly disabled type="text" [value] ="data.v3436"  placeholder="緯度">
+</mat-form-field>
+
+<div [ngSwitch]="true">
+  <div *ngSwitchCase="data.v3404 === 2 ">
+    <vendor-create [data]="data" (saved)="closeDialog($event)"></vendor-create>
+  </div>
+  <div *ngSwitchCase="data.v3404 === 1 ">
+    <customer-create [data]="data" (saved)="closeDialog($event)"></customer-create>
+  </div>
+  <div *ngSwitchDefault></div>
+</div>

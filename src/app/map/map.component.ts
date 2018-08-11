@@ -1,17 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { MatDialog } from '@angular/material';
+
 import L from 'leaflet';
+import { GeoSearchControl, EsriProvider } from 'leaflet-geosearch';
 require('leaflet.markercluster');
+
 import * as icon from 'leaflet/dist/images/marker-icon.png';
 import * as iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import * as GEOdata from '../../geojson/custom.geo.json';
+
+import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
+import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
+import { v34 } from '../ApiKmv/v34';
+import { V34Service } from '../ApiKmv/v34.service';
+
+import Highcharts from 'highcharts';
+require('highcharts/modules/series-label')(Highcharts);
+require('highcharts/modules/exporting')(Highcharts);
+
+//import * as $ from 'jquery/dist/jquery.min.js';
+import "jquery-ui/ui/widgets/draggable.js";
+declare var $: any;
 
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
+    providers: [V34Service]
 })
 
-export class MapComponet implements OnInit {
+export class MapComponet implements OnInit, OnDestroy {
     //slider
     maxZoom: number = 18;
     minZoom: number = 3;
@@ -25,17 +43,52 @@ export class MapComponet implements OnInit {
     map: any;
     WorldGeoJson: any;
     infoControl: any;
+    slideControl: any;
+    SideList: v34[] = [];
 
-    constructor() {
+    constructor(private REST_v34: V34Service, public dialog: MatDialog) {
 
+//隱藏footer      
+var element = document.getElementsByClassName('push');
+(element[0] as HTMLElement).style.display = 'none';
+var element = document.getElementsByClassName('wrapper');
+(element[0] as HTMLElement).style.display = 'contents';
+
+        $(function () {
+            $(".selector").draggable({
+                handle:"p",
+                containment: "#MapDiv"
+            });    
+           
+        });
+
+        //事件：視窗大小變換時，leaflet一起變動
+        window.onresize = (event: any) => {
+            resizeToScreen(document.getElementById('MapDiv'), 56);
+            resizeToScreen(document.getElementById('MapDetail'), 56);
+        };
     }
 
+    //初始化地圖
     ngOnInit() {
-        // 消除footer
-        // var element = document.getElementsByClassName('push');        
-        // element[0].style.display='none';
-        // console.log(element);
+        
 
+        //拖曳div
+        //dragElement(document.getElementById("mydiv"));
+
+        //leaflet heigh 初始化
+        resizeToScreen(document.getElementById('MapDiv'), 56);
+        resizeToScreen(document.getElementById('MapDetail'), 56);
+        //建立地圖
+        this.createMap();
+        //抓側欄資料
+        this.getSideDetail();
+        //塞highchart //todo
+        //this.createHighchart();
+        
+    }
+
+    createMap() {
         // 建立 Leaflet 地圖，it must create after component is rendered, or Map container would not found
         // 要明確丟入event(e)，不然function內的this會是event而不是global
         //  var self = this;
@@ -57,7 +110,7 @@ export class MapComponet implements OnInit {
         var option = {
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
         }
 
         var osm = new L.TileLayer(osmUrl, option);
@@ -145,7 +198,8 @@ export class MapComponet implements OnInit {
             maxBounds: [
                 [-90, -180],
                 [90, 180]
-            ]
+            ],
+            maxBoundsViscosity: 1.0
         });
         this.map.doubleClickZoom.disable();
 
@@ -154,7 +208,14 @@ export class MapComponet implements OnInit {
 
         //加入圖層控制項
         L.control.layers(baseMaps, overlayMaps).addTo(this.map);
-     
+
+        //加入地圖搜尋功能
+        const provider = new EsriProvider();
+        const searchControl = new GeoSearchControl({
+            provider: provider,
+        });
+        this.map.addControl(searchControl);
+
         //#endregion
 
         //#region Legend Control
@@ -162,32 +223,146 @@ export class MapComponet implements OnInit {
         this.map.on({
             zoom: () => {
                 this.Zoom = this.map.getZoom();
+                //console.log(this.map);
+                //this.map.setMaxBounds(this.map.getBounds());
+
             },
-            dblclick:(e)=>{
+            dblclick: (e) => {
                 //滑鼠座標點擊位置
-                //todo
-                console.log(e.latlng);
-            }
+                let data: v34 = new v34();
+                data.v3435 = e.latlng.lat;
+                data.v3436 = e.latlng.lng;
+
+                this.openCreateDialog(data);
+            },
+            // mousemove: (e) => {
+            //     console.log(e.latlng);
+            // }
         })
 
         this.infoControl = L.control({ position: 'bottomright' });
+        this.slideControl = L.control({ position: 'topleft' });
 
         this.infoControl.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            //這裡this為map
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"           
+            L.DomEvent.disableClickPropagation(this._div);
+            var draggable = new L.Draggable(this._div);
+            draggable.enable();
             this.update();
             return this._div;
         };
 
         // method that we will use to update the control based on feature properties passed
         this.infoControl.update = function (props) {
-            this._div.innerHTML = '<h4>Information of the country</h4>' + (props ?
+            this._div.innerHTML = '<div><h4>Information of the country</h4>' + (props ?
                 '<b>' + props.name + '</b><br />' + props.pop_est + ' people'
-                : 'Hover over a place');
+                : 'Hover over a place') + '</div>';
         };
 
+        
+
+        this.slideControl.onAdd = function (map) {
+            //這裡this為map            
+
+            this._div = L.DomUtil.get('slider'); // get a div element                     
+            var draggable = new L.Draggable(this._div);
+
+            //統一由jquery控制draggable功能            
+            //draggable.enable(); 
+            //nonDraggable.disable();
+
+            L.DomEvent.disableClickPropagation(this._div);           
+            
+            var self = this;
+
+            draggable.on('down', function (e) {
+                //self.draggable.enable();   
+            });
+
+            draggable.on('drag', function (e) {
+
+                // let point = L.DomUtil.getPosition(self._div);
+                // let DivPosition = map.containerPointToLatLng(point);
+                // let ViewMapBound = map.getBounds();
+
+                // console.log(self._div)
+                // console.log(point)
+                // console.log(map.containerPointToLatLng(point));
+                // console.log(map.getBounds());
+                // console.log(ViewMapBound.contains(DivPosition))
+            });
+
+            return this._div;
+        }
+
         this.infoControl.addTo(this.map);
+        this.slideControl.addTo(this.map);
+        //#endregion
+
+        //#region 調整Map中div屬性，不被map影響
+        //功能選單
+        let dragAction = L.DomUtil.get('dragAction');
+        L.DomEvent.disableClickPropagation(dragAction);
+
+        //統計圖表
+        let dragChart = L.DomUtil.get('dragChart'); // get a div element        
+        L.DomEvent.disableClickPropagation(dragChart);       
+
         //#endregion
     }
+
+    ngOnDestroy() {
+        //回復footer隱藏特例
+        var element = document.getElementsByClassName('push');
+        (element[0] as HTMLElement).style.display = '';
+        var element = document.getElementsByClassName('wrapper');
+        (element[0] as HTMLElement).style.display = '';
+    }
+
+    getSideDetail() {
+        this.REST_v34.GetV34().subscribe((result: v34[]) => {
+            this.SideList = result;
+        });
+    }
+
+    //#region Dialogs
+    openCreateDialog(data: v34): void {
+
+        const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
+            width: '80%',
+            data: data
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            //this.loadData();
+        });
+    }
+    openDeleteDialog(item: v34): void {
+        const dialogRef = this.dialog.open(DialogSupplyChainDeleteComponent, {
+            width: '250px',
+            data: item
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            //刷新側欄
+            this.getSideDetail();
+        });
+    }
+
+    openUpdateDialog(item: v34): void {
+        // const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
+        //     width: '400px',
+        //     data: [MenuDetial, this.MenuList]
+        // });
+
+        // dialogRef.afterClosed().subscribe(result => {
+        //     //console.log('The dialog was closed');
+        //     this.loadData();
+        // });
+        console.log(item)
+    }
+    //#endregion
 
     //#region Event function about Leaflet
     onEachFeature(feature, layer) {
@@ -226,5 +401,44 @@ export class MapComponet implements OnInit {
             layer.bringToFront();
         }
     }
-    //#endregion
+    //#endregion    
+
+    createHighchart() {
+        Highcharts.chart('highcahrtContainer', {
+            title: {
+                text: 'Combination chart'
+            },
+            xAxis: {
+                categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+            },
+            series: [{
+                type: 'column',
+                name: 'Jane',
+                data: [3, 2, 1, 3, 4]
+            }, {
+                type: 'column',
+                name: 'John',
+                data: [2, 3, 5, 7, 6]
+            }, {
+                type: 'column',
+                name: 'Joe',
+                data: [4, 3, 3, 9, 0]
+            }, {
+                type: 'spline',
+                name: 'Average',
+                data: [3, 2.67, 3, 6.33, 3.33],
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                }
+            }]
+        });
+    }
+}
+
+function resizeToScreen(element, diff) {
+    var wHeight = window.innerHeight;
+    var objHeight = wHeight - diff;
+    element.style.height = objHeight + "px";
 }

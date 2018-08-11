@@ -1,23 +1,93 @@
-<!-- 
-<mat-slider class="slider"
-[max]="maxZoom"
-[min]="minZoom"
-[step]="step"
-[thumbLabel]="thumbLabel"
-[value]="initZoom"
-[vertical]="vertical"
-(input) = "adjustZoom($event.value)">
-</mat-slider> -->
+<div class="MapContent">
 
-<div id="MapDiv" >
-    <mat-slider class="slider leaflet-left leaflet-top leaflet-control"
-    [max]="maxZoom"
-    [min]="minZoom"
-    [step]="step"
-    [thumbLabel]="thumbLabel"
-    [(ngModel)]="Zoom"
-    [vertical]="vertical"
-    (input) = "adjustZoom($event.value)">
-    </mat-slider>
-    
+
+
+    <!-- SideBar -->
+    <mat-drawer-container class="system-drawer-container">
+
+        <!--Opened Contents-->
+        <mat-drawer position="end" #drawer class="system-drawer-side" mode="side">
+            <div id="MapDetail">
+                <div class="search">
+                    <mat-form-field>
+                        <input matInput placeholder="搜尋">
+                    </mat-form-field>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="detail">
+                    <mat-card *ngFor="let item of SideList; let i = index" class="card">
+                        <mat-card-header>
+                            <!-- <div mat-card-avatar class="example-header-image"></div> -->
+                            <mat-card-title>{{item.v3401}}：{{item.v3403}}</mat-card-title>
+                            <mat-card-subtitle>{{item.v3402}}</mat-card-subtitle>
+                        </mat-card-header>
+                        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+                        <mat-card-content>
+                            <p>
+                                負責人：{{item.v3406}}
+                                <br> 聯絡人：{{item.v3407}}
+                                <br> 電話：{{item.v3412}}
+                                <br> 傳真：{{item.v3413}}
+                                <br> 手機：{{item.v3415}}
+                                <br> 公司地址：{{item.v3420}}
+                                <br> 工廠地址：{{item.v3422}}
+                            </p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-raised-button color="primary" (click)="openUpdateDialog(item)">詳細資料</button>
+                            <button mat-raised-button color="primary" (click)="openDeleteDialog(item)">刪除</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-drawer>
+
+        <!--Opened Contents-->
+        <!-- <mat-drawer #drawer2 class="system-drawer-side" mode="side">
+            <div class="MapDetail">
+                work!!
+            </div>
+        </mat-drawer> -->
+
+        <!--Main content in this page and the action buttoms -->
+        <mat-drawer-content class="system-drawer-content">
+
+            <div id="MapDiv">
+                <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step" [thumbLabel]="thumbLabel"
+                    [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
+                </mat-slider>
+
+                <div id="dragChart" class="dragDiv application selector">
+                    <p> Click here to move</p>
+                    <div id="highcahrtContainer" class="dragDivContent">
+
+                    </div>
+                </div>
+
+                <div  id="dragAction"  class="dragDiv action selector">
+                    <p> Click here to move</p>
+                    <mat-expansion-panel>
+                        <!--Title-->
+                        <mat-expansion-panel-header>
+                            <p>功能選單</p>
+                        </mat-expansion-panel-header>
+
+                        <!--buttoms-->
+                        <button type="button" mat-raised-button color="primary" (click)="drawer.toggle()">
+                            供應商/客戶
+                        </button>
+                        <br>
+                        <button type="button" mat-raised-button color="primary" (click)="">
+                            Test
+                        </button>
+                    </mat-expansion-panel>
+                </div>
+
+
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+
+
 </div>
