@@ -1,12 +1,10 @@
 <div class="MapContent">
 
-
-
     <!-- SideBar -->
-    <mat-drawer-container class="system-drawer-container">
+    <mat-drawer-container class="drawer-container">
 
         <!--Opened Contents-->
-        <mat-drawer position="end" #drawer class="system-drawer-side" mode="side">
+        <mat-drawer position="end" #drawer class="drawer-side" mode="side" [(opened)]="opened">
             <div id="MapDetail">
                 <div class="search">
                     <mat-form-field>
@@ -50,22 +48,30 @@
         </mat-drawer> -->
 
         <!--Main content in this page and the action buttoms -->
-        <mat-drawer-content class="system-drawer-content">
+        <mat-drawer-content class="drawer-content" >
 
-            <div id="MapDiv">
-                <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step" [thumbLabel]="thumbLabel"
-                    [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
+            <div id="MapDiv" #dragBounds>
+                <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step"
+                    [thumbLabel]="thumbLabel" [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
                 </mat-slider>
 
-                <div id="dragChart" class="dragDiv application selector">
-                    <p> Click here to move</p>
-                    <div id="highcahrtContainer" class="dragDivContent">
-
+                <div id="dragChart" class=" application dragDiv selector"
+                    ngDraggable
+                    [handle]="ChartHandle"
+                    [bounds]="dragBounds"
+                    [inBounds]="true"
+                    [preventDefaultEvent]="true">
+                    <div #ChartHandle>
+                        <p > Click here to move</p>
+                    </div>                    
+                    <div id="highcahrtContainer" class="dragDivContent" 
+                        ngResizable rzHandles="s,e,se"
+                        (rzResizing)="onResizing($event)">
                     </div>
                 </div>
 
-                <div  id="dragAction"  class="dragDiv action selector">
-                    <p> Click here to move</p>
+                <div id="dragAction" class=" actionList dragDiv selector" ngResizable rzHandles="e,w" ngDraggable [handle]="dragHandle">
+                    <p #dragHandle> Click here to move</p>
                     <mat-expansion-panel>
                         <!--Title-->
                         <mat-expansion-panel-header>
@@ -77,17 +83,14 @@
                             供應商/客戶
                         </button>
                         <br>
-                        <button type="button" mat-raised-button color="primary" >
+                        <button type="button" mat-raised-button color="primary" (click)="opened=!opened;">
                             Test
                         </button>
                     </mat-expansion-panel>
                 </div>
-
-
             </div>
+
         </mat-drawer-content>
     </mat-drawer-container>
-
-
 
 </div>

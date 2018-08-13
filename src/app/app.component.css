@@ -3,7 +3,7 @@
     width: 100%;    
 }
 
-@media (min-width:768px) {    
+@media (min-width:951px) {    
     .catagory {
         width: 100%;
         float: none;        
@@ -13,21 +13,21 @@
     .content {
         float: none;
         width: 100%;
-        /* padding-right: 2.5%;
+        padding-right: 2.5%;
         padding-left: 2.5%;   
         padding-bottom: 2.5%; 
-        padding-top: 80px         */
-        padding: 56px 0 0 0; 
+        padding-top: 80px        
+        /* padding: 56px 0 0 0;  */
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 950px) {
     /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
     .content {
-        /* padding-right: 5%;
+        padding-right: 5%;
         padding-left: 5%;
-        padding-top: 80px; */
-        padding: 56px 0 0 0; 
+        padding-top: 80px;
+        /* padding: 56px 0 0 0;  */
     }
 }
 

@@ -1,56 +1,66 @@
-#MapContent{
-    width:100%; 
-    position:relative;
-}
-
-
-.system-drawer-side{
-    width: 30%;   
-}
-
-.system-drawer-content{   
-    position: relative;  
+.MapContent{
+    width:100%;    
+    padding-top: 56px;
 }
 
 #MapDiv{
     width: 100%;   
     float: left;
 }
-/*沒反應*/
-#MapDiv #slider.mat-slider-vertical .mat-slider-wrapper{    
-    left: 16px;
+
+.drawer-side{
+    width: 30%;   
 }
-#MapDiv .action{
-    float: right;
-    position: relative;
-    bottom: 0px;
-    right: 10px;
-    z-index: 1001;
+
+.dragDiv {        
+    position: absolute;  
+    cursor: move;
+    z-index: 1000;
+    background-color: blueviolet;
+    color: #fff;
+    border-radius: 5px;
+    
 }
-#MapDiv .action button{
+.dragDiv p {    
+    padding: 5px;
+    margin: 0px;  
+}
+.dragDiv .dragDivContent {    
+    cursor: text ;    
+    min-width:300px;  
+    margin: 0px auto; /* 置中*/
+}
+
+.actionList{
+    float: left;    
+    width:170px;
+    top: 20px;    
+    left: 20px;
+    z-index: 1002;
+}
+.actionList button{
     margin-top: 5px;
 }
-#MapDiv .application{
+.application{
     float: left;
-    position: relative;
-    bottom: 0px;
-    right: 10px;
-    z-index: 1000;
+    top: 10px;    
+    left: 50px; 
+    z-index: 1001;
 }
 
 
-#MapDetail{
+/* #MapDetail{
     width: 100%;   
     float: right;
-}
+}*/
 #MapDetail .search{
-    height: 6%; 
+    /* height: 6%;  */
     text-align: center;
 }
-#MapDetail .detail{
-    height: 93%;
+/* #MapDetail .detail{
+    height: 94%;
     overflow-y: scroll;
-}
+} */
 #MapDetail .detail card{
    margin-bottom: 1px;
 }
@@ -59,29 +69,7 @@
 
 
 
-.dragDiv {        
-    /* position: absolute;
-    bottom: 0px; */
-    width: 300px;
-    cursor: move;
-    z-index: 1000;
-    background-color: blueviolet;
-    color: #fff;
-    border-radius: 5px;
-}
-.dragDiv p {    
-    padding: 5px;
-    margin: 0px;  
-}
-.dragDiv .dragDivContent {    
-    z-index: 1001;
-    background-color: #f1f1f1;
-    text-align: center;
-    border: 1px solid #d3d3d3; 
-    color: blueviolet;   
-    cursor: text ;
-    width: 100%
-}
+
 
 
 .info {

@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularDraggableModule } from 'angular2-draggable';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
@@ -32,8 +33,9 @@ import { SharedMaterialModule, MatComponents } from './shared-material.module'
     ReactiveFormsModule,
     NgbModule.forRoot(),    
     AppRoutingModule,
-    BrowserAnimationsModule, //angular material animation
-    SharedMaterialModule //used material
+    BrowserAnimationsModule,  //angular material animation
+    SharedMaterialModule,     //used material
+    AngularDraggableModule    //directive of ngDraggable/ngResizable to make the DOM element draggable
   ],
   providers: [    
     SharedService,

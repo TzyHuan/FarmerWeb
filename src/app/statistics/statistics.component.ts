@@ -9,12 +9,15 @@ require('highcharts/modules/exporting')(Highcharts);
 })
 
 export class StatisticsComponent implements OnInit {
+
+    StatisticalCahrt:Highcharts;
+
     constructor() {
 
     }
 
     ngOnInit() {
-        Highcharts.chart('container', {
+        this.StatisticalCahrt = Highcharts.chart('container', {
             title: {
                 text: 'Combination chart'
             },
@@ -76,5 +79,9 @@ export class StatisticsComponent implements OnInit {
                 }
             }]
         });
+    }
+
+    onResizing(event:Event){
+        this.StatisticalCahrt.reflow();
     }
 }

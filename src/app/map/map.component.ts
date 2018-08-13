@@ -18,9 +18,12 @@ import Highcharts from 'highcharts';
 require('highcharts/modules/series-label')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
 
-//import * as $ from 'jquery/dist/jquery.min.js';
-import "jquery-ui/ui/widgets/draggable.js";
-declare var $: any;
+/** jquery有時候不太穩定，同樣的程式碼有時候讀得到有時候讀不到
+ * 解法：設定TimeOut，等所有dom準備完畢再上場
+ * 結論：不爽用！
+ * declare var $: any;
+ * import 'jquery-ui/ui/widgets/draggable.js';
+*/
 
 @Component({
     selector: 'app-map',
@@ -30,7 +33,7 @@ declare var $: any;
 })
 
 export class MapComponet implements OnInit, OnDestroy {
-    //slider
+    //mat-slider
     maxZoom: number = 18;
     minZoom: number = 3;
     step: number = 0.25;
@@ -39,6 +42,9 @@ export class MapComponet implements OnInit, OnDestroy {
     Zoom: number = 5;
     vertical: boolean = true;
 
+    //mat-sidenav
+    opened: boolean;
+
     //leaflet
     map: any;
     WorldGeoJson: any;
@@ -46,46 +52,42 @@ export class MapComponet implements OnInit, OnDestroy {
     slideControl: any;
     SideList: v34[] = [];
 
+    //Highchart
+    Cahrt:Highcharts;
+
     constructor(private REST_v34: V34Service, public dialog: MatDialog) {
 
-//隱藏footer      
-var element = document.getElementsByClassName('push');
-(element[0] as HTMLElement).style.display = 'none';
-var element = document.getElementsByClassName('wrapper');
-(element[0] as HTMLElement).style.display = 'contents';
+        //隱藏footer，調整map顯示於全屏
+        var element = document.getElementsByClassName('push');
+        (element[0] as HTMLElement).style.display = 'none';
+        var element = document.getElementsByClassName('wrapper');
+        (element[0] as HTMLElement).style.display = 'contents';
+        var element = document.getElementsByClassName('content');
+        (element[0] as HTMLElement).style.display = 'contents';        
 
-        $(function () {
-            $(".selector").draggable({
-                handle:"p",
-                containment: "#MapDiv"
-            });    
-           
-        });
-
-        //事件：視窗大小變換時，leaflet一起變動
+        //事件：視窗大小變換時，leaflet的size一起變動
         window.onresize = (event: any) => {
-            resizeToScreen(document.getElementById('MapDiv'), 56);
-            resizeToScreen(document.getElementById('MapDetail'), 56);
+            //變動時sidenav為關閉狀態，以免css被影響
+            this.opened=false;
+            this.resizeToScreen(document.getElementById('MapDiv'), 56);
+            this.resizeToScreen(document.getElementById('MapDetail'), 56);
+
         };
     }
 
-    //初始化地圖
     ngOnInit() {
-        
+        //leaflet size 初始化
+        this.resizeToScreen(document.getElementById('MapDiv'), 56);
+        this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
-        //拖曳div
-        //dragElement(document.getElementById("mydiv"));
-
-        //leaflet heigh 初始化
-        resizeToScreen(document.getElementById('MapDiv'), 56);
-        resizeToScreen(document.getElementById('MapDetail'), 56);
         //建立地圖
         this.createMap();
+
         //抓側欄資料
         this.getSideDetail();
-        //塞highchart //todo
-        //this.createHighchart();
-        
+
+        //塞資料入highchart //todo
+        this.createHighchart();
     }
 
     createMap() {
@@ -101,7 +103,7 @@ var element = document.getElementsByClassName('wrapper');
             shadowUrl: iconShadow,
         });
 
-        // 設定底圖資來源
+        //#region 設定底圖與圖層來源
         var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var PositronUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
         var AntiqueUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-antique/{z}/{x}/{y}.png';
@@ -118,7 +120,7 @@ var element = document.getElementsByClassName('wrapper');
         var antique = new L.TileLayer(AntiqueUrl, option);
         var eco = new L.TileLayer(EcoUrl, option);
 
-        // GeoJSON圖檔
+        // 匯入GeoJSON世界地圖檔
         this.WorldGeoJson = new L.geoJson(GEOdata, {
             style: (feature) => {
                 return {
@@ -134,9 +136,9 @@ var element = document.getElementsByClassName('wrapper');
                 this.onEachFeature(feature, layer)
             }
         });
+        //#endregion
 
-        //#region Markers標籤
-        //自訂多邊形標籤
+        //#region 自訂Markers、多邊形標籤
         var MyLand = L.polygon([
             [25.272156, 121.492556],
             [25.272322, 121.492739],
@@ -175,8 +177,7 @@ var element = document.getElementsByClassName('wrapper');
         ClusterMarkers.addLayer(MyMarker5);
         //#endregion
 
-
-        //#region 準備產出Map顯示於HTML
+        //#region 建立map on HTML div後，設定map相關屬性及監聽!
         //圖層設定
         var baseMaps = {
             "OpenStreetMap": osm,
@@ -201,25 +202,23 @@ var element = document.getElementsByClassName('wrapper');
             ],
             maxBoundsViscosity: 1.0
         });
+        //取消雙擊放大地圖
         this.map.doubleClickZoom.disable();
 
-        //設定初始中心
+        //設定初始中心為Taiwan
         this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
 
         //加入圖層控制項
         L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
-        //加入地圖搜尋功能
+        //加入Esri地圖搜尋功能(google的要收錢)
         const provider = new EsriProvider();
         const searchControl = new GeoSearchControl({
             provider: provider,
         });
         this.map.addControl(searchControl);
 
-        //#endregion
-
-        //#region Legend Control
-        //監聽地圖是否正在調整Zoom
+        //監聽map是否正在調整Zoom  
         this.map.on({
             zoom: () => {
                 this.Zoom = this.map.getZoom();
@@ -239,7 +238,9 @@ var element = document.getElementsByClassName('wrapper');
             //     console.log(e.latlng);
             // }
         })
+        //#endregion
 
+        //#region 其他自訂Legend Control append on map
         this.infoControl = L.control({ position: 'bottomright' });
         this.slideControl = L.control({ position: 'topleft' });
 
@@ -260,39 +261,17 @@ var element = document.getElementsByClassName('wrapper');
                 : 'Hover over a place') + '</div>';
         };
 
-        
-
         this.slideControl.onAdd = function (map) {
-            //這裡this為map            
+            //這裡this為map
+            this._div = L.DomUtil.get('slider'); // get a div element         
+            L.DomEvent.disableClickPropagation(this._div);
 
-            this._div = L.DomUtil.get('slider'); // get a div element                     
-            var draggable = new L.Draggable(this._div);
-
-            //統一由jquery控制draggable功能            
-            //draggable.enable(); 
-            //nonDraggable.disable();
-
-            L.DomEvent.disableClickPropagation(this._div);           
-            
-            var self = this;
-
-            draggable.on('down', function (e) {
-                //self.draggable.enable();   
-            });
-
-            draggable.on('drag', function (e) {
-
-                // let point = L.DomUtil.getPosition(self._div);
-                // let DivPosition = map.containerPointToLatLng(point);
-                // let ViewMapBound = map.getBounds();
-
-                // console.log(self._div)
-                // console.log(point)
-                // console.log(map.containerPointToLatLng(point));
-                // console.log(map.getBounds());
-                // console.log(ViewMapBound.contains(DivPosition))
-            });
-
+            //var draggable = new L.Draggable(this._div);
+            //draggable.enable();  
+            // draggable.on('down', function (e) {
+            // });
+            // draggable.on('drag', function (e) {
+            // });
             return this._div;
         }
 
@@ -300,25 +279,56 @@ var element = document.getElementsByClassName('wrapper');
         this.slideControl.addTo(this.map);
         //#endregion
 
-        //#region 調整Map中div屬性，不被map影響
+        //#region 與Map無關之視窗div屬性，click不與map連動
         //功能選單
         let dragAction = L.DomUtil.get('dragAction');
         L.DomEvent.disableClickPropagation(dragAction);
 
         //統計圖表
         let dragChart = L.DomUtil.get('dragChart'); // get a div element        
-        L.DomEvent.disableClickPropagation(dragChart);       
-
+        L.DomEvent.disableClickPropagation(dragChart);
         //#endregion
     }
 
-    ngOnDestroy() {
-        //回復footer隱藏特例
-        var element = document.getElementsByClassName('push');
-        (element[0] as HTMLElement).style.display = '';
-        var element = document.getElementsByClassName('wrapper');
-        (element[0] as HTMLElement).style.display = '';
+    //#region Event function about Leaflet
+    onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: (e) => this.highlightFeature(e),
+            mouseout: (e) => this.resetHighlight(e),
+            click: (e) => this.zoomToFeature(e)
+        });
     }
+
+    adjustZoom(value: number) {
+        this.map.setZoom(value);
+    }
+
+    zoomToFeature(e) {
+        this.map.fitBounds(e.target.getBounds());
+    }
+
+    resetHighlight(e) {
+        this.WorldGeoJson.resetStyle(e.target);
+        this.infoControl.update();
+    }
+
+    highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+            weight: 4,
+            color: '#666',
+            dashArray: '',
+            fillOpacity: 0.6
+        });
+
+        this.infoControl.update(layer.feature.properties);
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+    }
+    //#endregion    
+    
 
     getSideDetail() {
         this.REST_v34.GetV34().subscribe((result: v34[]) => {
@@ -364,47 +374,8 @@ var element = document.getElementsByClassName('wrapper');
     }
     //#endregion
 
-    //#region Event function about Leaflet
-    onEachFeature(feature, layer) {
-        layer.on({
-            mouseover: (e) => this.highlightFeature(e),
-            mouseout: (e) => this.resetHighlight(e),
-            click: (e) => this.zoomToFeature(e)
-        });
-    }
-
-    adjustZoom(value: number) {
-        this.map.setZoom(value);
-    }
-
-    zoomToFeature(e) {
-        this.map.fitBounds(e.target.getBounds());
-    }
-
-    resetHighlight(e) {
-        this.WorldGeoJson.resetStyle(e.target);
-        this.infoControl.update();
-    }
-
-    highlightFeature(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 4,
-            color: '#666',
-            dashArray: '',
-            fillOpacity: 0.6
-        });
-
-        this.infoControl.update(layer.feature.properties);
-
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-        }
-    }
-    //#endregion    
-
     createHighchart() {
-        Highcharts.chart('highcahrtContainer', {
+        this.Cahrt = Highcharts.chart('highcahrtContainer', {
             title: {
                 text: 'Combination chart'
             },
@@ -435,10 +406,28 @@ var element = document.getElementsByClassName('wrapper');
             }]
         });
     }
-}
 
-function resizeToScreen(element, diff) {
-    var wHeight = window.innerHeight;
-    var objHeight = wHeight - diff;
-    element.style.height = objHeight + "px";
+    resizeToScreen(element, diff) {
+        var wHeight = window.innerHeight;
+        var objHeight = wHeight - diff;
+        element.style.height = objHeight + "px";
+    }
+
+    onResizing(event:Event){
+        //Highchart automatic resize to the div
+        this.Cahrt.reflow();
+    }
+
+    ngOnDestroy() {
+        //回復footer隱藏特例
+        var element = document.getElementsByClassName('push');
+        (element[0] as HTMLElement).style.display = '';
+        var element = document.getElementsByClassName('wrapper');
+        (element[0] as HTMLElement).style.display = '';
+        var element = document.getElementsByClassName('content');
+        (element[0] as HTMLElement).style.display = '';
+
+        //取消onresize map
+        window.onresize = null;
+    }
 }

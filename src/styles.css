@@ -37,6 +37,11 @@ body{
     left: 0px;
 }
 
+.push{
+    position: fixed;
+    width: 100%;
+}
+
 /*加這段重新定位app-root位置，不然會亂跑*/
 app-root{
     margin: 0; 
