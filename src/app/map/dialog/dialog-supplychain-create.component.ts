@@ -13,38 +13,32 @@ import { v34 } from '../../ApiKmv/v34';
 
 export class DialogSupplyChainCreateComponent {
 
+    public data: v34;
+    public isModified: boolean;
+
+
     //SelectedCompanyType: number = 2; //預設初始值為'供應商'
     CompanyTypeList: CompanyType[] = [
-        {typeName:'客戶', value:1},
-        {typeName:'供應商', value:2}
+        { typeName: '客戶', value: 1 },
+        { typeName: '供應商', value: 2 }
     ];
 
 
     constructor(public dialogRef: MatDialogRef<DialogSupplyChainCreateComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: v34) {
+        @Inject(MAT_DIALOG_DATA) public recieve: v34) {
 
-        //todo enum
-        if (data.v3404 === 1) {
-            //this.SelectedCompanyType = "客戶";
-        }
-        else if (data.v3404 === 2) {
-            //this.SelectedCompanyType = "供應商";
-        }
-        else
-        {
-            //假設沒有值，預設初始值為'供應商'
-            //data.v3404 =2;
-        }
-
+        this.data = recieve[0];
+        this.isModified = recieve[1];
     }
 
-    closeDialog() {
+    closeDialog(event:any) {
+        console.log("saved: ",event);
         this.dialogRef.close();
     }
 
 }
 
-export class CompanyType{
-    typeName:string;
-    value:number;
+export class CompanyType {
+    typeName: string;
+    value: number;
 }

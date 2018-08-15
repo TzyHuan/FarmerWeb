@@ -1,5 +1,5 @@
 <mat-radio-group [(ngModel)]="data.v3404">
-  <mat-radio-button *ngFor="let Type of CompanyTypeList" [value]="Type.value">
+  <mat-radio-button *ngFor="let Type of CompanyTypeList" [value]="Type.value" [disabled]="isModified">
     {{Type.typeName}}&nbsp;&nbsp;&nbsp;&nbsp;
   </mat-radio-button>
 </mat-radio-group>
@@ -13,10 +13,10 @@
 
 <div [ngSwitch]="true">
   <div *ngSwitchCase="data.v3404 === 2 ">
-    <vendor-create [data]="data" (saved)="closeDialog($event)"></vendor-create>
+    <vendor-create [data]="data" [isModified]="isModified" (saved)="closeDialog($event)"></vendor-create>
   </div>
   <div *ngSwitchCase="data.v3404 === 1 ">
-    <customer-create [data]="data" (saved)="closeDialog($event)"></customer-create>
+    <customer-create [data]="data" [isModified]="isModified" (saved)="closeDialog($event)"></customer-create>
   </div>
   <div *ngSwitchDefault></div>
 </div>

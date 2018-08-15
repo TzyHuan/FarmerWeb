@@ -29,7 +29,9 @@ export class V34Service {
     GetOneV34(V3401: string, V3404: number) {
         return this.http.get<v34[]>(this.ApiUrl_v34 + "/" + V3401 + "/" + V3404);
     }
-    PutV34(V3401: string, V3404: number, body: v34) {
+    PutV34(body: v34) {
+        let V3401: string = body.v3401;
+        let V3404: number = body.v3404;
         return this.http.put<v34>(
             this.ApiUrl_v34 + "/" + V3401 + "/" + V3404,
             body,

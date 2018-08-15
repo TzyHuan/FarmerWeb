@@ -12,7 +12,7 @@ import * as GEOdata from '../../geojson/custom.geo.json';
 import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
 import { v34 } from '../ApiKmv/v34';
-import { V34Service } from '../ApiKmv/v34.service';
+//import { V34Service } from '../ApiKmv/v34.service';
 
 import Highcharts from 'highcharts';
 require('highcharts/modules/series-label')(Highcharts);
@@ -29,7 +29,7 @@ require('highcharts/modules/exporting')(Highcharts);
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
-    providers: [V34Service]
+    //providers: [V34Service]
 })
 
 export class MapComponet implements OnInit, OnDestroy {
@@ -43,19 +43,25 @@ export class MapComponet implements OnInit, OnDestroy {
     vertical: boolean = true;
 
     //mat-sidenav
-    opened: boolean;
+    @ViewChild('drawer') drawer:any;
+    drawerPage: number;
+    opened: boolean = false;    
+    sideSwitchButtonList: SwitchButton[] = [
+        { name: '供應商/客戶', value: 1 },
+        { name: 'Test', value: 2 }
+    ];
 
     //leaflet
     map: any;
     WorldGeoJson: any;
     infoControl: any;
-    slideControl: any;
-    SideList: v34[] = [];
+    slideControl: any;    
 
     //Highchart
-    Cahrt:Highcharts;
+    Cahrt: Highcharts;
+    
 
-    constructor(private REST_v34: V34Service, public dialog: MatDialog) {
+    constructor(public dialog: MatDialog) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -63,29 +69,26 @@ export class MapComponet implements OnInit, OnDestroy {
         var element = document.getElementsByClassName('wrapper');
         (element[0] as HTMLElement).style.display = 'contents';
         var element = document.getElementsByClassName('content');
-        (element[0] as HTMLElement).style.display = 'contents';        
+        (element[0] as HTMLElement).style.display = 'contents';
 
         //事件：視窗大小變換時，leaflet的size一起變動
         window.onresize = (event: any) => {
             //變動時sidenav為關閉狀態，以免css被影響
-            this.opened=false;
+            this.opened = false;
             this.resizeToScreen(document.getElementById('MapDiv'), 56);
             this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
         };
     }
 
-    ngOnInit() {
+    ngOnInit() {        
         //leaflet size 初始化
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
         this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
         //建立地圖
         this.createMap();
-
-        //抓側欄資料
-        this.getSideDetail();
-
+        
         //塞資料入highchart //todo
         this.createHighchart();
     }
@@ -328,20 +331,13 @@ export class MapComponet implements OnInit, OnDestroy {
         }
     }
     //#endregion    
-    
-
-    getSideDetail() {
-        this.REST_v34.GetV34().subscribe((result: v34[]) => {
-            this.SideList = result;
-        });
-    }
 
     //#region Dialogs
     openCreateDialog(data: v34): void {
-
+        var isModified:boolean = false;
         const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
             width: '80%',
-            data: data
+            data: [data, isModified]
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -356,22 +352,9 @@ export class MapComponet implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             //刷新側欄
-            this.getSideDetail();
+            //this.getSideDetail();
         });
-    }
-
-    openUpdateDialog(item: v34): void {
-        // const dialogRef = this.dialog.open(DialogMenuUpdateComponent, {
-        //     width: '400px',
-        //     data: [MenuDetial, this.MenuList]
-        // });
-
-        // dialogRef.afterClosed().subscribe(result => {
-        //     //console.log('The dialog was closed');
-        //     this.loadData();
-        // });
-        console.log(item)
-    }
+    }   
     //#endregion
 
     createHighchart() {
@@ -413,9 +396,31 @@ export class MapComponet implements OnInit, OnDestroy {
         element.style.height = objHeight + "px";
     }
 
-    onResizing(event:Event){
+    onResizing(event: Event) {
         //Highchart automatic resize to the div
         this.Cahrt.reflow();
+    }
+
+    onToggle(event:any, id: number) {        
+        
+        if(this.drawer.opened == false){
+            //若drawer為關閉狀態
+            this.drawer.opened = true;  //打開side
+            this.drawerPage = id;       //顯示指定id page
+        }
+        else if(this.drawer.opened == true && this.drawerPage == id){
+            //若drawer為開啟狀態且又再按同樣的button
+            this.drawer.opened = false; //關閉side
+        }
+        else if(this.drawer.opened == true && this.drawerPage != id){
+            //開啟狀態點不同button
+            this.drawerPage = id;       //直接切換到指定id page
+        }
+        else{
+            //其他狀況就關了吧～
+            this.drawer.opened = false;
+        }
+       
     }
 
     ngOnDestroy() {
@@ -430,4 +435,9 @@ export class MapComponet implements OnInit, OnDestroy {
         //取消onresize map
         window.onresize = null;
     }
+}
+
+export class SwitchButton {
+    name: string;
+    value: number;
 }

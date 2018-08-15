@@ -67,6 +67,9 @@ import { VendorCreateComponent } from './map/dialog/vendor-create.component';
 import { ActionTableComponent } from './system/action/actionTable/actionTable.component';
 import { CtrlTableComponent } from './system/action/ctrlTable/ctrlTable.component';
 
+/** Child components in Sidenav */
+import { DrawerSupplyChainComponent } from './map/drawer/drawer-supplychain.component';
+
 @NgModule({
   //imports: [MatButtonModule], // import內用
   exports: [
@@ -138,4 +141,5 @@ export const MatComponents = [
   VendorCreateComponent,
   CustomerCreateComponent,
   DialogSupplyChainDeleteComponent,
+  DrawerSupplyChainComponent,
 ]
