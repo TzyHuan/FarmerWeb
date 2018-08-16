@@ -22,7 +22,7 @@
                         </svg>   
 
                         <canvas id="myCanvas" width="550px" height="350px"></canvas>
-                        
+
                     </div>
                     <div *ngSwitchDefault>
                         Fuck!!
@@ -42,7 +42,7 @@
                 </mat-slider>
 
                 <!--Operation of highchart-->
-                <div id="dragChart" class=" application dragDiv" ngDraggable [handle]="ChartHandle" [bounds]="dragBounds" [inBounds]="true"
+                <!-- <div id="dragChart" class=" application dragDiv" ngDraggable [handle]="ChartHandle" [bounds]="dragBounds" [inBounds]="true"
                     [preventDefaultEvent]="true">
                     <div class="selector" #ChartHandle>
                         <p> Click here to move
@@ -52,14 +52,20 @@
                         </p>
                     </div>
 
-                    <!--Contain-->
+                    
                     <div id="highcahrtContainer" class="dragDivContent" ngResizable rzHandles="s,e,se" (rzResizing)="onResizing($event)">
                     </div>
 
+                </div> -->
+
+                <div *ngFor="let window of windowList">
+                    <window id={{window.name}}></window>
                 </div>
 
+                
+
                 <!--Operation of sideList-->
-                <div id="dragAction" class=" actionList dragDiv" ngResizable rzHandles="e,w" ngDraggable [bounds]="dragBounds" [inBounds]="true"
+                <!-- <div id="dragAction" class=" actionList dragDiv" ngResizable rzHandles="e,w" ngDraggable [bounds]="dragBounds" [inBounds]="true"
                     [handle]="ActionsHandle" [preventDefaultEvent]="true">
                     <div class="selector" #ActionsHandle>
                         <p> Click here to move
@@ -69,14 +75,14 @@
                         </p>
                     </div>
 
-                    <!--Contain-->
+                    
                     <mat-expansion-panel class=" actionItems">
-                        <!--Title-->
+                        
                         <mat-expansion-panel-header>
                             <p>功能選單</p>
                         </mat-expansion-panel-header>
 
-                        <!--buttons-->
+                        
                         <div *ngFor="let SwitchButton of sideSwitchButtonList; last as isLast">
                             <button type="button" mat-raised-button color="primary" (click)="onToggle($event, SwitchButton.value)">
                                 {{SwitchButton.name}}
@@ -85,7 +91,7 @@
                         </div>
 
                     </mat-expansion-panel>
-                </div>
+                </div> -->
             </div>
             <!-- Map as desktop-->
 
@@ -104,19 +110,19 @@
                     </mat-icon>
                 </button>
                 <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assessment
+                    <mat-icon class="mat-icon-rtl-mirror">assignment
                     </mat-icon>
                 </button>
                 <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assessment
+                    <mat-icon class="mat-icon-rtl-mirror">work
                     </mat-icon>
                 </button>
                 <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assessment
+                    <mat-icon class="mat-icon-rtl-mirror">domain
                     </mat-icon>
                 </button>
                 <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assessment
+                    <mat-icon class="mat-icon-rtl-mirror">sentiment_satisfied_alt
                     </mat-icon>
                 </button>
             </div>

@@ -6,17 +6,11 @@ import { HttpHeaders } from '@angular/common/http'
 import { ClimateComponent } from './climate/climate.component';
 import { HomeComponent } from './home/home.component';
 //登入&登出
-import { UserComponent } from './user/user.component';
-import { SignUpComponent } from './user/sign-up/sign-up.component';
-import { SignInComponent } from './user/sign-in/sign-in.component';
+import { UserComponents } from './user/user.module';
 //系統管理
-import { SystemComponent } from './system/system.component';
-import { MenuComponent } from './system/menu/menu.component';
-import { ActionComponent } from './system/action/action.component';
-import { CharacterComponent } from './system/character/character.component';
-import { MemberComponent } from './system/member/member.component'
+import { SystemComponents } from './system/system.module';
 //地圖
-import { MapComponet } from './map/map.component';
+import { MapComponents } from './map/map.module';
 //列印
 import { PrintComponent } from './print/print.component';
 //統計
@@ -111,7 +105,6 @@ export class AppRoutingModule {
     return finalRoutes;
   }
 
-
   private GetComponentType(route: vmNavMenu): any {
     // 根據 componentType 名字取出對應的 componentType
     let factory: any = this.factories.find(
@@ -168,26 +161,26 @@ export class AppRoutingModule {
 
 // 這邊宣告所有要用的Components
 export const routingComponents = [
+
+  //Climate
   ClimateComponent,
+
+  //Home
   HomeComponent,
 
-  //登入&登出
-  SignInComponent,
-  SignUpComponent,
+  //User登入&登出
+  UserComponents,
 
   //系統管理
-  SystemComponent,
-  MenuComponent,
-  ActionComponent,
-  CharacterComponent,
-  MemberComponent,
+  SystemComponents,
 
   //地圖
-  MapComponet,
+  MapComponents,
 
   //列印
   PrintComponent,
 
   //統計
   StatisticsComponent
+
 ]

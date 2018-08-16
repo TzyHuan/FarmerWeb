@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import L from 'leaflet';
@@ -32,7 +32,7 @@ require('highcharts/modules/exporting')(Highcharts);
     //providers: [V34Service]
 })
 
-export class MapComponet implements OnInit, OnDestroy {
+export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     //mat-slider
     maxZoom: number = 18;
     minZoom: number = 3;
@@ -50,6 +50,11 @@ export class MapComponet implements OnInit, OnDestroy {
         { name: '供應商/客戶', value: 1 },
         { name: 'Test', value: 2 }
     ];
+    windowList:Window[] = [
+        { name: 'dragChart', value: 1 },
+        { name: 'dragAction', value: 2 },
+        { name: 'dragWindow1', value: 3 }
+    ]
 
     //leaflet
     map: any;
@@ -86,11 +91,28 @@ export class MapComponet implements OnInit, OnDestroy {
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
         this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
-        //建立地圖
-        this.createMap();
+        
         
         //塞資料入highchart //todo
-        this.createHighchart();
+        //this.createHighchart();
+    }
+
+    ngAfterViewInit(){
+        //建立地圖
+        this.createMap();
+    }
+
+    ngOnDestroy() {
+        //回復footer隱藏特例
+        var element = document.getElementsByClassName('push');
+        (element[0] as HTMLElement).style.display = '';
+        var element = document.getElementsByClassName('wrapper');
+        (element[0] as HTMLElement).style.display = '';
+        var element = document.getElementsByClassName('content');
+        (element[0] as HTMLElement).style.display = '';
+
+        //取消onresize map
+        window.onresize = null;
     }
 
     createMap() {
@@ -283,13 +305,23 @@ export class MapComponet implements OnInit, OnDestroy {
         //#endregion
 
         //#region 與Map無關之視窗div屬性，click不與map連動
-        //功能選單
-        let dragAction = L.DomUtil.get('dragAction');
-        L.DomEvent.disableClickPropagation(dragAction);
 
-        //統計圖表
-        let dragChart = L.DomUtil.get('dragChart'); // get a div element        
-        L.DomEvent.disableClickPropagation(dragChart);
+        this.windowList.forEach((value,index,array)=>{
+            let dragWindow = L.DomUtil.get(value.name);            
+            L.DomEvent.disableClickPropagation(dragWindow);
+        })
+        // //功能選單
+        // let dragAction = L.DomUtil.get('dragAction');
+        // L.DomEvent.disableClickPropagation(dragAction);
+
+        // //統計圖表
+        // let dragChart = L.DomUtil.get('dragChart'); // get a div element        
+        // L.DomEvent.disableClickPropagation(dragChart);
+
+        // //todo 需寫迴圈，動態設定每個視窗
+        // let dragWindow1 = L.DomUtil.get('dragWindow1');
+        // L.DomEvent.disableClickPropagation(dragWindow1);
+
         //#endregion
     }
 
@@ -422,22 +454,14 @@ export class MapComponet implements OnInit, OnDestroy {
         }
        
     }
-
-    ngOnDestroy() {
-        //回復footer隱藏特例
-        var element = document.getElementsByClassName('push');
-        (element[0] as HTMLElement).style.display = '';
-        var element = document.getElementsByClassName('wrapper');
-        (element[0] as HTMLElement).style.display = '';
-        var element = document.getElementsByClassName('content');
-        (element[0] as HTMLElement).style.display = '';
-
-        //取消onresize map
-        window.onresize = null;
-    }
 }
 
 export class SwitchButton {
+    name: string;
+    value: number;
+}
+
+export class Window {
     name: string;
     value: number;
 }

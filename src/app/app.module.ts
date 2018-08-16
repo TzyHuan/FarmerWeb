@@ -11,28 +11,26 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
-import { UserComponent } from './user/user.component';
 
 import { UserService } from './user/shared/user.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { SharedService } from './shared-service';
-import { SharedMaterialModule, MatComponents } from './shared-material.module'
+import { SharedMaterialModule, MatComponents } from './shared-material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    routingComponents,  
-    UserComponent,
+    routingComponents,
     MatComponents
   ],
   imports: [
-    BrowserModule,//must put first    
+    BrowserModule,            //must put first
     HttpClientModule,
     FormsModule,    
     ReactiveFormsModule,
     NgbModule.forRoot(),    
-    AppRoutingModule,
+    AppRoutingModule,         //component 路徑樹狀結構
     BrowserAnimationsModule,  //angular material animation
     SharedMaterialModule,     //used material
     AngularDraggableModule    //directive of ngDraggable/ngResizable to make the DOM element draggable
@@ -41,7 +39,7 @@ import { SharedMaterialModule, MatComponents } from './shared-material.module'
     SharedService,
     UserService,
     {
-      provide : HTTP_INTERCEPTORS,
+      provide : HTTP_INTERCEPTORS,  //過濾封包
       useClass : AuthInterceptor,
       multi : true
     }
@@ -57,7 +55,7 @@ import { SharedMaterialModule, MatComponents } from './shared-material.module'
   // or including it in a routing definition.
   entryComponents:[   
     routingComponents,
-    MatComponents
+    MatComponents,    
   ]
 })
 
