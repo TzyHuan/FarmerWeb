@@ -67,7 +67,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    constructor(public dialog: MatDialog, public _WindowService: WindowService ) {
+    constructor(public dialog: MatDialog, public _WindowService: WindowService) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -84,7 +84,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             this.resizeToScreen(document.getElementById('MapDiv'), 56);
             this.resizeToScreen(document.getElementById('MapDetail'), 56);
         };
-      
+
     }
 
     ngOnInit() {
@@ -94,19 +94,28 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
         //訂閱sidenav開啟/關閉事件
         this.subSideChange = this._WindowService.sideChangeEmitted$.subscribe((emittedId: number) => {
-            this.onToggle(emittedId);            
+
+            this.onToggle(emittedId);
+
         });
 
         //訂閱window開啟/關閉事件
         this.subWindowClose = this._WindowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
-            this.windowList[emittedIndex].opened = false;
-        });
+            this.windowList[emittedIndex].opened = !this.windowList[emittedIndex].opened;
+           
+            //刷新button active class
+            this.dockButtomActive();
+        });       
 
     }
 
     ngAfterViewInit() {
         //建立地圖
         this.createMap();
+
+        //初始化dock button 開啟/關閉狀態的class以調整css
+        //必須在ngAfterViewInit，等*ngFor完成buttom
+        this.dockButtomActive();
     }
 
     ngOnDestroy() {
@@ -417,6 +426,25 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             this.drawer.opened = false;
         }
 
+    }
+
+    dockOnClick(index: number) {
+        this._WindowService.emitWindowClose(index)
+        //this.windowList[index].opened=!this.windowList[index].opened;
+    }
+
+    dockButtomActive(){
+        this.windowList.forEach((v, i, a) => {
+            console.log(i);
+            let dockButtonClasses = document.getElementById("btn" + i).classList;
+
+            if (v.opened) {
+                dockButtonClasses.add("btn-active");
+            } else {
+                dockButtonClasses.remove("btn-active");
+            }
+
+        })
     }
 }
 

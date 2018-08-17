@@ -90,8 +90,14 @@
 
             <!--Operation of bottom dock (open/close the windows) -->
             <div class="dock">
-                <button *ngFor="let window of windowList; let i=index" mat-icon-button (click)="windowList[i].opened=!windowList[i].opened;">
-                    <mat-icon class="mat-icon-rtl-mirror">{{window.icon}}
+                <button *ngFor="let window of windowList; let i=index" 
+                    id="btn{{i}}"
+                    mat-icon-button 
+                    matTooltip={{window.name}}
+                    matTooltipPosition="above"
+                    [matTooltipShowDelay]="500"
+                    (click)="dockOnClick(i)">
+                    <mat-icon>{{window.icon}}
                     </mat-icon>
                 </button>
             </div>

@@ -22,6 +22,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   //imports: [MatButtonModule], // import內用
@@ -49,7 +50,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatRadioModule,
     MatDividerModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTooltipModule,
   ]
 })
 
