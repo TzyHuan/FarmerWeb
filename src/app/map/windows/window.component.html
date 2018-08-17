@@ -1,13 +1,30 @@
 <!--Operation of highchart-->
 <div id="dragChart" class=" application dragDiv" ngDraggable [handle]="Handle" [preventDefaultEvent]="true">
+    
     <div class="selector" #Handle>
-        <p> Click here to move
-            <button class="close">
+        <p> {{Title}}
+            <button class="close" (click)="clickClose()">
                 <span>x</span>
             </button>
         </p>
     </div>
 
+    <!--Switch case 判斷該開啟內容為何-->
+    <div [ngSwitch]="true" class="dragDivContent">
 
+        <!--Highchart-->
+        <div *ngSwitchCase="Title === 'dragChart'" class="chart" >
+            <window-dragChart></window-dragChart>
+        </div>
+        
+        <!--側欄-->
+        <div *ngSwitchCase="Title === 'dragAction'" class="actionList">
+            <window-dragAction class="actionItems"></window-dragAction>
+        </div>   
+
+        <!--空白-->
+        <div *ngSwitchDefault class="noContent">no content</div>
+
+    </div>
 
 </div>

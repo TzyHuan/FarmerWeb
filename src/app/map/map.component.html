@@ -15,11 +15,11 @@
                         Test Work!!
 
                         <div id="oval">
-                        </div> 
+                        </div>
 
-                        <svg height="400" width="350">       
-                            <path d="M 0 350 q 100 -30 200 0" stroke="green" stroke-width="1" fill="none" />         
-                        </svg>   
+                        <svg height="400" width="350">
+                            <path d="M 0 350 q 100 -30 200 0" stroke="green" stroke-width="1" fill="none" />
+                        </svg>
 
                         <canvas id="myCanvas" width="550px" height="350px"></canvas>
 
@@ -40,29 +40,7 @@
                 <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step"
                     [thumbLabel]="thumbLabel" [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
                 </mat-slider>
-
-                <!--Operation of highchart-->
-                <!-- <div id="dragChart" class=" application dragDiv" ngDraggable [handle]="ChartHandle" [bounds]="dragBounds" [inBounds]="true"
-                    [preventDefaultEvent]="true">
-                    <div class="selector" #ChartHandle>
-                        <p> Click here to move
-                            <button class="close">
-                                <span>x</span>
-                            </button>
-                        </p>
-                    </div>
-
-                    
-                    <div id="highcahrtContainer" class="dragDivContent" ngResizable rzHandles="s,e,se" (rzResizing)="onResizing($event)">
-                    </div>
-
-                </div> -->
-
-                <div *ngFor="let window of windowList">
-                    <window id={{window.name}}></window>
-                </div>
-
-                
+               
 
                 <!--Operation of sideList-->
                 <!-- <div id="dragAction" class=" actionList dragDiv" ngResizable rzHandles="e,w" ngDraggable [bounds]="dragBounds" [inBounds]="true"
@@ -91,9 +69,16 @@
                         </div>
 
                     </mat-expansion-panel>
+                    
                 </div> -->
+
             </div>
             <!-- Map as desktop-->
+
+            <!--Draggable windows-->
+            <div *ngFor="let window of windowList; let i=index">
+                <window *ngIf="window.opened" id={{window.name}} [Title]="windowList[i].name" [Index]="i"></window>
+            </div>
 
             <!--Operation of hideDrawer-->
             <div class="hideDrawer" [hidden]="!opened">
@@ -103,26 +88,10 @@
                 </button>
             </div>
 
-            <!--Operation of bottom dock-->
+            <!--Operation of bottom dock (open/close the windows) -->
             <div class="dock">
-                <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assessment
-                    </mat-icon>
-                </button>
-                <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">assignment
-                    </mat-icon>
-                </button>
-                <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">work
-                    </mat-icon>
-                </button>
-                <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">domain
-                    </mat-icon>
-                </button>
-                <button mat-icon-button (click)="opened=false;">
-                    <mat-icon class="mat-icon-rtl-mirror">sentiment_satisfied_alt
+                <button *ngFor="let window of windowList; let i=index" mat-icon-button (click)="windowList[i].opened=!windowList[i].opened;">
+                    <mat-icon class="mat-icon-rtl-mirror">{{window.icon}}
                     </mat-icon>
                 </button>
             </div>

@@ -3,7 +3,7 @@
 
   <mat-drawer #drawer class="system-drawer-side" mode="side">
     <ul>         
-      <li *ngFor="let MenuItem of MenuList" class="li.link-active nav-item" [routerLinkActive]="['link-active']">
+      <li *ngFor="let MenuItem of MenuList" class="nav-item" [routerLinkActive]="['link-active']">
         <a class="nav-link" [routerLink]="MenuItem?.path">
           <mat-icon style="vertical-align: top">label</mat-icon>
           {{MenuItem?.menuText}}

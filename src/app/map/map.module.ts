@@ -11,6 +11,10 @@ import { VendorCreateComponent } from './dialog/vendor-create.component';
 /** Child components in Sidenav */
 import { DrawerSupplyChainComponent } from './drawer/drawer-supplychain.component';
 
+/** Child component in windows */
+import { DragActionComponent } from './windows/dragAction/dragAction.component';
+import { DragChartComponent } from './windows/dragChart/dragChart.component';
+
 export class MapModule { }
 
 // 這邊宣告所有Material的Components
@@ -25,6 +29,9 @@ export const MapComponents = [
     /** Child components in dialogs */    
     VendorCreateComponent,
     CustomerCreateComponent,
+    /** Child component in windows */
+    DragActionComponent,
+    DragChartComponent,
     
     /** Others */
     DrawerSupplyChainComponent,

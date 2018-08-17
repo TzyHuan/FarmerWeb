@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material';
 
 import L from 'leaflet';
@@ -13,10 +14,7 @@ import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-cr
 import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
 import { v34 } from '../ApiKmv/v34';
 //import { V34Service } from '../ApiKmv/v34.service';
-
-import Highcharts from 'highcharts';
-require('highcharts/modules/series-label')(Highcharts);
-require('highcharts/modules/exporting')(Highcharts);
+import { WindowService } from './windows/window.service';
 
 /** jquery有時候不太穩定，同樣的程式碼有時候讀得到有時候讀不到
  * 解法：設定TimeOut，等所有dom準備完畢再上場
@@ -29,7 +27,7 @@ require('highcharts/modules/exporting')(Highcharts);
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
-    //providers: [V34Service]
+    providers: [WindowService]
 })
 
 export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
@@ -43,30 +41,33 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     vertical: boolean = true;
 
     //mat-sidenav
-    @ViewChild('drawer') drawer:any;
+    @ViewChild('drawer') drawer: any;
     drawerPage: number;
-    opened: boolean = false;    
+    opened: boolean = false;
+    subSideChange: Subscription;
+    subWindowClose: Subscription;
+
     sideSwitchButtonList: SwitchButton[] = [
         { name: '供應商/客戶', value: 1 },
         { name: 'Test', value: 2 }
     ];
-    windowList:Window[] = [
-        { name: 'dragChart', value: 1 },
-        { name: 'dragAction', value: 2 },
-        { name: 'dragWindow1', value: 3 }
+    windowList: Window[] = [
+        { name: 'dragChart', value: 0, opened: true, icon: 'assessment' },
+        { name: 'dragAction', value: 1, opened: true, icon: 'vertical_split' },
+        { name: 'dragWindow1', value: 2, opened: true, icon: 'work' },
+        { name: 'dragWindow2', value: 3, opened: true, icon: 'domain' },
+        { name: 'dragWindow3', value: 4, opened: true, icon: 'assignment' }
     ]
 
     //leaflet
     map: any;
     WorldGeoJson: any;
     infoControl: any;
-    slideControl: any;    
+    slideControl: any;
 
-    //Highchart
-    Cahrt: Highcharts;
-    
 
-    constructor(public dialog: MatDialog) {
+
+    constructor(public dialog: MatDialog, public _WindowService: WindowService ) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -82,22 +83,28 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             this.opened = false;
             this.resizeToScreen(document.getElementById('MapDiv'), 56);
             this.resizeToScreen(document.getElementById('MapDetail'), 56);
-
         };
+      
     }
 
-    ngOnInit() {        
+    ngOnInit() {
         //leaflet size 初始化
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
         this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
-        
-        
-        //塞資料入highchart //todo
-        //this.createHighchart();
+        //訂閱sidenav開啟/關閉事件
+        this.subSideChange = this._WindowService.sideChangeEmitted$.subscribe((emittedId: number) => {
+            this.onToggle(emittedId);            
+        });
+
+        //訂閱window開啟/關閉事件
+        this.subWindowClose = this._WindowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
+            this.windowList[emittedIndex].opened = false;
+        });
+
     }
 
-    ngAfterViewInit(){
+    ngAfterViewInit() {
         //建立地圖
         this.createMap();
     }
@@ -113,6 +120,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
         //取消onresize map
         window.onresize = null;
+
+        //取消訂閱避免memory leak
+        this.subSideChange.unsubscribe();
+        this.subWindowClose.unsubscribe();
     }
 
     createMap() {
@@ -305,23 +316,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //#endregion
 
         //#region 與Map無關之視窗div屬性，click不與map連動
-
-        this.windowList.forEach((value,index,array)=>{
-            let dragWindow = L.DomUtil.get(value.name);            
-            L.DomEvent.disableClickPropagation(dragWindow);
-        })
-        // //功能選單
-        // let dragAction = L.DomUtil.get('dragAction');
-        // L.DomEvent.disableClickPropagation(dragAction);
-
-        // //統計圖表
-        // let dragChart = L.DomUtil.get('dragChart'); // get a div element        
-        // L.DomEvent.disableClickPropagation(dragChart);
-
-        // //todo 需寫迴圈，動態設定每個視窗
-        // let dragWindow1 = L.DomUtil.get('dragWindow1');
-        // L.DomEvent.disableClickPropagation(dragWindow1);
-
+        // this.windowList.forEach((value,index,array)=>{
+        //     let dragWindow = L.DomUtil.get(value.name);            
+        //     L.DomEvent.disableClickPropagation(dragWindow);
+        // })
         //#endregion
     }
 
@@ -366,7 +364,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
     //#region Dialogs
     openCreateDialog(data: v34): void {
-        var isModified:boolean = false;
+        var isModified: boolean = false;
         const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
             width: '80%',
             data: [data, isModified]
@@ -386,41 +384,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             //刷新側欄
             //this.getSideDetail();
         });
-    }   
+    }
     //#endregion
 
-    createHighchart() {
-        this.Cahrt = Highcharts.chart('highcahrtContainer', {
-            title: {
-                text: 'Combination chart'
-            },
-            xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-            },
-            series: [{
-                type: 'column',
-                name: 'Jane',
-                data: [3, 2, 1, 3, 4]
-            }, {
-                type: 'column',
-                name: 'John',
-                data: [2, 3, 5, 7, 6]
-            }, {
-                type: 'column',
-                name: 'Joe',
-                data: [4, 3, 3, 9, 0]
-            }, {
-                type: 'spline',
-                name: 'Average',
-                data: [3, 2.67, 3, 6.33, 3.33],
-                marker: {
-                    lineWidth: 2,
-                    lineColor: Highcharts.getOptions().colors[3],
-                    fillColor: 'white'
-                }
-            }]
-        });
-    }
+
 
     resizeToScreen(element, diff) {
         var wHeight = window.innerHeight;
@@ -428,31 +395,28 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         element.style.height = objHeight + "px";
     }
 
-    onResizing(event: Event) {
-        //Highchart automatic resize to the div
-        this.Cahrt.reflow();
-    }
 
-    onToggle(event:any, id: number) {        
-        
-        if(this.drawer.opened == false){
+
+    onToggle(id: number) {
+
+        if (this.drawer.opened == false) {
             //若drawer為關閉狀態
             this.drawer.opened = true;  //打開side
             this.drawerPage = id;       //顯示指定id page
         }
-        else if(this.drawer.opened == true && this.drawerPage == id){
+        else if (this.drawer.opened == true && this.drawerPage == id) {
             //若drawer為開啟狀態且又再按同樣的button
             this.drawer.opened = false; //關閉side
         }
-        else if(this.drawer.opened == true && this.drawerPage != id){
+        else if (this.drawer.opened == true && this.drawerPage != id) {
             //開啟狀態點不同button
             this.drawerPage = id;       //直接切換到指定id page
         }
-        else{
+        else {
             //其他狀況就關了吧～
             this.drawer.opened = false;
         }
-       
+
     }
 }
 
@@ -464,4 +428,6 @@ export class SwitchButton {
 export class Window {
     name: string;
     value: number;
+    opened: boolean;
+    icon: string;
 }
