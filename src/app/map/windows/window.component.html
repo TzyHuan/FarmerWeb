@@ -1,5 +1,9 @@
 <!--Operation of highchart-->
-<div id="dragChart" class=" application dragDiv" ngDraggable [handle]="Handle" [preventDefaultEvent]="true">
+<div id="dragChart" class="dragDiv" ngDraggable 
+    [handle]="Handle"     
+    [bounds]="LimitedBound"
+    [inBounds]="true"
+    [preventDefaultEvent]="true">
     
     <div class="selector" #Handle>
         <p> {{Title}}

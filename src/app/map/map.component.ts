@@ -15,6 +15,7 @@ import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-de
 import { v34 } from '../ApiKmv/v34';
 //import { V34Service } from '../ApiKmv/v34.service';
 import { WindowService } from './windows/window.service';
+import { MapService } from './map.service';
 
 /** jquery有時候不太穩定，同樣的程式碼有時候讀得到有時候讀不到
  * 解法：設定TimeOut，等所有dom準備完畢再上場
@@ -27,7 +28,7 @@ import { WindowService } from './windows/window.service';
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
-    providers: [WindowService]
+    providers: [WindowService, MapService]
 })
 
 export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
@@ -67,7 +68,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    constructor(public dialog: MatDialog, public _WindowService: WindowService) {
+    constructor(public dialog: MatDialog, public _WindowService: WindowService, public _MapService:MapService) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -90,7 +91,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         //leaflet size 初始化
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
-        this.resizeToScreen(document.getElementById('MapDetail'), 56);
+        this.resizeToScreen(document.getElementById('MapDetail'), 56);       
 
         //訂閱sidenav開啟/關閉事件
         this.subSideChange = this._WindowService.sideChangeEmitted$.subscribe((emittedId: number) => {
@@ -105,7 +106,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
             //刷新button active class
             this.dockButtomActive();
-        });
+        });      
 
     }
 
@@ -220,6 +221,16 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         ClusterMarkers.addLayer(MyMarker3);
         ClusterMarkers.addLayer(MyMarker4);
         ClusterMarkers.addLayer(MyMarker5);
+
+        //監聽客戶
+        this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {            
+            ClusterMarkers.clearLayers();
+            result.forEach((v,i,a)=>{
+                let CompanyMarker = L.marker([v.v3435, v.v3436]).bindPopup(v.v3402);
+                ClusterMarkers.addLayer(CompanyMarker);
+            });
+        });
+
         //#endregion
 
         //#region 建立map on HTML div後，設定map相關屬性及監聽!
@@ -325,10 +336,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //#endregion
 
         //#region 與Map無關之視窗div屬性，click不與map連動
-        // this.windowList.forEach((value,index,array)=>{
-        //     let dragWindow = L.DomUtil.get(value.name);            
-        //     L.DomEvent.disableClickPropagation(dragWindow);
-        // })
+        this.windowList.forEach((value,index,array)=>{
+            let dragWindow = L.DomUtil.get(value.name);            
+            L.DomEvent.disableClickPropagation(dragWindow);
+        })
         //#endregion
     }
 
@@ -396,15 +407,11 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
     //#endregion
 
-
-
     resizeToScreen(element, diff) {
-        var wHeight = window.innerHeight;
+        var wHeight = window.innerHeight;        
         var objHeight = wHeight - diff;
-        element.style.height = objHeight + "px";
+        element.style.height = objHeight + "px";       
     }
-
-
 
     onToggle(id: number) {
 
@@ -429,17 +436,16 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     dockOnClick(index: number) {
-        this._WindowService.emitWindowClose(index)
-        //this.windowList[index].opened=!this.windowList[index].opened;
+        this._WindowService.emitWindowClose(index);        
     }
 
-    dockButtomActive() {
+    dockButtomActive() {        
         this.windowList.forEach((v, i, a) => {
 
-            let dockButtonClasses = document.getElementById("btn" + i).classList;
+            let dockButtonClasses = document.getElementById("dockBtn" + i).classList;
 
             if (v.opened) {
-                dockButtonClasses.add("btn-active");
+                dockButtonClasses.add("btn-active");               
             } else {
                 dockButtonClasses.remove("btn-active");
             }

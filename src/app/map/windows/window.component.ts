@@ -5,13 +5,13 @@ import { WindowService } from './window.service';
     selector: 'window',
     templateUrl: './window.component.html',
     styleUrls: ['./window.component.css'],
-    //providers: []
 })
 
 export class WindowComponent implements OnInit, OnDestroy {
 
     @Input('Title') Title: string;
     @Input('Index') Index: number;
+    @Input('Bound') LimitedBound: HTMLDivElement;
 
     constructor(public _WindowService: WindowService) {
 

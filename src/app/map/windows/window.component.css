@@ -1,13 +1,9 @@
-.application{
-    float: left;
-    top: 10px;    
-    left: 50px; 
-    z-index: 1002;
-}
 .dragDiv {        
     position: absolute;    
-    font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
-    z-index: 1000;
+    font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;    
+    top: 10px;    
+    left: 50px;
+    z-index: 1002;
     border-radius: 5px;  
     background-color: rgba(138, 43, 226,0.9);
 }

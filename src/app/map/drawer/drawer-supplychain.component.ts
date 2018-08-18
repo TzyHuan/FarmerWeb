@@ -8,6 +8,7 @@ import { V34Service } from '../../ApiKmv/v34.service';
 
 import { DialogSupplyChainCreateComponent } from '../dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from '../dialog/dialog-supplychain-delete.component';
+import { MapService } from '../map.service';
 
 @Component({
     selector: 'drawer-supplychain',
@@ -21,40 +22,42 @@ export class DrawerSupplyChainComponent implements OnInit {
     CompanyFilter = new FormControl();
     filteredCompany: v34[];
 
-    constructor(private REST_v34: V34Service, public dialog: MatDialog) {
+    constructor(private REST_v34: V34Service, public dialog: MatDialog, private _MapService: MapService) {
 
     }
 
     ngOnInit() {
         //抓側欄資料
         this.getContent();
-
-        //Listen CompanyFilter
-        this.CompanyFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-            this.filteredCompany = this.sideCompanyList.filter((v, i, a) => {
-                return this.companyFilter(v,value)
-            });
-        });
     }
 
     getContent() {
         this.REST_v34.GetV34().subscribe((result: v34[]) => {
             this.filteredCompany = this.sideCompanyList = result;
+
+            //Listen CompanyFilter
+            this.CompanyFilter.valueChanges.pipe(startWith('')).subscribe(value => {
+                this.filteredCompany = this.sideCompanyList.filter((v, i, a) => {
+                    return this.companyFilter(v, value)
+                });
+
+                this._MapService.emitCompanyFilter(this.filteredCompany);
+            });
         });
     }
 
     companyFilter(Data: v34, searchTerms: string): boolean {
         //Filter obj
-        let FilterItem = JSON.stringify(Data).replace(/"|{|}|:| |,|-/g, '');        
+        let FilterItem = JSON.stringify(Data).replace(/"|{|}|:| |,|-/g, '');
 
-        Object.getOwnPropertyNames(Data).forEach((v)=>{
-            FilterItem = FilterItem.replace(v,'');
+        Object.getOwnPropertyNames(Data).forEach((v) => {
+            FilterItem = FilterItem.replace(v, '');
         })
-       
+
         let Judged: boolean = FilterItem.toLowerCase().indexOf(searchTerms.toLowerCase()) != -1;
 
         //為true者，才是要顯示的Data
-        return Judged       
+        return Judged
     }
 
     //#region Dialogs    
@@ -63,11 +66,6 @@ export class DrawerSupplyChainComponent implements OnInit {
             width: '250px',
             data: item
         });
-
-        dialogRef.afterClosed().subscribe(result => {
-            //刷新側欄
-            this.getContent();
-        });
     }
 
     openUpdateDialog(item: v34): void {
@@ -75,12 +73,7 @@ export class DrawerSupplyChainComponent implements OnInit {
         const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
             width: '80%',
             data: [item, isModified]
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            //刷新側欄
-            this.getContent();
-        });
+        });       
     }
     //#endregion    
 }

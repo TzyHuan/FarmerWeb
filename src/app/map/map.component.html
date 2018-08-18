@@ -8,9 +8,11 @@
             <div id="MapDetail">
 
                 <div [ngSwitch]="true">
+
                     <div *ngSwitchCase="drawerPage === 1">
                         <drawer-supplychain></drawer-supplychain>
                     </div>
+
                     <div *ngSwitchCase="drawerPage === 2">
                         Test Work!!
 
@@ -24,9 +26,11 @@
                         <canvas id="myCanvas" width="550px" height="350px"></canvas>
 
                     </div>
+
                     <div *ngSwitchDefault>
                         Nothing!!
                     </div>
+
                 </div>
 
             </div>
@@ -40,12 +44,14 @@
                 <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step"
                     [thumbLabel]="thumbLabel" [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
                 </mat-slider>
-            </div>           
 
-            <!--Draggable windows-->
-            <div *ngFor="let window of windowList; let i=index">
-                <window *ngIf="window.opened" id={{window.name}} [Title]="windowList[i].name" [Index]="i"></window>
+                <!--Draggable windows-->
+                <div *ngFor="let window of windowList; let i=index" id={{window.name}}>
+                    <window *ngIf="window.opened" [Title]="windowList[i].name" [Index]="i" [Bound]="dragBounds"></window>
+                </div>
             </div>
+
+
 
             <!--Operation of hideDrawer-->
             <div class="hideDrawer" [hidden]="!opened">
@@ -57,13 +63,8 @@
 
             <!--Operation of bottom dock (open/close the windows) -->
             <div class="dock">
-                <button *ngFor="let window of windowList; let i=index" 
-                    id="btn{{i}}"
-                    mat-icon-button 
-                    matTooltip={{window.name}}
-                    matTooltipPosition="above"
-                    [matTooltipShowDelay]="500"
-                    (click)="dockOnClick(i)">
+                <button *ngFor="let window of windowList; let i=index" id="dockBtn{{i}}" mat-icon-button matTooltip={{window.name}} matTooltipPosition="above"
+                    [matTooltipShowDelay]="500" (click)="dockOnClick(i)">
                     <mat-icon>{{window.icon}}
                     </mat-icon>
                 </button>
