@@ -25,7 +25,7 @@
 
                     </div>
                     <div *ngSwitchDefault>
-                        Fuck!!
+                        Nothing!!
                     </div>
                 </div>
 
@@ -40,40 +40,7 @@
                 <mat-slider id="slider" class="slider leaflet-left leaflet-top leaflet-control" [max]="maxZoom" [min]="minZoom" [step]="step"
                     [thumbLabel]="thumbLabel" [(ngModel)]="Zoom" [vertical]="vertical" (input)="adjustZoom($event.value)">
                 </mat-slider>
-               
-
-                <!--Operation of sideList-->
-                <!-- <div id="dragAction" class=" actionList dragDiv" ngResizable rzHandles="e,w" ngDraggable [bounds]="dragBounds" [inBounds]="true"
-                    [handle]="ActionsHandle" [preventDefaultEvent]="true">
-                    <div class="selector" #ActionsHandle>
-                        <p> Click here to move
-                            <button class="close">
-                                <span>x</span>
-                            </button>
-                        </p>
-                    </div>
-
-                    
-                    <mat-expansion-panel class=" actionItems">
-                        
-                        <mat-expansion-panel-header>
-                            <p>功能選單</p>
-                        </mat-expansion-panel-header>
-
-                        
-                        <div *ngFor="let SwitchButton of sideSwitchButtonList; last as isLast">
-                            <button type="button" mat-raised-button color="primary" (click)="onToggle($event, SwitchButton.value)">
-                                {{SwitchButton.name}}
-                            </button>
-                            <br *ngIf="!isLast">
-                        </div>
-
-                    </mat-expansion-panel>
-                    
-                </div> -->
-
-            </div>
-            <!-- Map as desktop-->
+            </div>           
 
             <!--Draggable windows-->
             <div *ngFor="let window of windowList; let i=index">

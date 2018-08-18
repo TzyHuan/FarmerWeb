@@ -54,9 +54,9 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     windowList: Window[] = [
         { name: 'dragChart', value: 0, opened: true, icon: 'assessment' },
         { name: 'dragAction', value: 1, opened: true, icon: 'vertical_split' },
-        { name: 'dragWindow1', value: 2, opened: true, icon: 'work' },
-        { name: 'dragWindow2', value: 3, opened: true, icon: 'domain' },
-        { name: 'dragWindow3', value: 4, opened: true, icon: 'assignment' }
+        { name: 'dragWindow1', value: 2, opened: false, icon: 'work' },
+        { name: 'dragWindow2', value: 3, opened: false, icon: 'domain' },
+        { name: 'dragWindow3', value: 4, opened: false, icon: 'assignment' }
     ]
 
     //leaflet
@@ -102,10 +102,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //訂閱window開啟/關閉事件
         this.subWindowClose = this._WindowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
             this.windowList[emittedIndex].opened = !this.windowList[emittedIndex].opened;
-           
+
             //刷新button active class
             this.dockButtomActive();
-        });       
+        });
 
     }
 
@@ -433,9 +433,9 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //this.windowList[index].opened=!this.windowList[index].opened;
     }
 
-    dockButtomActive(){
+    dockButtomActive() {
         this.windowList.forEach((v, i, a) => {
-            console.log(i);
+
             let dockButtonClasses = document.getElementById("btn" + i).classList;
 
             if (v.opened) {
