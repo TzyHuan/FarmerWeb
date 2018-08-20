@@ -7,9 +7,11 @@ import { v34 } from '../ApiKmv/v34';
 export class MapService {
     // Observable string sources
     private emitCompanyFilterSource = new Subject<v34[]>();    
+    private emitDrawerDetailClickSource = new Subject<number[]>();
 
     // Observable string streams
-    CompanyFilterEmitted$ = this.emitCompanyFilterSource.asObservable();    
+    CompanyFilterEmitted$ = this.emitCompanyFilterSource.asObservable();
+    DrawerDetailClickEmitted$ = this.emitDrawerDetailClickSource.asObservable();
 
     constructor() {
     }
@@ -17,6 +19,10 @@ export class MapService {
     // Service message commands
     emitCompanyFilter(data: v34[]) {
         this.emitCompanyFilterSource.next(data);
+    }
+
+    emitDrawerDetailClick(data: number[]) {
+        this.emitDrawerDetailClickSource.next(data);
     }
 }
 

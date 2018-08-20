@@ -5,7 +5,7 @@
 </div>
 <mat-divider></mat-divider>
 <div class="detail">
-    <mat-card *ngFor="let item of filteredCompany; let i = index" class="card">
+    <mat-card *ngFor="let item of filteredCompany; let i = index" class="card" (click)="onClickDetail(item.v3435, item.v3436)">
         <mat-card-header>
             <!-- <div mat-card-avatar class="example-header-image"></div> -->
             <mat-card-title>{{item.v3401}}：{{item.v3403}}</mat-card-title>

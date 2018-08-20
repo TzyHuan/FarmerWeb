@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { MapService } from '../map.service';
     providers: [V34Service]
 })
 
-export class DrawerSupplyChainComponent implements OnInit {
+export class DrawerSupplyChainComponent implements OnInit {    
     sideCompanyList: v34[] = [];
     CompanyFilter = new FormControl();
     filteredCompany: v34[];
@@ -58,6 +58,11 @@ export class DrawerSupplyChainComponent implements OnInit {
 
         //為true者，才是要顯示的Data
         return Judged
+    }
+
+    onClickDetail(Lat:number, Lng:number){
+        let position:number[] = [Lat, Lng];
+        this._MapService.emitDrawerDetailClick(position);
     }
 
     //#region Dialogs    

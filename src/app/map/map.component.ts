@@ -222,13 +222,16 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         ClusterMarkers.addLayer(MyMarker4);
         ClusterMarkers.addLayer(MyMarker5);
 
-        //監聽客戶
+        //監聽「客戶/供應商」drawer事件
         this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {            
             ClusterMarkers.clearLayers();
             result.forEach((v,i,a)=>{
                 let CompanyMarker = L.marker([v.v3435, v.v3436]).bindPopup(v.v3402);
                 ClusterMarkers.addLayer(CompanyMarker);
             });
+        });
+        this._MapService.DrawerDetailClickEmitted$.subscribe((result:number[]) => {            
+            this.map.panTo(result);            
         });
 
         //#endregion
