@@ -1,59 +1,81 @@
 <form [formGroup]="PrintForm">
-交易日期<br>
-<mat-form-field>
-  <input matInput formControlName="beginDate" [matDatepicker]="beginDatePicker" placeholder="起始日期">
-  <mat-datepicker-toggle matSuffix [for]="beginDatePicker"></mat-datepicker-toggle>
-  <mat-datepicker #beginDatePicker></mat-datepicker>
-</mat-form-field>
-至
-<mat-form-field>
-  <input matInput formControlName="endDate" [matDatepicker]="endDatePicker" placeholder="結束日期">
-  <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-  <mat-datepicker #endDatePicker></mat-datepicker>
-</mat-form-field>
+  交易日期
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="beginDate" [matDatepicker]="beginDatePicker" placeholder="起始日期">
+    <mat-datepicker-toggle matSuffix [for]="beginDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #beginDatePicker></mat-datepicker>
+  </mat-form-field>
+  至
+  <mat-form-field>
+    <input matInput formControlName="endDate" [matDatepicker]="endDatePicker" placeholder="結束日期">
+    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #endDatePicker></mat-datepicker>
+  </mat-form-field>
 
-<br>
+  <br> 公司名稱
 
-客戶代號<br>
-<mat-form-field>
-  <input matInput formControlName="customer" placeholder="請輸入客戶代號">
-</mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="company" placeholder="Title 公司名稱">
+  </mat-form-field>
 
-<br>
+  <br> 客戶代號
 
-水果種類<br>
-<mat-form-field>
-  <input matInput formControlName="type" placeholder="請輸入水果種類">
-</mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="customer" placeholder="請輸入客戶代號" [matAutocomplete]="autoCustomer">
+    <mat-autocomplete #autoCustomer="matAutocomplete" [panelWidth]="400">
+      <mat-option *ngFor="let option of customerFilteredOptions" [value]="option.value">
+        {{option.value}},{{option.key}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
 
-<br>
+  <br> 水果種類
 
-品種<br>
-<mat-form-field>
-  <input matInput formControlName="variety" placeholder="請輸入品種">
-</mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="type" placeholder="請輸入水果種類">
+  </mat-form-field>
 
-<br>
+  <br> 品種
 
-品牌<br>
-<mat-form-field>
-  <input matInput formControlName="brand" placeholder="請輸入品牌">
-</mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="variety" placeholder="請輸入品種">
+  </mat-form-field>
 
-<br>
+  <br> 品牌
 
-<!-- 列印別<br>
+  <br>
+  <mat-form-field>
+    <input matInput formControlName="brand" placeholder="請輸入品牌">
+  </mat-form-field>
+
+  <br>
+
+  <!-- 列印別<br>
 <mat-select  formControlName="printCategory"  placeholder="隸屬選單">
     <mat-option *ngFor="let Menu of MenuList" value="{{Menu.menuId}}">{{Menu.menuText}}</mat-option>
 </mat-select> -->
 
-<br>
-<mat-checkbox formControlName="printWord" [checked]="false">
+  <br>
+  <!-- <mat-checkbox formControlName="printWord" [checked]="false">
 </mat-checkbox>Word &nbsp;
 <mat-checkbox formControlName="printExcel" [checked]="false">
-</mat-checkbox>Excel &nbsp;
+</mat-checkbox>Excel &nbsp; -->
 
-<br>
-<button mat-raised-button color="primary" (click)="Print(PrintForm.value)">列印</button>
+  <mat-radio-group formControlName="printType">
+    <mat-radio-button [value]="'Word'">
+      Word &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </mat-radio-button>
+    <mat-radio-button [value]="'Excel'">
+      Excel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <br>
+  <button mat-raised-button color="primary" (click)="Print(PrintForm.value)">列印</button>
 
 </form>
