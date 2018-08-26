@@ -48,12 +48,12 @@ export class DrawerSupplyChainComponent implements OnInit {
 
     companyFilter(Data: v34, searchTerms: string): boolean {
         //Filter obj
-        let FilterItem = JSON.stringify(Data).replace(/"|{|}|:| |,|-/g, '');
+        let FilterItem = JSON.stringify(Data).replace(/"|{|}|:| |,/g, '');
 
         Object.getOwnPropertyNames(Data).forEach((v) => {
             FilterItem = FilterItem.replace(v, '');
         })
-
+        
         let Judged: boolean = FilterItem.toLowerCase().indexOf(searchTerms.toLowerCase()) != -1;
 
         //為true者，才是要顯示的Data

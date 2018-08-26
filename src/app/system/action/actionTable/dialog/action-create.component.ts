@@ -13,12 +13,12 @@ export class ActionCreateComponent {
     // we will pass in address, named as group when Input, from ActionComponent
     @Input('Group') public ActionForm: FormGroup;
     //@Input('ActionList') public ActionList: Action[];
-    public MethodList: string[] = ['GET', 'POST', 'PUT', 'DELETE'];
+    public MethodList: string[] = ['Get', 'Post', 'Put', 'Delete'];
 
     constructor() {}
 
     compareObjects(o1: any, o2: any): boolean {
-        if (o1 == '') o1 = 'GET';
+        if (o1 == '') o1 = 'Get';
         return o1 == o2;
       }
 }

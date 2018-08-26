@@ -6,8 +6,8 @@ import { map } from 'rxjs/operators'
 
 @Injectable()
 export class PrintService {
-    //public ApiUrl_print: string = environment.apiUrl + 'Print';
-    public ApiUrl_print: string = "http://localhost:4064/api/Print";
+    public ApiUrl_print: string = environment.apiUrl + 'Print';
+    //public ApiUrl_print: string = "http://localhost:4064/api/Print";
 
     headers = new HttpHeaders({
         'Content-Type': 'application/json; charset=UTF-8'

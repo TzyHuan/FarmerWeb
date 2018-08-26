@@ -10,14 +10,17 @@ require('highcharts/modules/exporting')(Highcharts);
 
 export class StatisticsComponent implements OnInit {
 
-    StatisticalCahrt:Highcharts;
+    StatisticalCahrt1:Highcharts;
+    StatisticalCahrt2:Highcharts;
+    StatisticalCahrt3:Highcharts;
+    StatisticalCahrt4:Highcharts;
 
     constructor() {
 
     }
 
     ngOnInit() {
-        this.StatisticalCahrt = Highcharts.chart('container', {
+        this.StatisticalCahrt1 = Highcharts.chart('container1', {
             title: {
                 text: 'Combination chart'
             },
@@ -79,9 +82,169 @@ export class StatisticsComponent implements OnInit {
                 }
             }]
         });
+
+        this.StatisticalCahrt2 = Highcharts.chart('container2', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Historic World Population by Region'
+            },
+            subtitle: {
+                text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
+            },
+            xAxis: {
+                categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Population (millions)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' millions'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 80,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Year 1800',
+                data: [107, 31, 635, 203, 2]
+            }, {
+                name: 'Year 1900',
+                data: [133, 156, 947, 408, 6]
+            }, {
+                name: 'Year 2000',
+                data: [814, 841, 3714, 727, 31]
+            }, {
+                name: 'Year 2016',
+                data: [1216, 1001, 4436, 738, 40]
+            }]
+        });
+
+        this.StatisticalCahrt3 = Highcharts.chart('container3', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                }
+            },
+            title: {
+                text: 'Contents of Highsoft\'s weekly fruit delivery'
+            },
+            subtitle: {
+                text: '3D donut in Highcharts'
+            },
+            plotOptions: {
+                pie: {
+                    innerSize: 100,
+                    depth: 45
+                }
+            },
+            series: [{
+                name: 'Delivered amount',
+                data: [
+                    ['Bananas', 8],
+                    ['Kiwi', 3],
+                    ['Mixed nuts', 1],
+                    ['Oranges', 6],
+                    ['Apples', 8],
+                    ['Pears', 4],
+                    ['Clementines', 4],
+                    ['Reddish (bag)', 1],
+                    ['Grapes (bunch)', 1]
+                ]
+            }]
+        });
+
+        this.StatisticalCahrt4 = Highcharts.chart('container4', {
+
+            chart: {
+                polar: true,
+                type: 'line'
+            },
+        
+            title: {
+                text: 'Budget vs spending',
+                x: -80
+            },
+        
+            pane: {
+                size: '80%'
+            },
+        
+            xAxis: {
+                categories: ['Sales', 'Marketing', 'Development', 'Customer Support',
+                    'Information Technology', 'Administration'],
+                tickmarkPlacement: 'on',
+                lineWidth: 0
+            },
+        
+            yAxis: {
+                gridLineInterpolation: 'polygon',
+                lineWidth: 0,
+                min: 0
+            },
+        
+            tooltip: {
+                shared: true,
+                pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
+            },
+        
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                y: 70,
+                layout: 'vertical'
+            },
+        
+            series: [{
+                name: 'Allocated Budget',
+                data: [43000, 19000, 60000, 35000, 17000, 10000],
+                pointPlacement: 'on'
+            }, {
+                name: 'Actual Spending',
+                data: [50000, 39000, 42000, 31000, 26000, 14000],
+                pointPlacement: 'on'
+            }]
+        
+        });
     }
 
     onResizing(event:Event){
-        this.StatisticalCahrt.reflow();
+        this.StatisticalCahrt1.reflow();
+
+        this.StatisticalCahrt2.reflow();
+
+        this.StatisticalCahrt3.reflow();
+
+        this.StatisticalCahrt4.reflow();
     }
 }

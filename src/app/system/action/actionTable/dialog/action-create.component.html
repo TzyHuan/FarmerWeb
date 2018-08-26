@@ -8,7 +8,7 @@
 
     
     <mat-form-field class="insert-full-width">
-        <mat-select formControlName="method" [compareWith]="compareObjects" placeholder="隸屬選單" required>
+        <mat-select formControlName="method" [compareWith]="compareObjects" placeholder="傳送方法" required>
             <mat-option *ngFor="let Method of MethodList" value="{{Method}}">{{Method}}</mat-option>
         </mat-select>
     </mat-form-field>

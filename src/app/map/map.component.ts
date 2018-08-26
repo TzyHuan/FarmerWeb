@@ -16,6 +16,7 @@ import { v34 } from '../ApiKmv/v34';
 //import { V34Service } from '../ApiKmv/v34.service';
 import { WindowService } from './windows/window.service';
 import { MapService } from './map.service';
+import { startWith } from '../../../node_modules/rxjs/operators';
 
 /** jquery有時候不太穩定，同樣的程式碼有時候讀得到有時候讀不到
  * 解法：設定TimeOut，等所有dom準備完畢再上場
@@ -210,19 +211,22 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             //     return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
             // }
         });
-        var MyMarker1 = L.marker([25.272156, 121.492556]).bindPopup('1'),
-            MyMarker2 = L.marker([25.272322, 121.492739]).bindPopup('2'),
-            MyMarker3 = L.marker([25.271947, 121.493200]).bindPopup('3'),
-            MyMarker4 = L.marker([25.271692, 121.492967]).bindPopup('4'),
-            MyMarker5 = L.marker([25.271950, 121.492656]).bindPopup('5');
-        //var Markers = L.layerGroup([MyMarker1, MyMarker2, MyMarker3, MyMarker4,MyMarker5]);
-        ClusterMarkers.addLayer(MyMarker1);
-        ClusterMarkers.addLayer(MyMarker2);
-        ClusterMarkers.addLayer(MyMarker3);
-        ClusterMarkers.addLayer(MyMarker4);
-        ClusterMarkers.addLayer(MyMarker5);
+        // var MyMarker1 = L.marker([25.272156, 121.492556]).bindPopup('1'),
+        //     MyMarker2 = L.marker([25.272322, 121.492739]).bindPopup('2'),
+        //     MyMarker3 = L.marker([25.271947, 121.493200]).bindPopup('3'),
+        //     MyMarker4 = L.marker([25.271692, 121.492967]).bindPopup('4'),
+        //     MyMarker5 = L.marker([25.271950, 121.492656]).bindPopup('5');
+        // //var Markers = L.layerGroup([MyMarker1, MyMarker2, MyMarker3, MyMarker4,MyMarker5]);
+        // ClusterMarkers.addLayer(MyMarker1);
+        // ClusterMarkers.addLayer(MyMarker2);
+        // ClusterMarkers.addLayer(MyMarker3);
+        // ClusterMarkers.addLayer(MyMarker4);
+        // ClusterMarkers.addLayer(MyMarker5);
 
-        //監聽「客戶/供應商」drawer事件
+        //初始化客戶/供應商於地圖上
+        
+
+        //監聽「客戶/供應商」drawer Filter事件，連動地圖Marker項目
         this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {            
             ClusterMarkers.clearLayers();
             result.forEach((v,i,a)=>{

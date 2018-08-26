@@ -40,11 +40,21 @@
     </mat-select>
 </mat-form-field>
 
-<div style="width: 500px" 
-    ngResizable 
-    ngDraggable
-    rzHandles="all"
-    (rzResizing)="onResizing($event)">
-    <div id="container" style="min-width: 310px; height: 100%;width: 100%; margin: 0 auto">
+<div>
+    <div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all" (rzResizing)="onResizing($event)">
+        <div id="container1" style="min-width: 310px; height: 100%;width: 100%; margin: 0 auto">
+        </div>
+    </div>
+    <div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all" (rzResizing)="onResizing($event)">
+        <div id="container2" style="min-width: 310px; height: 100%;width: 100%; margin: 0 auto">
+        </div>
+    </div>
+    <div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all" (rzResizing)="onResizing($event)">
+        <div id="container3" style="min-width: 310px; height: 100%;width: 100%; margin: 0 auto;">
+        </div>
+    </div>
+    <div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all" (rzResizing)="onResizing($event)">
+        <div id="container4" style="min-width: 310px; height: 100%;width: 100%; margin: 0 auto">
+        </div>
     </div>
 </div>

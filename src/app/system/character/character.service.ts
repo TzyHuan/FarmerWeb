@@ -44,7 +44,7 @@ export class CharacterService {
 
 @Injectable()
 export class ImenuRolesService {
-    public RestfulApiUrl_ImenuRole: string = 'http://192.168.1.170/FarmerAPI/api/ImenuRoles';
+    public RestfulApiUrl_ImenuRole: string = environment.apiUrl + 'ImenuRoles';
     
     constructor(private http: HttpClient) { }
 
