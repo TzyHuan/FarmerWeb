@@ -7,6 +7,7 @@ export class Menu {
     public selector?:string;
     public component?: string;
     public rootMenuId?: number;   
+    public appId?: number;
 }
 
 export class MenuNode {   

@@ -68,7 +68,6 @@ export class CharacterComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         //this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
-
       }
 
       /** 把選單資料代入Dialog選項 且 增加"無隸屬"的選項 */
@@ -76,22 +75,17 @@ export class CharacterComponent implements OnInit {
       // StackOverFlow-6612385:
       // An array in JavaScript is also an object and variables only hold a reference to an object, 
       // not the object itself. Thus both variables have a reference to the same object.
-      this.RoleList = data;
+      // Deep copy!不然MatTable也會多一個"無"的資料
+      this.RoleList = JSON.parse(JSON.stringify(data));
       this.RoleList.unshift({
         roleId: null,
         roleName: '無'
       });
-
     });
 
-    /** 由於 ImenuRoleDialog 需要同時需要ImenuRole、Menu的資料，先call再傳到children Components節省流量 */
-    zip(this.ImenuRoleREST.GetImenuRole(), this.MenuREST.GetMenuTree(), this.IactionRoleREST.GetIactionRole(), this.ActionREST.GetActionTree())
-      .subscribe(value => {
-        this.ImenuRoleList = value[0];
-        this.TreeMenu = value[1];
-        this.IactionRoleList = value[2];
-        this.TreeAction = value[3];
-      });
+    /** 由於 ImenuRoleDialog 需要同時需要ImenuRole、Menu的資料，先call再傳到children Component讓操作更流暢 */
+    this.loadImenuRole();
+    this.loadIactionRole();
   }
 
   //#region Dialog patterns
@@ -101,8 +95,8 @@ export class CharacterComponent implements OnInit {
       data: RoleDetial
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadData();
+    dialogRef.afterClosed().subscribe((saved: boolean) => {
+      if (saved) this.reloadData();
     });
   }
 
@@ -112,8 +106,8 @@ export class CharacterComponent implements OnInit {
       data: [RoleDetial, this.RoleList]
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadData();
+    dialogRef.afterClosed().subscribe((saved: boolean) => {
+      if (saved) this.reloadData();
     });
   }
 
@@ -123,8 +117,8 @@ export class CharacterComponent implements OnInit {
       data: this.RoleList
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadData();
+    dialogRef.afterClosed().subscribe((saved: boolean) => {
+      if (saved) this.reloadData();
     });
   }
 
@@ -134,8 +128,8 @@ export class CharacterComponent implements OnInit {
       data: [RoleDetial, this.ImenuRoleList, this.TreeMenu]
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadData();
+    dialogRef.afterClosed().subscribe((saved: boolean) => {
+      if (saved) this.loadImenuRole();
     });
   }
 
@@ -145,9 +139,29 @@ export class CharacterComponent implements OnInit {
       data: [RoleDetial, this.IactionRoleList, this.TreeAction]
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadData();
+    dialogRef.afterClosed().subscribe((saved: boolean) => {
+      if (saved) this.loadIactionRole();
+    });
+  }  
+  //#endregion
+
+  reloadData() {
+    this.CharacterREST.GetRoleGroup().subscribe((data: RoleGroup[]) => {
+      this.dataSource.data = data;
     });
   }
-  //#endregion
+
+  loadImenuRole() {
+    zip(this.ImenuRoleREST.GetImenuRole(), this.MenuREST.GetMenuTree()).subscribe(value => {
+      this.ImenuRoleList = value[0];
+      this.TreeMenu = value[1];
+    });
+  }
+
+  loadIactionRole() {
+    zip(this.IactionRoleREST.GetIactionRole(), this.ActionREST.GetActionTree()).subscribe(value => {
+      this.IactionRoleList = value[0];
+      this.TreeAction = value[1];
+    });
+  }
 }

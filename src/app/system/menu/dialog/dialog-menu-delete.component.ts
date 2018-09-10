@@ -16,18 +16,18 @@ import { MenuService } from '../menu.service'
       @Inject(MAT_DIALOG_DATA) public data: Menu) { }
   
     onNoClick(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   
     onYesClick(): void {
       this.deleteMenu(this.data.menuId);
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   
     deleteMenu(id: number) {
       this.MenuREST.DeleteMenu(id).subscribe(
         (result: any) => {
-          console.log(result);
+          //console.log(result);
         },
         error => {
           console.log(error);

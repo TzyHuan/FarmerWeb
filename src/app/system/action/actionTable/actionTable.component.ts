@@ -9,7 +9,8 @@ import { MatDialog } from '@angular/material';
 import { DialogActionCreateComponent } from './dialog/dialog-action-create.component';
 import { DialogActionDeleteComponent } from './dialog/dialog-action-delete.component';
 import { DialogActionUpdateComponent } from './dialog/dialog-action-update.component';
-import { startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { startWith, map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'mat-table-action',
@@ -32,12 +33,12 @@ export class ActionTableComponent implements OnInit {
     public methodFilter = new FormControl();
     public controllerIdFilter = new FormControl();
     public descriptionFilter = new FormControl();
-    public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' };
-    public idFilteredOptions: string[];
-    public nameFilteredOptions: string[];
-    public methodFilteredOptions: string[];
-    public controllerIdFilteredOptions: string[];
-    public descriptionFilteredOptions: string[];
+    public filterValues = { actionId: '', name: '', method: '', controllerId: '', description: '' };
+    public idFilteredOptions: Observable<string[]>;
+    public nameFilteredOptions: Observable<string[]>;
+    public methodFilteredOptions: Observable<string[]>;
+    public controllerIdFilteredOptions: Observable<string[]>;
+    public descriptionFilteredOptions: Observable<string[]>;
 
     constructor(private ActionREST: ActionService, public dialog: MatDialog) {
 
@@ -59,71 +60,77 @@ export class ActionTableComponent implements OnInit {
                 /** 監聽時給入初始值startwith('')
                  * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 */
                 //Listen idFilter
-                this.idFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-
-                    this.idFilteredOptions = this._autoFilter(
-                        data.map(v => v.id.toString()),
+                this.idFilteredOptions = this.idFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value=>{
+                        this.filterValues.actionId = value;
+                        this.ActionDataSource.filter = JSON.stringify(this.filterValues);
+                        this.ActionDataSource.paginator.firstPage();
+                    }),
+                    map(value=>this._autoFilter(
+                        data.map(v => v.actionId.toString()),
                         value
-                    );
-                 
-                    this.filterValues.id = value;
-                    this.ActionDataSource.filter = JSON.stringify(this.filterValues);
-                    this.ActionDataSource.paginator.firstPage();
-                });
+                    ))
+                )
 
                 //Listen nameFilter
-                this.nameFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-
-                    this.nameFilteredOptions = this._autoFilter(
+                this.nameFilteredOptions = this.nameFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value => {
+                        this.filterValues.name = value;
+                        this.ActionDataSource.filter = JSON.stringify(this.filterValues);
+                        this.ActionDataSource.paginator.firstPage();
+                    }),
+                    map(value => this._autoFilter(
                         data.map(v => v.name),
                         value
-                    );
-
-                    this.filterValues.name = value;
-                    this.ActionDataSource.filter = JSON.stringify(this.filterValues);
-                    this.ActionDataSource.paginator.firstPage();
-                });
+                    ))
+                );
 
                 //Listen methodFilter
-                this.methodFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-
-                    this.methodFilteredOptions = this._autoFilter(
+                this.methodFilteredOptions = this.methodFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value => {
+                        this.filterValues.method = value;
+                        this.ActionDataSource.filter = JSON.stringify(this.filterValues);
+                        this.ActionDataSource.paginator.firstPage();
+                    }),
+                    map(value => this._autoFilter(
                         data.map(v => v.method),
                         value
-                    );
-
-                    this.filterValues.method = value;
-                    this.ActionDataSource.filter = JSON.stringify(this.filterValues);
-                    this.ActionDataSource.paginator.firstPage();
-                });
+                    ))
+                );
 
                 //Listen controllerIdFilter
-                this.controllerIdFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-
-                    this.controllerIdFilteredOptions = this._autoFilter(
+                this.controllerIdFilteredOptions = this.controllerIdFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value=>{
+                        this.filterValues.controllerId = value;
+                        this.ActionDataSource.filter = JSON.stringify(this.filterValues);
+                        this.ActionDataSource.paginator.firstPage();
+                    }),
+                    map(value=>this._autoFilter(
                         data.map(v => v.controllerId.toString())
                             .sort((a, b) => parseFloat(a) - parseFloat(b)),
                         value
-                    );
-
-                    this.filterValues.controllerId = value;
-                    this.ActionDataSource.filter = JSON.stringify(this.filterValues);
-                    this.ActionDataSource.paginator.firstPage();
-                });
+                    ))
+                );                   
 
                 //Listen descriptionFilter
-                this.descriptionFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-                    
-                    this.descriptionFilteredOptions = this._autoFilter(
-                        data.filter(x =>x.description != null && x.description.length>0)
+                this.descriptionFilteredOptions = this.descriptionFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value=>{
+                        this.filterValues.description = value;
+                        this.ActionDataSource.filter = JSON.stringify(this.filterValues);
+                        this.ActionDataSource.paginator.firstPage();
+                    }),
+                    map(value=>this._autoFilter(
+                        data.filter(x => x.description != null && x.description.length > 0)
                             .map(v => v.description),
                         value
-                    );
-
-                    this.filterValues.description = value;
-                    this.ActionDataSource.filter = JSON.stringify(this.filterValues);
-                    this.ActionDataSource.paginator.firstPage();
-                });
+                    ))
+                );
+              
                 //#endregion
             }
         });
@@ -140,8 +147,8 @@ export class ActionTableComponent implements OnInit {
         let searchTerms: Action = JSON.parse(Filter);
 
         //先預判是否有沒有值的欄位，無值不篩選進來
-        let JudgedId: boolean = isNullOrUndefined(Data.id) ?
-            true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
+        let JudgedId: boolean = isNullOrUndefined(Data.actionId) ?
+            true : Data.actionId.toString().indexOf(searchTerms.actionId.toString()) != -1
 
         let JudgedName: boolean = isNullOrUndefined(Data.name) ?
             true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1
@@ -169,9 +176,8 @@ export class ActionTableComponent implements OnInit {
             data: ActionDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {            
+            if(saved) this.reloadData();
         });
     }
 
@@ -181,9 +187,8 @@ export class ActionTableComponent implements OnInit {
             data: ActionDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -193,9 +198,15 @@ export class ActionTableComponent implements OnInit {
             data: []
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            
+            if(saved) this.reloadData();
+        });
+    }
+
+    reloadData(){
+        this.ActionREST.GetActions().subscribe((data: Action[]) => {            
+            this.ActionDataSource.data = data;
         });
     }
     //#endregion

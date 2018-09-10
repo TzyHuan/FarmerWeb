@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class UserService {
 
-  public AuthUrl: string = environment.apiUrl + 'Auth/Authenticate';
+  public AuthUrl: string = environment.ApiUrl_Auth + 'Auth/Authenticate';
   constructor(private http: HttpClient) { }
   public data: vmAuth = new vmAuth();
 

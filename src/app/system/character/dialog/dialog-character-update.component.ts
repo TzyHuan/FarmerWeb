@@ -19,13 +19,12 @@ export class DialogCharacterUpdateComponent {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
-  onYesClick(): void {
-    console.log(this.RoleDetail.roleId);
+  onYesClick(): void {    
     this.putMenu(this.RoleDetail.roleId, this.RoleDetail);
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
   putMenu(id: number, UpdatedRole: RoleGroup) {

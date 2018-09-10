@@ -7,7 +7,7 @@
     <mat-form-field class="MenuNum">
       <input matInput [formControl]="menuIdFilter" placeholder="Filter Id" [matAutocomplete]="autoMenuId">
       <mat-autocomplete #autoMenuId="matAutocomplete">
-        <mat-option *ngFor="let option of menuIdFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of menuIdFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
@@ -20,7 +20,7 @@
     <mat-form-field>
       <input matInput [formControl]="pathFilter" placeholder="Filter 路徑" [matAutocomplete]="autoPath">
       <mat-autocomplete #autoPath="matAutocomplete">
-        <mat-option *ngFor="let option of pathFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of pathFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
@@ -33,7 +33,7 @@
     <mat-form-field>
       <input matInput [formControl]="menuTextFilter" placeholder="Filter 名稱" [matAutocomplete]="autoMenuText">
       <mat-autocomplete #autoMenuText="matAutocomplete">
-        <mat-option *ngFor="let option of menuTextFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of menuTextFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
@@ -46,7 +46,7 @@
     <mat-form-field class="MenuNum">
       <input matInput [formControl]="sortNoFilter" placeholder="Filter 排序" [matAutocomplete]="autoSortNo">
       <mat-autocomplete #autoSortNo="matAutocomplete">
-        <mat-option *ngFor="let option of sortNoFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of sortNoFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
@@ -57,14 +57,14 @@
 
     <!-- Filter selector Column -->
     <mat-form-field>
-      <input matInput [formControl]="selectorFilter" placeholder="Filter 排序" [matAutocomplete]="autoSelector">
+      <input matInput [formControl]="selectorFilter" placeholder="Filter 標籤" [matAutocomplete]="autoSelector">
       <mat-autocomplete #autoSelector="matAutocomplete">
-        <mat-option *ngFor="let option of selectorFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of selectorFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
       <mat-label>
-        <mat-icon class="Search">search</mat-icon>排序
+        <mat-icon class="Search">search</mat-icon>標籤
       </mat-label>
     </mat-form-field>&nbsp;
 
@@ -72,7 +72,7 @@
     <mat-form-field>
       <input matInput [formControl]="componentFilter" placeholder="Filter 對應元件" [matAutocomplete]="autoComponent">
       <mat-autocomplete #autoComponent="matAutocomplete">
-        <mat-option *ngFor="let option of componentFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of componentFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
@@ -85,7 +85,7 @@
     <mat-form-field class="MenuNum">
       <input matInput [formControl]="rootMenuIdFilter" placeholder="Filter 隸屬" [matAutocomplete]="autoRootMenuId">
       <mat-autocomplete #autoRootMenuId="matAutocomplete">
-        <mat-option *ngFor="let option of rootMenuIdFilteredOptions" [value]="option">
+        <mat-option *ngFor="let option of rootMenuIdFilteredOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>

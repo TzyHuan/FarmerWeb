@@ -104,11 +104,8 @@ export class MemberComponent implements OnInit {
             }
         });
 
-        zip(this.ImemRoleService.GetImemRole(), this.CharacterService.GetRoleGroupTree())
-            .subscribe(value => {
-                this.ImemRoleList = value[0];
-                this.TreeRole = value[1];
-            });
+        //進頁面先查詢再傳至dialog
+        this.loadImemRole();
     }
 
     customFilter(Data: Member, Filter: string): boolean {
@@ -146,9 +143,8 @@ export class MemberComponent implements OnInit {
             data: MemberDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -158,9 +154,8 @@ export class MemberComponent implements OnInit {
             data: MemberDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -170,9 +165,8 @@ export class MemberComponent implements OnInit {
             //data: this.MemberList
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            //console.log('The dialog was closed');
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -182,10 +176,23 @@ export class MemberComponent implements OnInit {
             data: [MemberDetial, this.ImemRoleList, this.TreeRole]
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.loadImemRole();
+        });
+    }
+
+    reloadData(){
+        this.MemberREST.GetMember().subscribe((data: Member[]) => { 
+            this.dataSource.data = data;
         });
     }
     //#endregion
 
+    loadImemRole(){
+        zip(this.ImemRoleService.GetImemRole(), this.CharacterService.GetRoleGroupTree())
+            .subscribe(value => {
+                this.ImemRoleList = value[0];
+                this.TreeRole = value[1];
+            });
+    }
 }

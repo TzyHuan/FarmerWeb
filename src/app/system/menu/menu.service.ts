@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class MenuService {
 
-    private readonly RestfulApiUrl_Menu: string = environment.apiUrl + 'Menus';
+    private readonly RestfulApiUrl_Menu: string = environment.ApiUrl_Auth + 'Menus';
     
     constructor(private http: HttpClient) { }
    

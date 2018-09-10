@@ -6,5 +6,7 @@
 //"ng build" or "ng serve" only
 export const environment = {
   production: false,
-  apiUrl: 'http://192.168.1.170/FarmerAPI/api/',
+  ApiUrl_Auth: 'http://192.168.1.170/SystemAuth/api/',
+  ApiUrl_Farmer: 'http://192.168.1.170/FarmerAPI/api/',
+  AppID: 0,
 };

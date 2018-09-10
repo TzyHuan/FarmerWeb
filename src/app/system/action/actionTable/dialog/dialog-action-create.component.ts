@@ -48,12 +48,12 @@ export class DialogActionCreateComponent {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(InsertData:Action[]): void {        
         this.createAction(InsertData);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     createAction(dataList: Action[]) {

@@ -16,12 +16,12 @@ import { CharacterService } from '../character.service'
       @Inject(MAT_DIALOG_DATA) public data: RoleGroup) { }
   
     onNoClick(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   
     onYesClick(): void {
       this.deleteMenu(this.data.roleId);
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   
     deleteMenu(id: number) {

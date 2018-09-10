@@ -6,7 +6,7 @@
     <mat-form-field class="MenuNum">
         <input matInput [formControl]="idFilter" placeholder="Filter Id" [matAutocomplete]="autoIdFilter">
         <mat-autocomplete #autoIdFilter="matAutocomplete">
-            <mat-option *ngFor="let option of idFilteredOptions" [value]="option">
+            <mat-option *ngFor="let option of idFilteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -19,7 +19,7 @@
     <mat-form-field>
         <input matInput [formControl]="nameFilter" placeholder="Filter 名稱" [matAutocomplete]="autoNameFilter">
         <mat-autocomplete #autoNameFilter="matAutocomplete">
-            <mat-option *ngFor="let option of nameFilteredOptions" [value]="option">
+            <mat-option *ngFor="let option of nameFilteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -32,7 +32,7 @@
     <mat-form-field>
         <input matInput [formControl]="methodFilter" placeholder="Filter 方法" [matAutocomplete]="autoMethodFilter">
         <mat-autocomplete #autoMethodFilter="matAutocomplete">
-            <mat-option *ngFor="let option of methodFilteredOptions" [value]="option">
+            <mat-option *ngFor="let option of methodFilteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -45,7 +45,7 @@
     <mat-form-field class="MenuNum">
         <input matInput [formControl]="controllerIdFilter" placeholder="Filter 控制器" [matAutocomplete]="autoComponentFilter">
         <mat-autocomplete #autoComponentFilter="matAutocomplete">
-            <mat-option *ngFor="let option of controllerIdFilteredOptions" [value]="option">
+            <mat-option *ngFor="let option of controllerIdFilteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -58,7 +58,7 @@
     <mat-form-field>
         <input matInput [formControl]="descriptionFilter" placeholder="Filter 描述" [matAutocomplete]="autoDescriptionFilter">
         <mat-autocomplete #autoDescriptionFilter="matAutocomplete">
-            <mat-option *ngFor="let option of descriptionFilteredOptions" [value]="option">
+            <mat-option *ngFor="let option of descriptionFilteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -76,7 +76,7 @@
     <!-- id Column -->
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.actionId}} </td>
     </ng-container>
 
     <!-- name Column -->

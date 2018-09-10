@@ -19,13 +19,13 @@ import { MenuService } from '../menu.service'
     }
   
     onNoClick(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   
     onYesClick(): void {
       //console.log(this.MenuDetial.menuId);
       this.putMenu(this.MenuDetial.menuId, this.MenuDetial);
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   
     putMenu(id: number, UpdatedMenu: Menu) {

@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Menu } from '../menu';
 import { MenuService } from '../menu.service'
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { environment } from '../../../../environments/environment'
 
 @Component({
     selector: 'dialog-menu-create',
@@ -32,7 +33,8 @@ export class DialogMenuCreateComponent {
             sortNo: ['', Validators.required],
             selector:[''],
             component: ['', Validators.required],
-            rootMenuId: null
+            rootMenuId: null,
+            appId:[environment.AppID] //第一個應用程式 todo
         }
         return this._fb.group(DefaultRow);
     }
@@ -50,19 +52,19 @@ export class DialogMenuCreateComponent {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(InsertData:Menu[]): void {
         this.createMenu(InsertData);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     createMenu(dataList: Menu[]) {
         dataList.forEach(data => {
             this.MenuREST.PostMenu(data).subscribe(
                 (result: any) => {
-                    console.log(result);
+                    //console.log(result);
                 },
                 error => {
                     console.log(error);

@@ -16,12 +16,12 @@ import { MemberService } from '../member.service'
       @Inject(MAT_DIALOG_DATA) public data: Member) { }
   
     onNoClick(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   
     onYesClick(): void {
       this.deleteMenu(this.data.account);
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   
     deleteMenu(id: string) {

@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class ActionService {
 
-    private readonly RestfulApiUrl_Action: string = environment.apiUrl + 'Actions';
+    private readonly RestfulApiUrl_Action: string = environment.ApiUrl_Auth + 'Actions';
     
     constructor(private http: HttpClient) { }
    
@@ -46,7 +46,7 @@ export class ActionService {
 
 @Injectable()
 export class CtrlService {
-    private readonly RestfulApiUrl_Ctrl: string = 'http://192.168.1.170/FarmerAPI/api/Ctrls';
+    private readonly RestfulApiUrl_Ctrl: string = environment.ApiUrl_Auth + 'Ctrls';
 
     constructor(private http: HttpClient) { }
     

@@ -23,7 +23,7 @@ export class DialogCtrlUpdateComponent {
 
   onYesClick(): void {
     //console.log(this.CtrlDetial.CtrlId);
-    this.putCtrl(this.CtrlDetail.id, this.CtrlDetail);
+    this.putCtrl(this.CtrlDetail.ctrlId, this.CtrlDetail);
     this.dialogRef.close();
   }
 

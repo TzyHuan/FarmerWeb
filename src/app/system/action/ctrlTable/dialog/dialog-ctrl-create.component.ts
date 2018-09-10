@@ -4,6 +4,8 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Ctrl } from '../../action';
 import { CtrlService } from '../../action.service';
 import { formControlBinding } from '@angular/forms/src/directives/reactive_directives/form_control_directive';
+import { environment } from '../../../../../environments/environment'
+
 @Component({
     //moduleId: module.id,
     selector: 'dialog-ctrl-create',
@@ -17,7 +19,8 @@ export class DialogCtrlCreateComponent {
     public CtrlForm: FormGroup= new FormGroup({
         id: new FormControl(),
         name: new FormControl(),
-        description: new FormControl()
+        description: new FormControl(),
+        appId:new FormControl({value: environment.AppID})
      });
 
     constructor(public dialogRef: MatDialogRef<DialogCtrlCreateComponent>, private CtrlREST: CtrlService ) {
@@ -25,13 +28,13 @@ export class DialogCtrlCreateComponent {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(InsertData: Ctrl): void {
         //console.log(InsertData)
         this.createCtrl(InsertData);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     createCtrl(data: Ctrl) {

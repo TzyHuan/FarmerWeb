@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class MemberService {
 
-    public RestfulApiUrl_Member: string = environment.apiUrl + 'Members';
+    public RestfulApiUrl_Member: string = environment.ApiUrl_Auth + 'Members';
     
     constructor(private http: HttpClient) { }
     

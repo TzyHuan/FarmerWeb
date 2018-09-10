@@ -7,7 +7,7 @@ import { vmNavMenu } from './navmenu'
 
 @Injectable()
 export class NavMenuService {
-    public AllowMenuApiUrl: string = environment.apiUrl + 'System/GetAllowedMenu';
+    public AllowMenuApiUrl: string = environment.ApiUrl_Auth + 'System/GetAllowedMenu';
 
     constructor(private http: HttpClient) { }
 

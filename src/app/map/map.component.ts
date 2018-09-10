@@ -8,6 +8,8 @@ require('leaflet.markercluster');
 
 import * as icon from 'leaflet/dist/images/marker-icon.png';
 import * as iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import * as blueIcon from '../../icon/blue.png';
+import * as pinkIcon from '../../icon/pink.png';
 import * as GEOdata from '../../geojson/custom.geo.json';
 
 import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
@@ -66,8 +68,6 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     WorldGeoJson: any;
     infoControl: any;
     slideControl: any;
-
-
 
     constructor(public dialog: MatDialog, public _WindowService: WindowService, public _MapService:MapService) {
 
@@ -144,11 +144,22 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
         // 有bug需手動抓，Webpack在leaflet Icon圖案_getIconUrl抓預設圖案url時字串有問題
         // https://github.com/Leaflet/Leaflet/issues/4968
+
+        //#region Icon設定
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconUrl: icon,
             shadowUrl: iconShadow,
         });
+        var customIcon = L.icon({
+            iconUrl: blueIcon,
+            iconAnchor:[24, 48]
+        });
+        var vendorIcon = L.icon({
+            iconUrl: pinkIcon,
+            iconAnchor:[24, 48]
+        });
+        //#endregion
 
         //#region 設定底圖與圖層來源
         var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -182,10 +193,10 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             onEachFeature: (feature, layer) => {
                 this.onEachFeature(feature, layer)
             }
-        });
+        });       
         //#endregion
 
-        //#region 自訂Markers、多邊形標籤
+        //#region Markers、多邊形標籤
         var MyLand = L.polygon([
             [25.272156, 121.492556],
             [25.272322, 121.492739],
@@ -230,17 +241,40 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {            
             ClusterMarkers.clearLayers();
             result.forEach((v,i,a)=>{
-                let CompanyMarker = L.marker([v.v3435, v.v3436]).bindPopup(v.v3402);
+                let CompanyIcon;
+                if(v.v3404==1){
+                    //custom
+                    CompanyIcon = customIcon;                    
+                }
+                else if(v.v3404==2){
+                    //vendor
+                    CompanyIcon = vendorIcon;
+                }
+                
+                let CompanyMarker = L.marker(
+                    [v.v3435, v.v3436], 
+                    {icon: CompanyIcon}
+                ).bindPopup(
+                    v.v3402,
+                    {closeButton: false, offset: L.point(0, -20)}
+                );
+                CompanyMarker.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+                CompanyMarker.on('mouseout', function (e) {
+                    this.closePopup();
+                });
                 ClusterMarkers.addLayer(CompanyMarker);
             });
         });
+        //監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
         this._MapService.DrawerDetailClickEmitted$.subscribe((result:number[]) => {            
             this.map.panTo(result);            
         });
 
         //#endregion
 
-        //#region 建立map on HTML div後，設定map相關屬性及監聽!
+        //#region 建立map於HTML div後，設定map相關屬性及監聽!
         //圖層設定
         var baseMaps = {
             "OpenStreetMap": osm,
@@ -350,7 +384,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //#endregion
     }
 
-    //#region Event function about Leaflet
+    //#region Event function about Leaflet geojson
     onEachFeature(feature, layer) {
         layer.on({
             mouseover: (e) => this.highlightFeature(e),

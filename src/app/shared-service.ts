@@ -8,7 +8,7 @@ import { vmNavMenu } from './navmenu/navmenu';
 
 @Injectable()
 export class SharedService {
-    private readonly AllowMenuApiUrl: string = environment.apiUrl + 'System/GetAllowedMenu';
+    private readonly AllowMenuApiUrl: string = environment.ApiUrl_Auth + 'System/GetAllowedMenu';
 
     // Observable string sources
     private emitChangeSource = new Subject<any>();

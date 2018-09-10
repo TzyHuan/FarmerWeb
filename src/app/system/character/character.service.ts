@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CharacterService {
-    public RestfulApiUrl_RoleGroup: string = environment.apiUrl + 'RoleGroups';
+    public RestfulApiUrl_RoleGroup: string = environment.ApiUrl_Auth + 'RoleGroups';
   
     constructor(private http: HttpClient) { }
     
@@ -44,7 +44,7 @@ export class CharacterService {
 
 @Injectable()
 export class ImenuRolesService {
-    public RestfulApiUrl_ImenuRole: string = environment.apiUrl + 'ImenuRoles';
+    public RestfulApiUrl_ImenuRole: string = environment.ApiUrl_Auth + 'ImenuRoles';
     
     constructor(private http: HttpClient) { }
 
@@ -72,7 +72,7 @@ export class ImenuRolesService {
 
 @Injectable()
 export class IactionRolesService {
-    public RestfulApiUrl_IactionRole: string = 'http://192.168.1.170/FarmerAPI/api/IactionRoles';
+    public RestfulApiUrl_IactionRole: string = environment.ApiUrl_Auth + 'IactionRoles';
     
     constructor(private http: HttpClient) { }
 
@@ -101,7 +101,7 @@ export class IactionRolesService {
 @Injectable()
 export class ImemRoleService {
 
-    public RestfulApiUrl_ImemRole: string = 'http://192.168.1.170/FarmerAPI/api/ImemRoles';
+    public RestfulApiUrl_ImemRole: string = environment.ApiUrl_Auth + 'ImemRoles';
     
     constructor(private http: HttpClient) { }
     

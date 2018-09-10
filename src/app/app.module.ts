@@ -13,7 +13,7 @@ import { NavMenuComponent } from './navmenu/navmenu.component';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
 import { UserService } from './user/shared/user.service';
-import { AuthInterceptor } from './auth/auth.interceptor';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 import { SharedService } from './shared-service';
 import { SharedMaterialModule, MatComponents } from './shared-material.module';
 

@@ -10,7 +10,8 @@ import { DialogCtrlCreateComponent } from './dialog/dialog-ctrl-create.component
 
 import { MatDialog } from '@angular/material';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { startWith } from 'rxjs/operators';
+import { startWith, tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'mat-table-ctrl',
@@ -31,10 +32,10 @@ export class CtrlTableComponent implements OnInit {
     public idFilter = new FormControl();
     public nameFilter = new FormControl();
     public descriptionFilter = new FormControl();
-    public filterValues = { id: '', name: '', description: '' };
-    public idFilteredOptions: string[];
-    public nameFilteredOptions: string[];
-    public descriptionFilteredOptions: string[];
+    public filterValues = { ctrlId: '', name: '', description: '' };
+    public idFilteredOptions: Observable<string[]>;
+    public nameFilteredOptions: Observable<string[]>;
+    public descriptionFilteredOptions: Observable<string[]>;
 
     constructor(private CtrlREST: CtrlService, public dialog: MatDialog) {
 
@@ -54,46 +55,49 @@ export class CtrlTableComponent implements OnInit {
 
                 //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
                 //Listen idFilter
-                this.idFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-                    
-                    this.idFilteredOptions = this._autoFilter(
-                        data.map(v => v.id.toString()),
+                this.idFilteredOptions = this.idFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value => {
+                        this.filterValues.ctrlId = value;
+                        this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                        this.CtrlDataSource.paginator.firstPage();
+                    }),
+                    map(value => this._autoFilter(
+                        data.map(v => v.ctrlId.toString()),
                         value
-                    );
+                    ))
+                );
 
-                    this.filterValues.id = value;
-                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
-                    this.CtrlDataSource.paginator.firstPage();
-                });
-                
                 //Listen nameFilter
-                this.nameFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-                    
-                    this.nameFilteredOptions = this._autoFilter(
+                this.nameFilteredOptions = this.nameFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value=>{
+                        this.filterValues.name = value;
+                        this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                        this.CtrlDataSource.paginator.firstPage();
+                    }),
+                    map(value=>this._autoFilter(
                         data.map(v => v.name),
                         value
-                    );
+                    ))
+                );
 
-                    this.filterValues.name = value;
-                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
-                    this.CtrlDataSource.paginator.firstPage();
-                });
-                
                 //Listen descriptionFilter
-                this.descriptionFilter.valueChanges.pipe(startWith('')).subscribe(value => {
-
-                    this.descriptionFilteredOptions = this._autoFilter(
+                this.descriptionFilteredOptions = this.descriptionFilter.valueChanges.pipe(
+                    startWith(''),
+                    tap(value=>{
+                        this.filterValues.description = value;
+                        this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
+                        this.CtrlDataSource.paginator.firstPage();
+                    }),
+                    map(value=>this._autoFilter(
                         data.filter(x => x.description != null && x.description.length > 0)
                             .map(v => v.description),
                         value
-                    );
-
-                    this.filterValues.description = value;
-                    this.CtrlDataSource.filter = JSON.stringify(this.filterValues);
-                    this.CtrlDataSource.paginator.firstPage();
-                });
+                    ))
+                );                
+             
                 //#endregion
-
             }
         });
     }
@@ -109,8 +113,8 @@ export class CtrlTableComponent implements OnInit {
         let searchTerms: Ctrl = JSON.parse(Filter);
 
         //先預判是否有沒有值的欄位，無值不篩選進來
-        let JudgedId: boolean = isNullOrUndefined(Data.id) ?
-            true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
+        let JudgedId: boolean = isNullOrUndefined(Data.ctrlId) ?
+            true : Data.ctrlId.toString().indexOf(searchTerms.ctrlId.toString()) != -1
 
         let JudgedName: boolean = isNullOrUndefined(Data.name) ?
             true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1
@@ -131,8 +135,8 @@ export class CtrlTableComponent implements OnInit {
             data: CtrlDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -142,8 +146,8 @@ export class CtrlTableComponent implements OnInit {
             data: CtrlDetial
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
         });
     }
 
@@ -152,8 +156,14 @@ export class CtrlTableComponent implements OnInit {
             width: '80%'
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.loadData();
+        dialogRef.afterClosed().subscribe((saved:boolean) => {
+            if(saved) this.reloadData();
+        });
+    }
+
+    reloadData(){
+        this.CtrlREST.GetCtrls().subscribe((data: Ctrl[]) => {
+            this.CtrlDataSource.data = data;
         });
     }
     //#endregion

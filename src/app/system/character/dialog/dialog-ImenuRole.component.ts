@@ -121,7 +121,7 @@ export class DialogImenuRoleComponent implements OnInit {
    
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(): void {
@@ -162,7 +162,7 @@ export class DialogImenuRoleComponent implements OnInit {
             );
         }
 
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     PostImenuRole(roleId: number, menuId: number) {

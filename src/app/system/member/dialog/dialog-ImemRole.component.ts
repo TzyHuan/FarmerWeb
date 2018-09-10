@@ -69,7 +69,7 @@ export class DialogImemRoleComponent implements OnInit {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(): void {
@@ -105,7 +105,7 @@ export class DialogImemRoleComponent implements OnInit {
             );
         }
 
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     PostIactionRole(account: string, roleId: number) {

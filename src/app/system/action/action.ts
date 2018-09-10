@@ -1,6 +1,6 @@
 export class Action {
     //有bug，宣告矩陣塞資料後，屬性第一字母會自動變小寫menuText這樣！html打MenuText反而找不到...
-    public id: number;
+    public actionId: number;
     public name: string;
     public method: string;
     public controllerId: number;
@@ -9,12 +9,13 @@ export class Action {
 
 export class Ctrl {
     //有bug，宣告矩陣塞資料後，屬性第一字母會自動變小寫menuText這樣！html打MenuText反而找不到...
-    public id: number;
+    public ctrlId: number;
     public name: string;
     public description?: string;
+    public appId?:number;
 
-    constructor(id, name) {
-        this.id = id;
+    constructor(ctrlId, name) {
+        this.ctrlId = ctrlId;
         this.name = name;
     }
 }

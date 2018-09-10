@@ -23,13 +23,13 @@ export class DialogMemberUpdateComponent {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   onYesClick(): void {
     //console.log(this.RoleDetail.roleId);
     this.putMenu(this.MemberDetail.account, this.MemberDetail);
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
   putMenu(id: string, UpdatedMember: Member) {

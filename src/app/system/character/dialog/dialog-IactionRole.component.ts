@@ -41,7 +41,6 @@ export class DialogIactionRoleComponent implements OnInit {
         this.RoleDetail = data[0];
         this.IactionRoleList = data[1];
         this.TreeAction = data[2];
-        
 
         this.treeFlattener = new MatTreeFlattener(
             this.transformer,
@@ -61,12 +60,12 @@ export class DialogIactionRoleComponent implements OnInit {
     ngOnInit() {
         /** 取出角色清單可用Memu清單 
          *  先將database該角色資料show on the tree  */      
-        this.IactionRoleList.filter(x => x.roleId == this.RoleDetail.roleId).forEach(y => {
+        this.IactionRoleList.filter(x => x.roleId == this.RoleDetail.roleId).forEach(y => {           
             this.AllowedAction.push(y);
             this.checklistSelection.select(
                 this.treeControl.dataNodes.find(x => x.id == y.actionId && x.level == 1)
-            )
-        });
+            )           
+        });        
     }
 
     /** Whether all the descendants of the node are selected */
@@ -80,18 +79,17 @@ export class DialogIactionRoleComponent implements OnInit {
         const descendants = this.treeControl.getDescendants(node);
         const result = descendants.some(child => this.checklistSelection.isSelected(child));
 
-        // // 只要有選到child或從DB抓來資料是已selected，就自動select parent      
-        // if (result || this.checklistSelection.isSelected(node)) {
-        //     this.checklistSelection.select(node)
-        // }
-        // else {
-        //     this.checklistSelection.deselect(node);
-        // }
+        // 只要有選到child或從DB抓來資料是已selected，就自動select parent      
+        if (result || this.checklistSelection.isSelected(node)) {
+            this.checklistSelection.select(node)
+        }
+        else {
+            this.checklistSelection.deselect(node);
+        }
 
-        // return (result && !this.descendantsAllSelected(node))
-        //     || this.checklistSelection.isSelected(node);
-
-        return result
+        return (result && !this.descendantsAllSelected(node))
+            || this.checklistSelection.isSelected(node);
+      
     }
 
     /** Check item selection. Select/deselect all the descendants node */
@@ -124,7 +122,7 @@ export class DialogIactionRoleComponent implements OnInit {
 
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(): void {
@@ -166,7 +164,7 @@ export class DialogIactionRoleComponent implements OnInit {
             );
         }
 
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     PostIactionRole(roleId: number, actionId: number) {

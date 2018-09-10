@@ -21,13 +21,13 @@ export class DialogActionUpdateComponent {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   onYesClick(): void {
     //console.log(this.ActionDetial.ActionId);
-    this.putAction(this.ActionDetail.id, this.ActionDetail);
-    this.dialogRef.close();
+    this.putAction(this.ActionDetail.actionId, this.ActionDetail);
+    this.dialogRef.close(true);
   }
 
   putAction(id: number, UpdatedAction: Action) {

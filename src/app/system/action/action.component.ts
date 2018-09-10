@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionService } from './action.service';
 import { Action, Ctrl } from './action';
 import { BehaviorSubject } from 'rxjs';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { zip } from 'rxjs/operators';
 
 @Component({
@@ -61,6 +61,7 @@ export class ActionComponent implements OnInit {
   ngOnInit() {
     //初始讀第一個tab的資料
     this.loadData(0);
+    
   }
 
 
@@ -92,6 +93,8 @@ export class ActionComponent implements OnInit {
     // }
     // return this.tabLoadedData[index];
 
+    //切換tab時移至第一頁
     this.paginator.firstPage();
   }
+  
 }

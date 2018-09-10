@@ -16,12 +16,12 @@ import { ActionService } from '../../action.service'
       @Inject(MAT_DIALOG_DATA) public data: Action) { }
   
     onNoClick(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   
     onYesClick(): void {
-      this.deleteMenu(this.data.id);
-      this.dialogRef.close();
+      this.deleteMenu(this.data.actionId);
+      this.dialogRef.close(true);
     }
   
     deleteMenu(id: number) {

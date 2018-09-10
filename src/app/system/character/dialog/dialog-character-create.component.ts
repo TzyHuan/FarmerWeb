@@ -55,13 +55,13 @@ export class DialogCharacterCreateComponent {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(InsertData: RoleGroup[]): void {
         console.log(InsertData)
         this.createRole(InsertData);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     createRole(dataList: RoleGroup[]) {

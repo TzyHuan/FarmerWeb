@@ -20,7 +20,7 @@ import { CtrlService } from '../../action.service'
     }
   
     onYesClick(): void {
-      this.deleteMenu(this.data.id);
+      this.deleteMenu(this.data.ctrlId);
       this.dialogRef.close();
     }
   

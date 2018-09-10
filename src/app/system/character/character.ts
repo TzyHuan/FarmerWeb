@@ -33,9 +33,8 @@ export class ImemRole {
 export class ActionNode extends Ctrl {
     public children: ActionNode[]
     public method: string
-    constructor(id, name) {
-        super(id, name)
-    };
+    public id: number
+    public name:string    
 }
 
 export class ActionFlatNode {

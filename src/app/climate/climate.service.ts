@@ -8,9 +8,9 @@ import { WeatherStation, HighchartsTempratures, HighchartsHumidities } from './c
 
 @Injectable()
 export class ClimateService {
-    public StationApiUrl: string = environment.apiUrl + 'WeatherData/Stations';
-    public TemperatuteApiUrl: string = environment.apiUrl +  'WeatherData/Temperatures';
-    public HumiditiesApiUrl: string = environment.apiUrl + 'WeatherData/Humidities';
+    public StationApiUrl: string = environment.ApiUrl_Farmer + 'WeatherData/Stations';
+    public TemperatuteApiUrl: string = environment.ApiUrl_Farmer +  'WeatherData/Temperatures';
+    public HumiditiesApiUrl: string = environment.ApiUrl_Farmer + 'WeatherData/Humidities';
 
     constructor(private http: HttpClient) { }
 

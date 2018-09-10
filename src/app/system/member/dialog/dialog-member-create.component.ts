@@ -33,13 +33,13 @@ export class DialogMemberCreateComponent {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     onYesClick(InsertData: Member): void {
         //console.log(InsertData)
         this.createMember(InsertData);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
     }
 
     createMember(data: Member) {
