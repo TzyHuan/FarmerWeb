@@ -8,5 +8,6 @@ export const environment = {
   production: false,
   ApiUrl_Auth: 'http://192.168.1.170/SystemAuth/api/',
   ApiUrl_Farmer: 'http://192.168.1.170/FarmerAPI/api/',
+  ApiUrl_WebSocket: 'http://192.168.1.170/FarmerAPI/',
   AppID: 0,
 };

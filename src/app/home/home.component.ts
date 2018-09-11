@@ -5,6 +5,9 @@ import { HomeService } from './home.service';
 import { RealtimeData, WeatherStation } from './home';
 import { ClimateService } from '../climate/climate.service';
 
+import * as signalR from '@aspnet/signalr';
+import { environment } from '../../environments/environment';
+
 import * as Highcharts from 'highcharts';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
@@ -19,9 +22,14 @@ require('highcharts/modules/export-data')(Highcharts);
   providers: [HomeService, ClimateService]
 })
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
+
   public timeNow: Observable<string>;
   public APIRealtimeDate: RealtimeData;
   private $UpdateRealtime: Subscription;
+  private connection = new signalR.HubConnectionBuilder()
+    .withUrl(environment.ApiUrl_WebSocket + "weatherHub")
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
 
   //Highchart 
   public RealtimeTempGauge: any;
@@ -34,6 +42,10 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   public selectedStations: WeatherStation = new WeatherStation();
 
   constructor(private homeREST: HomeService, private StationREST: ClimateService) {
+
+    // 初始化建立SignalR連線   
+    this.connection.start().catch(err => console.error(err));
+
     // 抓Station Selector選項    
     this.StationREST.getSelectItem()
       .subscribe(
@@ -51,7 +63,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnInit() {
-      var options = {
+    var options = {
       //year: "numeric", month: "short", day: "numeric",
       hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
       //weekday: "short",
@@ -65,21 +77,10 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       ), 1000);
     });
 
-    //每隔10秒刷新realtime溫溼度資料
-    //如果失敗便停止訂閱此監聽
-    //rxjs 5->6, interval直接繼承observable,不在是observable底下的方法
-    this.$UpdateRealtime = interval(10000)
-      .subscribe(() => {
-        this.RefreshRealtimeData(this.selectedStations.stationId);
-      },
-        (error) => {
-          console.log(error);
-        }
-      );
   }
 
   ngAfterContentInit() {
-    //設定Highstock屬性
+    //#region 設定Highstock屬性
     const optionsTemp: Highcharts.Options = {
       chart: {
         type: 'gauge',
@@ -224,14 +225,41 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         }
       }]
     };
+    //#endregion
+
     //將基本參數代入，初始化Highchart畫面格式    
     this.RealtimeTempGauge = Highcharts.chart(this.RealtimeTempGaugeEle.nativeElement, optionsTemp);
     this.RealtimeRHGauge = Highcharts.chart(this.RealtimeRHGaugeEle.nativeElement, optionsRH);
+
+    //SignalR開始連線接收刷新數據
+    this.connection.on("TempRhSensorReceived", (StationID: number, Temperature: number, Humidity: number) => {
+
+      if (this.selectedStations.stationId == StationID) {
+        // 送來的stationIdID與選擇的相同時才刷新 todo
+        this.APIRealtimeDate = {
+          StationId: StationID,
+          stationName: this.stations.find(x => x.stationId == StationID).stationName,
+          recTemp: Temperature,
+          recRH: Humidity
+        }
+
+        this.RealtimeTempGauge.series[0].update({
+          data: [Temperature]
+        }, true);
+
+        this.RealtimeRHGauge.series[0].update({
+          data: [Humidity]
+        }, true);
+      }
+    });
   }
 
   ngOnDestroy() {
     //console.log('ngOnDestroy');
     this.$UpdateRealtime.unsubscribe();
+
+    //關閉SignalR連線
+    this.connection.off;
   }
 
   onSelect(StationId: number) {
@@ -240,7 +268,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         this.selectedStations = this.stations[i];
       }
     }
-    //切換後馬上初始化即時資料，不等observer慢慢跑timeinterval
+    //切換後馬上初始化即時資料，不等WebSocket慢慢廣播過來
     this.RefreshRealtimeData(this.selectedStations.stationId);
   }
 
@@ -250,45 +278,28 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
     //https://stackoverflow.com/questions/23667086/why-is-my-variable-unaltered-after-i-modify-it-inside-of-a-function-asynchron
 
     //置入資料至溫度的Highchart
-    await this.homeREST.getRealtimeData(StationId)
-      .subscribe(
-        (data: RealtimeData) => {
-          this.APIRealtimeDate = data;
-          this.UpdateHighchart(this.RealtimeTempGauge, data, 'Temp');
-          this.UpdateHighchart(this.RealtimeRHGauge, data, 'RH');
-        },
-        (error) => {
-          console.log(error);
-          //錯誤便停止定時訂閱UpdateRealtime
-          this.$UpdateRealtime.unsubscribe();
-        }
-      );
+    await this.homeREST.getRealtimeData(StationId).subscribe((data: RealtimeData) => {
+      this.APIRealtimeDate = data;
+      this.RealtimeTempGauge.series[0].update({
+        data: [data.recTemp]
+      }, true);
+
+      this.RealtimeRHGauge.series[0].update({
+        data: [data.recRH]
+      }, true);
+    },
+      (error) => {
+        console.log(error);
+        //錯誤便停止定時訂閱UpdateRealtime
+        this.$UpdateRealtime.unsubscribe();
+      }
+    );
   }
 
-  ///mode is Temp(溫度) or RH(濕度)
-  private UpdateHighchart(chart: Highcharts.ChartObject, UpdateData: RealtimeData, mode: string) {
-    let Data: any = [];
-
-    if (mode == 'Temp') {
-      Data.push([
-        UpdateData.recTemp
-      ]);
-    }
-    else if (mode == 'RH') {
-      Data.push([
-        UpdateData.recRH
-      ]);
-    }
-    chart.series[0].update({
-      data: Data
-    }, true);
-  }
 }
 
 
 //#region draggalble div
-
-
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   console.log(elmnt)
