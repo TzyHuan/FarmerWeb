@@ -24,8 +24,7 @@ require('highcharts/modules/export-data')(Highcharts);
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
 
   public timeNow: Observable<string>;
-  public APIRealtimeDate: RealtimeData;
-  private $UpdateRealtime: Subscription;
+  public APIRealtimeDate: RealtimeData;  
   private connection = new signalR.HubConnectionBuilder()
     .withUrl(environment.ApiUrl_WebSocket + "weatherHub")
     .configureLogging(signalR.LogLevel.Information)
@@ -255,8 +254,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //console.log('ngOnDestroy');
-    this.$UpdateRealtime.unsubscribe();
+    //console.log('ngOnDestroy');   
 
     //關閉SignalR連線
     this.connection.off;
@@ -289,9 +287,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       }, true);
     },
       (error) => {
-        console.log(error);
-        //錯誤便停止定時訂閱UpdateRealtime
-        this.$UpdateRealtime.unsubscribe();
+        console.log(error);       
       }
     );
   }

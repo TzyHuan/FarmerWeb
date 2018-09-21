@@ -69,7 +69,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     infoControl: any;
     slideControl: any;
 
-    constructor(public dialog: MatDialog, public _WindowService: WindowService, public _MapService:MapService) {
+    constructor(public dialog: MatDialog, public _WindowService: WindowService, public _MapService: MapService) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -92,7 +92,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         //leaflet size 初始化
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
-        this.resizeToScreen(document.getElementById('MapDetail'), 56);       
+        this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
         //訂閱sidenav開啟/關閉事件
         this.subSideChange = this._WindowService.sideChangeEmitted$.subscribe((emittedId: number) => {
@@ -107,7 +107,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
             //刷新button active class
             this.dockButtomActive();
-        });      
+        });
 
     }
 
@@ -153,11 +153,11 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         });
         var customIcon = L.icon({
             iconUrl: blueIcon,
-            iconAnchor:[24, 48]
+            iconAnchor: [24, 48]
         });
         var vendorIcon = L.icon({
             iconUrl: pinkIcon,
-            iconAnchor:[24, 48]
+            iconAnchor: [24, 48]
         });
         //#endregion
 
@@ -193,7 +193,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             onEachFeature: (feature, layer) => {
                 this.onEachFeature(feature, layer)
             }
-        });       
+        });
         //#endregion
 
         //#region Markers、多邊形標籤
@@ -235,28 +235,28 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         // ClusterMarkers.addLayer(MyMarker5);
 
         //初始化客戶/供應商於地圖上
-        
+
 
         //監聽「客戶/供應商」drawer Filter事件，連動地圖Marker項目
-        this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {            
+        this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {
             ClusterMarkers.clearLayers();
-            result.forEach((v,i,a)=>{
+            result.filter(x => x.v3435 != null && x.v3436 != null).forEach((v, i, a) => {
                 let CompanyIcon;
-                if(v.v3404==1){
+                if (v.v3404 == 1) {
                     //custom
-                    CompanyIcon = customIcon;                    
+                    CompanyIcon = customIcon;
                 }
-                else if(v.v3404==2){
+                else if (v.v3404 == 2) {
                     //vendor
                     CompanyIcon = vendorIcon;
                 }
-                
+
                 let CompanyMarker = L.marker(
-                    [v.v3435, v.v3436], 
-                    {icon: CompanyIcon}
+                    [v.v3435, v.v3436],
+                    { icon: CompanyIcon }
                 ).bindPopup(
                     v.v3402,
-                    {closeButton: false, offset: L.point(0, -20)}
+                    { closeButton: false, offset: L.point(0, -20) }
                 );
                 CompanyMarker.on('mouseover', function (e) {
                     this.openPopup();
@@ -268,8 +268,8 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             });
         });
         //監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
-        this._MapService.DrawerDetailClickEmitted$.subscribe((result:number[]) => {            
-            this.map.panTo(result);            
+        this._MapService.DrawerDetailClickEmitted$.subscribe((result: number[]) => {
+            this.map.panTo(result);
         });
 
         //#endregion
@@ -377,8 +377,8 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //#endregion
 
         //#region 與Map無關之視窗div屬性，click不與map連動
-        this.windowList.forEach((value,index,array)=>{
-            let dragWindow = L.DomUtil.get(value.name);            
+        this.windowList.forEach((value, index, array) => {
+            let dragWindow = L.DomUtil.get(value.name);
             L.DomEvent.disableClickPropagation(dragWindow);
         })
         //#endregion
@@ -449,9 +449,9 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     //#endregion
 
     resizeToScreen(element, diff) {
-        var wHeight = window.innerHeight;        
+        var wHeight = window.innerHeight;
         var objHeight = wHeight - diff;
-        element.style.height = objHeight + "px";       
+        element.style.height = objHeight + "px";
     }
 
     onToggle(id: number) {
@@ -477,16 +477,16 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     dockOnClick(index: number) {
-        this._WindowService.emitWindowClose(index);        
+        this._WindowService.emitWindowClose(index);
     }
 
-    dockButtomActive() {        
+    dockButtomActive() {
         this.windowList.forEach((v, i, a) => {
 
             let dockButtonClasses = document.getElementById("dockBtn" + i).classList;
 
             if (v.opened) {
-                dockButtonClasses.add("btn-active");               
+                dockButtonClasses.add("btn-active");
             } else {
                 dockButtonClasses.remove("btn-active");
             }
