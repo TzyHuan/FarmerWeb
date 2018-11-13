@@ -15,6 +15,8 @@ import { MapComponents } from './map/map.module';
 import { PrintComponent } from './print/print.component';
 //統計
 import { StatisticsComponent } from './statistics/statistics.component';
+//直播
+import { LiveComponent } from './live/live.component';
 
 
 //----Service----//
@@ -181,6 +183,8 @@ export const routingComponents = [
   PrintComponent,
 
   //統計
-  StatisticsComponent
+  StatisticsComponent,
 
+  //直播
+  LiveComponent,
 ]

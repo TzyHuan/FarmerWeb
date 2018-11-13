@@ -4,6 +4,7 @@ import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
 import { HomeService } from './home.service';
 import { RealtimeData, WeatherStation } from './home';
 import { ClimateService } from '../climate/climate.service';
+import { GpioService } from '../ApiGpio/RaspGpio.service';
 
 import * as signalR from '@aspnet/signalr';
 import { environment } from '../../environments/environment';
@@ -19,12 +20,12 @@ require('highcharts/modules/export-data')(Highcharts);
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [HomeService, ClimateService]
+  providers: [HomeService, ClimateService, GpioService]
 })
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
 
   public timeNow: Observable<string>;
-  public APIRealtimeDate: RealtimeData;  
+  public APIRealtimeDate: RealtimeData;
   private connection = new signalR.HubConnectionBuilder()
     .withUrl(environment.ApiUrl_WebSocket + "weatherHub")
     .configureLogging(signalR.LogLevel.Information)
@@ -40,7 +41,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
 
-  constructor(private homeREST: HomeService, private StationREST: ClimateService) {
+  constructor(private homeREST: HomeService, private StationREST: ClimateService,
+    private _GpioService: GpioService) {
 
     // 初始化建立SignalR連線   
     this.connection.start().catch(err => console.error(err));
@@ -287,54 +289,19 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       }, true);
     },
       (error) => {
-        console.log(error);       
+        console.log(error);
       }
     );
   }
 
+  gpio(event: boolean) {
+    //gpio off = 1, 3.3v
+    //gpio on  = 0, 0v
+
+    let onoff = Number(!event);    
+    this._GpioService.setGpio(onoff).subscribe(x=>{
+      console.log(x);
+    });
+  }
+
 }
-
-
-//#region draggalble div
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  console.log(elmnt)
-  if (document.getElementById(elmnt.id + "header")) {
-    /* if present, the header is where you move the DIV from:*/
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  } else {
-    /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-//#endregion
