@@ -11,8 +11,6 @@ import { UserComponents } from './user/user.module';
 import { SystemComponents } from './system/system.module';
 //地圖
 import { MapComponents } from './map/map.module';
-//列印
-import { PrintComponent } from './print/print.component';
 //統計
 import { StatisticsComponent } from './statistics/statistics.component';
 //直播
@@ -178,9 +176,6 @@ export const routingComponents = [
 
   //地圖
   MapComponents,
-
-  //列印
-  PrintComponent,
 
   //統計
   StatisticsComponent,

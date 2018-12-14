@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { v34 } from '../../ApiKmv/v34';
+import { v34 } from '../../../api/ApiKmv/v34';
 // import { Member } from '../member';
 // import { MemberService } from '../member.service';
 

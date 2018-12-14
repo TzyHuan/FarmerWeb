@@ -6,8 +6,9 @@ export interface WeatherTemperature {
 export interface RealtimeData {
     StationId: number;
     stationName: string;
-    recTemp: number;
-    recRH: number;
+    recTemp?: number;
+    recRH?: number;
+    lux?: number;
 }
 
 export class WeatherStation {

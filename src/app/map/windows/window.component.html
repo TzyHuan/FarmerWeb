@@ -17,7 +17,7 @@
     <div [ngSwitch]="true" class="dragDivContent">
 
         <!--Highchart-->
-        <div *ngSwitchCase="Title === 'dragChart'" class="chart" >
+        <div *ngSwitchCase="Title === 'dragChart'" class="chart"  #dropTarget>
             <window-dragChart></window-dragChart>
         </div>
         

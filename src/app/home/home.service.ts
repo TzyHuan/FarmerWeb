@@ -9,7 +9,7 @@ import { RealtimeData } from './home';
 @Injectable()
 export class HomeService {
     //API URL//
-    public RealtimeApiUrl: string = environment.ApiUrl_Farmer + 'values/Realtime/';    
+    public RealtimeApiUrl: string = environment.ApiUrl_Farmer + 'Realtime/';    
 
     // public httpOptions = {
     //     headers: new HttpHeaders({
@@ -26,7 +26,7 @@ export class HomeService {
         return this.http.get<RealtimeData>(this.RealtimeApiUrl+stationId);
     }
 
-    //////// Save methods (test)//////////
+    //////// Save methods (test!!!!)//////////
     /** PUT: update the data on the server. Returns the updated data upon success. */
     updateRealtime(data: RealtimeData): any {      
 

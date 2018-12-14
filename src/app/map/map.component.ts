@@ -14,7 +14,7 @@ import * as GEOdata from '../../geojson/custom.geo.json';
 
 import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
-import { v34 } from '../ApiKmv/v34';
+import { v34 } from '../../api/ApiKmv/v34';
 //import { V34Service } from '../ApiKmv/v34.service';
 import { WindowService } from './windows/window.service';
 import { MapService } from './map.service';
@@ -251,20 +251,34 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
                     CompanyIcon = vendorIcon;
                 }
 
-                let CompanyMarker = L.marker(
+                let Marker = L.marker(
                     [v.v3435, v.v3436],
-                    { icon: CompanyIcon }
+                    {
+                        zIndexOffset:2000, //let marker on the top level
+                        icon: CompanyIcon,
+                        draggable: 'true'
+                    }
                 ).bindPopup(
                     v.v3402,
                     { closeButton: false, offset: L.point(0, -20) }
                 );
-                CompanyMarker.on('mouseover', function (e) {
+                Marker.on('mouseover', function (e) {
                     this.openPopup();
                 });
-                CompanyMarker.on('mouseout', function (e) {
+                Marker.on('mouseout', function (e) {
                     this.closePopup();
                 });
-                ClusterMarkers.addLayer(CompanyMarker);
+                Marker.on('dragstart', function (e) {
+                    console.log(v.v3435, v.v3436);
+                    console.log(e);
+                });
+                Marker.on('dragend', function (e) {
+                    console.log(v.v3435, v.v3436);
+                    console.log(e);
+                    e.target.setLatLng([v.v3435, v.v3436]);
+                });
+
+                ClusterMarkers.addLayer(Marker);
             });
         });
         //監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
@@ -492,6 +506,11 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             }
 
         })
+    }
+
+    
+    testClick(event:any){
+        console.log(event);
     }
 }
 

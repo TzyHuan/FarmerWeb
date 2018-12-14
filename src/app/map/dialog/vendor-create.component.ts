@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { v34 } from '../../ApiKmv/v34';
-import { V34Service } from '../../ApiKmv/v34.service'
+import { v34 } from '../../../api/ApiKmv/v34';
+import { V34Service } from '../../../api/ApiKmv/v34.service'
 
 @Component({
     selector: 'vendor-create',

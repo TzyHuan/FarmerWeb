@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 
-import { v34 } from '../../ApiKmv/v34';
-import { V34Service } from '../../ApiKmv/v34.service';
+import { v34 } from '../../../api/ApiKmv/v34';
+import { V34Service } from '../../../api/ApiKmv/v34.service';
 
 import { DialogSupplyChainCreateComponent } from '../dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from '../dialog/dialog-supplychain-delete.component';

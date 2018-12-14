@@ -1,5 +1,5 @@
 <h1>
-  Welcome to My balcony!!  
+  Welcome to My balcony!!
 </h1>
 <div class="HomePage">
   <div class="Selection">
@@ -14,18 +14,18 @@
     位置：{{APIRealtimeDate?.stationName}}
     <br> 即時溫度：{{APIRealtimeDate?.recTemp}} °C
     <br> 即時濕度：{{APIRealtimeDate?.recRH}} %
+    <br> 即時照度：{{APIRealtimeDate?.lux}} lux
   </div>
   <div class="Charts" *ngIf="APIRealtimeDate">
-    </div>
-    <div class="highchart" #RealtimeTempGauge>
-      Oops! There are some errors when loading temperatures...
-    </div>
-    <div class="highchart" #RealtimeRHGauge>
-      Oops! There are some errors when loading relative humidities...
-  </div>   
-     
-  <br>
-  GPIO_21:
-  <mat-slide-toggle class="example-margin" (change)="gpio($event.checked)">        
-      </mat-slide-toggle>
+  </div>
+  <div class="highchart" #RealtimeTempGauge>
+    Oops! There are some errors when loading temperatures...
+  </div>
+  <div class="highchart" #RealtimeRHGauge>
+    Oops! There are some errors when loading relative humidities...
+  </div>
+  <div class="highchart" #RealtimeLux>
+    Oops! There are some errors when loading relative humidities...
+  </div>
+
 </div>

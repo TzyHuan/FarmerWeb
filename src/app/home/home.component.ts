@@ -4,7 +4,7 @@ import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
 import { HomeService } from './home.service';
 import { RealtimeData, WeatherStation } from './home';
 import { ClimateService } from '../climate/climate.service';
-import { GpioService } from '../ApiGpio/RaspGpio.service';
+import { climate } from '../../api/mongoDb/Climate';
 
 import * as signalR from '@aspnet/signalr';
 import { environment } from '../../environments/environment';
@@ -20,7 +20,7 @@ require('highcharts/modules/export-data')(Highcharts);
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [HomeService, ClimateService, GpioService]
+  providers: [HomeService, ClimateService]
 })
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
 
@@ -34,15 +34,16 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   //Highchart 
   public RealtimeTempGauge: any;
   public RealtimeRHGauge: any;
+  public RealtimeLux: any;
   @ViewChild('RealtimeTempGauge') public RealtimeTempGaugeEle: ElementRef;
   @ViewChild('RealtimeRHGauge') public RealtimeRHGaugeEle: ElementRef;
+  @ViewChild('RealtimeLux') RealtimeLuxEle: ElementRef;
 
   //氣象站台清單、已選取之站台  
   public stations: WeatherStation[];
   public selectedStations: WeatherStation = new WeatherStation();
 
-  constructor(private homeREST: HomeService, private StationREST: ClimateService,
-    private _GpioService: GpioService) {
+  constructor(private homeREST: HomeService, private StationREST: ClimateService) {
 
     // 初始化建立SignalR連線   
     this.connection.start().catch(err => console.error(err));
@@ -226,38 +227,99 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         }
       }]
     };
+    const optionsLux: Highcharts.Options = {
+      chart: {
+        type: 'spline',
+        animation: Highcharts.svg, // don't animate in old IE
+        marginRight: 10       
+      },
+
+      time: {
+        useUTC: false
+      },
+
+      title: {
+        text: 'Realtime Illuminance'
+      },
+      xAxis: {
+        type: 'datetime',
+        tickPixelInterval: 150
+      },
+      yAxis: {
+        title: {
+          text: 'Lux'
+        },
+        plotLines: [{
+          value: 0,
+          width: 1,
+          color: '#808080'
+        }]
+      },
+      tooltip: {
+        headerFormat: '', //'<b>{series.name}</b><br/>',
+        //pointFormat: 'Illuminance: {point.y:.f} lux'
+      },
+      legend: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      series: [{
+        name: 'Illuminance',
+        data: (function () {
+          // generate an array of random data
+          var data = [],
+            time = (new Date()).getTime(),
+            i;
+
+          for (i = -199; i <= 0; i += 1) {
+            data.push({
+              x: time + i * 1000,
+              y: Math.random()
+            });
+          }
+          return data;
+        }())
+      }]
+    }
     //#endregion
 
     //將基本參數代入，初始化Highchart畫面格式    
     this.RealtimeTempGauge = Highcharts.chart(this.RealtimeTempGaugeEle.nativeElement, optionsTemp);
     this.RealtimeRHGauge = Highcharts.chart(this.RealtimeRHGaugeEle.nativeElement, optionsRH);
+    this.RealtimeLux = Highcharts.chart(this.RealtimeLuxEle.nativeElement, optionsLux);
 
     //SignalR開始連線接收刷新數據
-    this.connection.on("TempRhSensorReceived", (StationID: number, Temperature: number, Humidity: number) => {
-
-      if (this.selectedStations.stationId == StationID) {
+    this.connection.on("TempRhSensorReceived", (DetectedData: climate) => {
+      if (this.selectedStations.stationId == DetectedData.stationId) {
         // 送來的stationIdID與選擇的相同時才刷新 todo
         this.APIRealtimeDate = {
-          StationId: StationID,
-          stationName: this.stations.find(x => x.stationId == StationID).stationName,
-          recTemp: Temperature,
-          recRH: Humidity
+          StationId: DetectedData.stationId,
+          stationName: this.stations.find(x => x.stationId == DetectedData.stationId).stationName,
+          recTemp: DetectedData.temperature,
+          recRH: DetectedData.rh,
+          lux: DetectedData.lux
         }
 
         this.RealtimeTempGauge.series[0].update({
-          data: [Temperature]
+          data: [DetectedData.temperature]
         }, true);
 
         this.RealtimeRHGauge.series[0].update({
-          data: [Humidity]
+          data: [DetectedData.rh]
         }, true);
+
+        //console.log(new Date(DetectedData.obsTime).getTime());
+        //console.log([DetectedData.obsTime.getTime(), DetectedData.lux]);
+        this.RealtimeLux.series[0].addPoint([
+          new Date(DetectedData.obsTime).getTime(), DetectedData.lux
+        ], true, true);
       }
     });
   }
 
   ngOnDestroy() {
-    //console.log('ngOnDestroy');   
-
     //關閉SignalR連線
     this.connection.off;
   }
@@ -279,6 +341,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
 
     //置入資料至溫度的Highchart
     await this.homeREST.getRealtimeData(StationId).subscribe((data: RealtimeData) => {
+      console.log(data)
       this.APIRealtimeDate = data;
       this.RealtimeTempGauge.series[0].update({
         data: [data.recTemp]
@@ -292,16 +355,6 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         console.log(error);
       }
     );
-  }
-
-  gpio(event: boolean) {
-    //gpio off = 1, 3.3v
-    //gpio on  = 0, 0v
-
-    let onoff = Number(!event);    
-    this._GpioService.setGpio(onoff).subscribe(x=>{
-      console.log(x);
-    });
   }
 
 }

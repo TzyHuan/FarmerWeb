@@ -1,21 +1,8 @@
 <br><br><br>
 
 <video id=vid1 class="video-js" data-setup='{}'>
- 
+
     <source src="http://192.168.1.150/hls/test.m3u8" type="application/x-mpegURL">
-
-        <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to a web browser that
-            <a href="http://videojs.com/html5-video-support/" target="_blank">
-                supports HTML5 video
-            </a>
-        </p>
-</video>
-
-<!-- <video id="my-player" class="video-js" controls preload="auto" poster="//vjs.zencdn.net/v/oceans.png" data-setup='{}'>
-    <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
-    <source src="//vjs.zencdn.net/v/oceans.webm" type="video/webm">
-    <source src="//vjs.zencdn.net/v/oceans.ogv" type="video/ogg">
 
     <p class="vjs-no-js">
         To view this video please enable JavaScript, and consider upgrading to a web browser that
@@ -23,4 +10,45 @@
             supports HTML5 video
         </a>
     </p>
-</video> -->
+</video>
+
+
+<div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all">
+    <table>
+        <thead>
+            <tr>
+                <th>項目</th>
+                <th>開關</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--todo : 之後改從database抓，ngFor呈現-->
+            <tr>
+                <td>
+                    沉水馬達(GPIO_20)
+                </td>
+                <td>
+                    <mat-slide-toggle class="example-margin" (change)="SetGpio(20, $event.checked)">
+                    </mat-slide-toggle>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    樹梅派風扇(GPIO_21)
+                </td>
+                <td>
+                    <mat-slide-toggle class="example-margin" (change)="SetGpio(21,$event.checked)">
+                    </mat-slide-toggle>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 
+<div id="Box2" ondrop="Drop(event)" ondragover="AllowDrop(event)">
+        <img id="Img2" src="圖片網址" draggable="true" ondragstart="Drag(event)">
+    </div>
+    <div id="Box3" ondrop="Drop(event)" ondragover="AllowDrop(event)"></div>
+    <div id="Box4" ondrop="Drop(event)" ondragover="AllowDrop(event)"></div>
+    <div style="clear:both;"></div> -->

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { v34 } from '../../ApiKmv/v34';
-import { V34Service } from '../../ApiKmv/v34.service'
+import { v34 } from '../../../api/ApiKmv/v34';
+import { V34Service } from '../../../api/ApiKmv/v34.service';
 
 
 @Component({
