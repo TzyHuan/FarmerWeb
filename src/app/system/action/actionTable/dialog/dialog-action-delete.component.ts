@@ -20,7 +20,7 @@ import { ActionService } from '../../action.service'
     }
   
     onYesClick(): void {
-      this.deleteMenu(this.data.actionId);
+      this.deleteMenu(this.data.id);
       this.dialogRef.close(true);
     }
   

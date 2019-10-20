@@ -33,7 +33,7 @@ export class ActionTableComponent implements OnInit {
     public methodFilter = new FormControl();
     public controllerIdFilter = new FormControl();
     public descriptionFilter = new FormControl();
-    public filterValues = { actionId: '', name: '', method: '', controllerId: '', description: '' };
+    public filterValues = { id: '', name: '', method: '', controllerId: '', description: '' };
     public idFilteredOptions: Observable<string[]>;
     public nameFilteredOptions: Observable<string[]>;
     public methodFilteredOptions: Observable<string[]>;
@@ -63,12 +63,12 @@ export class ActionTableComponent implements OnInit {
                 this.idFilteredOptions = this.idFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value=>{
-                        this.filterValues.actionId = value;
+                        this.filterValues.id = value;
                         this.ActionDataSource.filter = JSON.stringify(this.filterValues);
                         this.ActionDataSource.paginator.firstPage();
                     }),
                     map(value=>this._autoFilter(
-                        data.map(v => v.actionId.toString()),
+                        data.map(v => v.id.toString()),
                         value
                     ))
                 )
@@ -147,8 +147,8 @@ export class ActionTableComponent implements OnInit {
         let searchTerms: Action = JSON.parse(Filter);
 
         //先預判是否有沒有值的欄位，無值不篩選進來
-        let JudgedId: boolean = isNullOrUndefined(Data.actionId) ?
-            true : Data.actionId.toString().indexOf(searchTerms.actionId.toString()) != -1
+        let JudgedId: boolean = isNullOrUndefined(Data.id) ?
+            true : Data.id.toString().indexOf(searchTerms.id.toString()) != -1
 
         let JudgedName: boolean = isNullOrUndefined(Data.name) ?
             true : Data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1

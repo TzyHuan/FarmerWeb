@@ -26,7 +26,7 @@ export class DialogActionUpdateComponent {
 
   onYesClick(): void {
     //console.log(this.ActionDetial.ActionId);
-    this.putAction(this.ActionDetail.actionId, this.ActionDetail);
+    this.putAction(this.ActionDetail.id, this.ActionDetail);
     this.dialogRef.close(true);
   }
 

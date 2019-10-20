@@ -54,8 +54,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         (result: WeatherStation[]) => {
           this.stations = result;
 
-          //預設初始選項為第一個選項
-          this.selectedStations = result[0];
+          //預設初始選項為倒數第一個選項
+          this.selectedStations = result[result.length-1];
 
           //得到station id後，馬上初始化即時資料
           this.RefreshRealtimeData(this.selectedStations.stationId);
@@ -140,6 +140,9 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
           color: '#DF5353' // red
         }]
       },
+      credits: {
+        enabled: false
+      },
       series: [{
         name: 'Temperature',
         data: [],
@@ -212,6 +215,9 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
           color: '#DF5353' // red
         }]
       },
+      credits: {
+        enabled: false
+      },
       series: [{
         name: 'RH',
         data: [],
@@ -231,7 +237,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       chart: {
         type: 'spline',
         animation: Highcharts.svg, // don't animate in old IE
-        marginRight: 10       
+        marginRight: 10
       },
 
       time: {
@@ -243,7 +249,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       },
       xAxis: {
         type: 'datetime',
-        tickPixelInterval: 150
+        tickPixelInterval: 15
       },
       yAxis: {
         title: {
@@ -265,18 +271,20 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       exporting: {
         enabled: false
       },
+      credits: {
+        enabled: false
+      },
       series: [{
         name: 'Illuminance',
-        data: (function () {
-          // generate an array of random data
+        data: 
+          (function () {
+          // generate an initial zero data
           var data = [],
-            time = (new Date()).getTime(),
-            i;
-
-          for (i = -199; i <= 0; i += 1) {
+            time = (new Date()).getTime()
+          for (let i = -199; i <= 0; i += 1) {
             data.push({
               x: time + i * 1000,
-              y: Math.random()
+              y: 0
             });
           }
           return data;

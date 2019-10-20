@@ -507,11 +507,6 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
         })
     }
-
-    
-    testClick(event:any){
-        console.log(event);
-    }
 }
 
 export class SwitchButton {
