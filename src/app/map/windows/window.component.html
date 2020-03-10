@@ -1,12 +1,12 @@
 <!--Operation of highchart-->
 <div id="dragChart" class="dragDiv" ngDraggable 
-    [handle]="Handle"     
-    [bounds]="LimitedBound"
+    [handle]="handle"     
+    [bounds]="limitedBound"
     [inBounds]="true"
     [preventDefaultEvent]="true">
     
-    <div class="selector" #Handle>
-        <p> {{Title}}
+    <div class="selector" #handle>
+        <p> {{title}}
             <button class="close" (click)="clickClose()">
                 <span>x</span>
             </button>
@@ -17,18 +17,16 @@
     <div [ngSwitch]="true" class="dragDivContent">
 
         <!--Highchart-->
-        <div *ngSwitchCase="Title === 'dragChart'" class="chart"  #dropTarget>
+        <div *ngSwitchCase="title === 'dragChart'" class="chart"  #dropTarget>
             <window-dragChart></window-dragChart>
         </div>
         
         <!--側欄-->
-        <div *ngSwitchCase="Title === 'dragAction'" class="actionList">
+        <div *ngSwitchCase="title === 'dragAction'" class="actionList">
             <window-dragAction class="actionItems"></window-dragAction>
         </div>   
 
         <!--空白-->
         <div *ngSwitchDefault class="noContent">no content</div>
-
     </div>
-
 </div>

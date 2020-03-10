@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>新增帳戶</h1>
 <div mat-dialog-content>
-    <form [formGroup]="MemberForm">
+    <form [formGroup]="memberForm">
 
         <mat-form-field class="insert-full-width formNum">
             <input matInput type="text" formControlName="domain" placeholder="網域" required>
@@ -13,10 +13,6 @@
         </mat-form-field> &nbsp;
         <mat-form-field class="insert-full-width formNum">
             <input matInput type="text" formControlName="lastName" placeholder="姓氏" required>
-        </mat-form-field>
-        <br>
-        <mat-form-field class="insert-full-width">
-            <input matInput type="text" formControlName="deptId" placeholder="部門" required>
         </mat-form-field>
         <br>
         <mat-form-field class="insert-full-width">
@@ -34,7 +30,7 @@
             <input matInput #inputMail type="text" maxlength="40" formControlName="email" placeholder="Email" [errorStateMatcher]="matcher"
                 required>
             <mat-hint align="end">{{inputMail.value?.length || 0}}/40</mat-hint>
-            <mat-error *ngIf="MemberForm.hasError('email')">
+            <mat-error *ngIf="memberForm.hasError('email')">
                 Please enter a valid email address
             </mat-error>
         </mat-form-field>
@@ -43,5 +39,5 @@
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button color="primary" (click)="onNoClick()">取消</button>
-    <button mat-raised-button color="primary" (click)="onYesClick(MemberForm.value)" [disabled]="!MemberForm.valid">確定新增</button>
+    <button mat-raised-button color="primary" (click)="onYesClick(memberForm.value)" [disabled]="!memberForm.valid">確定新增</button>
 </div>

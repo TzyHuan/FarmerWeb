@@ -10,17 +10,17 @@ require('highcharts/modules/exporting')(Highcharts);
 
 export class StatisticsComponent implements OnInit {
 
-    StatisticalCahrt1:Highcharts;
-    StatisticalCahrt2:Highcharts;
-    StatisticalCahrt3:Highcharts;
-    StatisticalCahrt4:Highcharts;
+    statisticalCahrt1: Highcharts;
+    statisticalCahrt2: Highcharts;
+    statisticalCahrt3: Highcharts;
+    statisticalCahrt4: Highcharts;
 
     constructor() {
 
     }
 
     ngOnInit() {
-        this.StatisticalCahrt1 = Highcharts.chart('container1', {
+        this.statisticalCahrt1 = Highcharts.chart('container1', {
             title: {
                 text: 'Combination chart'
             },
@@ -83,7 +83,7 @@ export class StatisticsComponent implements OnInit {
             }]
         });
 
-        this.StatisticalCahrt2 = Highcharts.chart('container2', {
+        this.statisticalCahrt2 = Highcharts.chart('container2', {
             chart: {
                 type: 'bar'
             },
@@ -148,7 +148,7 @@ export class StatisticsComponent implements OnInit {
             }]
         });
 
-        this.StatisticalCahrt3 = Highcharts.chart('container3', {
+        this.statisticalCahrt3 = Highcharts.chart('container3', {
             chart: {
                 type: 'pie',
                 options3d: {
@@ -184,47 +184,47 @@ export class StatisticsComponent implements OnInit {
             }]
         });
 
-        this.StatisticalCahrt4 = Highcharts.chart('container4', {
+        this.statisticalCahrt4 = Highcharts.chart('container4', {
 
             chart: {
                 polar: true,
                 type: 'line'
             },
-        
+
             title: {
                 text: 'Budget vs spending',
                 x: -80
             },
-        
+
             pane: {
                 size: '80%'
             },
-        
+
             xAxis: {
                 categories: ['Sales', 'Marketing', 'Development', 'Customer Support',
                     'Information Technology', 'Administration'],
                 tickmarkPlacement: 'on',
                 lineWidth: 0
             },
-        
+
             yAxis: {
                 gridLineInterpolation: 'polygon',
                 lineWidth: 0,
                 min: 0
             },
-        
+
             tooltip: {
                 shared: true,
                 pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
             },
-        
+
             legend: {
                 align: 'right',
                 verticalAlign: 'top',
                 y: 70,
                 layout: 'vertical'
             },
-        
+
             series: [{
                 name: 'Allocated Budget',
                 data: [43000, 19000, 60000, 35000, 17000, 10000],
@@ -234,17 +234,17 @@ export class StatisticsComponent implements OnInit {
                 data: [50000, 39000, 42000, 31000, 26000, 14000],
                 pointPlacement: 'on'
             }]
-        
+
         });
     }
 
-    onResizing(event:Event){
-        this.StatisticalCahrt1.reflow();
+    onResizing(event: Event) {
+        this.statisticalCahrt1.reflow();
 
-        this.StatisticalCahrt2.reflow();
+        this.statisticalCahrt2.reflow();
 
-        this.StatisticalCahrt3.reflow();
+        this.statisticalCahrt3.reflow();
 
-        this.StatisticalCahrt4.reflow();
+        this.statisticalCahrt4.reflow();
     }
 }

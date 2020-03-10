@@ -68,15 +68,15 @@
     </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="ActionDataSource" matSort>
+<table mat-table [dataSource]="actionDataSource" matSort>
 
     <!-- Note that these columns can be defined in any order.
          The actual rendered columns are set as a property on the row definition" -->
 
     <!-- id Column -->
-    <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    <ng-container matColumnDef="actionId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Action Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.actionId}} </td>
     </ng-container>
 
     <!-- name Column -->
@@ -123,8 +123,8 @@
         </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="ActionDisplayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: ActionDisplayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="actionDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: actionDisplayedColumns;"></tr>
 </table>
 
 <div class="no-results" [style.display]="paginator.length == 0 ? '' : 'none'">

@@ -1,33 +1,30 @@
-import { Component, ComponentFactoryResolver, Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { NavMenuService } from './navmenu.service';
-import { vmNavMenu } from './navmenu';
+import { Component } from '@angular/core';
+import { SystemService } from '../../api/system_auth/system.service';
+import { VmMenu } from '../../interface/system_auth/vm_menu';
 import { AppRoutingModule } from '../app-routing.module';
 import { Router } from '@angular/router';
 import { SharedService } from '../shared-service';
-import { EmptyObservable } from 'rxjs/observable/EmptyObservable';
-import { Observer, Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 
 @Component({
     selector: 'nav-menu',
     templateUrl: './navmenu.component.html',
     styleUrls: ['./navmenu.component.css'],
-    providers: [NavMenuService] //SharedService已在app.module
+    providers: [SystemService] //SharedService已在app.module
 })
 
 export class NavMenuComponent {
 
-    public MenuList: vmNavMenu[];
-    public SignList: vmNavMenu[];
+    public menuList: VmMenu[];
+    public signList: VmMenu[];
     public isSignIn: boolean;
     public timeNow: Observable<string>;
 
     constructor(
-        private MenuREST: NavMenuService,
-        private reRouting: AppRoutingModule,
         private router: Router,
-        private resolver: ComponentFactoryResolver,
-        private _sharedService: SharedService
+        private reRouting: AppRoutingModule,
+        private systemService: SystemService,
+        private sharedService: SharedService,
     ) {
 
         if (localStorage.getItem('userToken') == null) {
@@ -39,26 +36,23 @@ export class NavMenuComponent {
 
         //雖然第一次執行時app.module.ts會自動執行app-routing.module.ts建立Routers
         //但需要刷新Menu的button，所以必須執行一次
-        this.RebuildRoutes();
+        this.rebuildRoutes();
 
         //監聽從sign-in.component.ts傳來觸發事件，登入時重新抓Routes
-        _sharedService.changeEmitted$.subscribe(
-            text => {
-                console.log(text);
-                this.RebuildRoutes();
+        this.sharedService.changeEmitted$.subscribe(text => {
+            console.log(text);
+            this.rebuildRoutes();
 
-                if (localStorage.getItem('userToken') == null) {
-                    this.isSignIn = false;
-                }
-                else if (localStorage.getItem('userToken') != null) {
-                    this.isSignIn = true;
-                }
+            if (localStorage.getItem('userToken') == null) {
+                this.isSignIn = false;
             }
-        );
+            else if (localStorage.getItem('userToken') != null) {
+                this.isSignIn = true;
+            }
+        });
     }
 
-    ngOnInit() {        
-
+    ngOnInit() {
         var options = {
             //year: "numeric", month: "short", day: "numeric",
             hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
@@ -73,22 +67,20 @@ export class NavMenuComponent {
         });
     }
 
-    SignOut() {
+    signOut() {
         localStorage.removeItem("userToken");
         this.isSignIn = false;
-
-        this.RebuildRoutes();
+        this.rebuildRoutes();
     }
 
-    RebuildRoutes() {        
-        this.MenuREST.getAllowedMenu().subscribe(
-            (result: vmNavMenu[]) => {
-                this.router.resetConfig(this.reRouting.processRoute(result));
-                this.MenuList = result.filter(menu => !menu.path.startsWith('Sign'));
-                this.SignList = result.filter(menu => menu.path.startsWith('Sign'));
-                console.log("RebuildRoutes success!!")
-            },
-            error => console.error(error)
-        )
+    rebuildRoutes() {
+        this.systemService.getAllowedMenu().subscribe((result: VmMenu[]) => {
+            this.router.resetConfig(this.reRouting.processRoute(result));
+            this.menuList = result.filter(menu => !menu.path.startsWith('Sign'));
+            this.signList = result.filter(menu => menu.path.startsWith('Sign'));
+            console.log("RebuildRoutes success!!");
+        }, (error) => {
+            console.error(error);
+        });
     }
 }

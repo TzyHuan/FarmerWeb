@@ -1,26 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SharedService } from '../shared-service';
-//----ViewModel----//
-import { vmNavMenu } from '../navmenu/navmenu';
-
+import { VmMenu } from '../../interface/system_auth/vm_menu';
 
 @Component({
   selector: 'app-system',
   templateUrl: './system.component.html',
-  styleUrls: ['./system.component.css']
+  styleUrls: ['./system.component.css'],
   //providers: [ SharedService ] //已在app.module 
 })
-export class SystemComponent implements OnInit {
 
-  public MenuList: vmNavMenu[];
+export class SystemComponent {
 
-  constructor(private _sharedService: SharedService) {
-    _sharedService.ChildRoutesEmitted$.subscribe((Menus: vmNavMenu[]) => {
-      this.MenuList = Menus;     
+  menuList: VmMenu[];
+
+  constructor(private sharedService: SharedService) {
+    this.sharedService.childRoutesEmitted$.subscribe((menus: VmMenu[]) => {
+      this.menuList = menus;     
     });
   }
-
-  ngOnInit() {
-  }
-
 }

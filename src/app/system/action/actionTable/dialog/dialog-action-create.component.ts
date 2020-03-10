@@ -1,38 +1,41 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Action } from '../../action';
-import { ActionService } from '../../action.service'
-import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { Action } from '../../../../../interface/system_auth/action';
+import { ActionService } from '../../../../../api/system_auth/action.service';
 
 @Component({
     selector: 'dialog-action-create',
     templateUrl: 'dialog-action-create.html',
-    providers: [ActionService]
+    providers: [ActionService],
 })
+
 export class DialogActionCreateComponent {
 
-    public addActionForm: FormGroup;
+    addActionForm: FormGroup;
 
-    constructor(public dialogRef: MatDialogRef<DialogActionCreateComponent>,
-        private ActionREST: ActionService, public _fb: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public ActionList: Action[]) {
-        this.addActionForm = this._fb.group({
-            containLists: this._fb.array([
+    constructor(
+        public fb: FormBuilder,
+        public dialogRef: MatDialogRef<DialogActionCreateComponent>,
+        private actionService: ActionService,
+        @Inject(MAT_DIALOG_DATA) public ActionList: Action[],
+    ) {
+        this.addActionForm = this.fb.group({
+            containLists: this.fb.array([
                 this.initaddActionForm(),
-            ])
+            ]),
         });
     }
 
     initaddActionForm() {
         //若此地不加require，而在子component加入，則會發生前後不一致的警告！
-        let DefaultRow = {
-            id: ['', Validators.required],
+        return this.fb.group({
+            actionId: ['', Validators.required],
             name: ['', Validators.required],
             method: ['', Validators.required],
             controllerId: ['', Validators.required],
-            description: ['']           
-        }
-        return this._fb.group(DefaultRow);
+            description: [''],
+        });
     }
 
     addActionList() {
@@ -51,21 +54,18 @@ export class DialogActionCreateComponent {
         this.dialogRef.close(false);
     }
 
-    onYesClick(InsertData:Action[]): void {        
+    onYesClick(InsertData: Action[]): void {
         this.createAction(InsertData);
         this.dialogRef.close(true);
     }
 
     createAction(dataList: Action[]) {
         dataList.forEach(data => {
-            this.ActionREST.PostAction(data).subscribe(
-                (result: any) => {
-                    //console.log(result);
-                },
-                error => {
-                    console.log(error);
-                }
-            )
+            this.actionService.postAction(data).subscribe((result: any) => {
+                //console.log(result);
+            }, (error) => {
+                console.log(error);
+            });
         });
     }
 }

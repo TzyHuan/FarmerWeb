@@ -1,15 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActionService } from './action.service';
-import { Action, Ctrl } from './action';
+import { ActionService } from '../../../api/system_auth/action.service';
 import { BehaviorSubject } from 'rxjs';
-import { MatPaginator, PageEvent } from '@angular/material';
-import { zip } from 'rxjs/operators';
+import { MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'system-action',
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.css'],
-  providers: [ActionService]
+  providers: [ActionService],
 })
 export class ActionComponent implements OnInit {
 
@@ -18,7 +16,7 @@ export class ActionComponent implements OnInit {
   private TabChangeEmitted$ = this.emitTabChange.asObservable();
   public tabLoadedData: any[] = [];
 
-  @ViewChild('Paginator') paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
 
   /** 每更動DOM(按排序或下一頁都算)都會自動重新偵測，若該變數在非選擇的tab，得到 ms 則為 undefine 
    * angular有bug，每切tab時 dataSource.sort自動歸零對應
@@ -61,12 +59,10 @@ export class ActionComponent implements OnInit {
   ngOnInit() {
     //初始讀第一個tab的資料
     this.loadData(0);
-    
   }
 
 
   loadData(index: number) {
-
     switch (index) {
       case 0: {
         //statements; 
@@ -81,7 +77,6 @@ export class ActionComponent implements OnInit {
         break;
       }
     }
-
   }
 
   /** 統一在parent頁面讀取tabs的資料暫存  //todo

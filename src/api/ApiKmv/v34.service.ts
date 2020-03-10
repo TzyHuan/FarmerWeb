@@ -6,7 +6,7 @@ import { v34 } from './v34';
 
 @Injectable()
 export class V34Service {
-    public ApiUrl_v34: string = environment.ApiUrl_Farmer + 'V34';
+    public ApiUrl_v34: string = environment.greenhouseUrl + 'V34';
     //public ApiUrl_v34: string = "https://localhost:44321/api/V34";
 
     headers = new HttpHeaders({

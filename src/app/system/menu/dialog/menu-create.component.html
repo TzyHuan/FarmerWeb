@@ -1,4 +1,4 @@
-<form [formGroup]="MenuForm">
+<form [formGroup]="menuForm">
     <mat-form-field class="insert-full-width formNum">
         <input matInput type="number" formControlName="menuId"  placeholder="ID" required>
     </mat-form-field>
@@ -19,7 +19,7 @@
     </mat-form-field>
     <mat-form-field class="insert-full-width">
         <mat-select formControlName="rootMenuId" placeholder="隸屬選單">
-            <mat-option *ngFor="let MenuDetail of MenuList" value="{{MenuDetail.menuId}}">{{MenuDetail.menuText}}</mat-option>
+            <mat-option *ngFor="let menuDetail of menuList" value="{{menuDetail.menuId}}">{{menuDetail.menuText}}</mat-option>
         </mat-select>
     </mat-form-field>
 </form>

@@ -1,50 +1,48 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserService } from '../shared/user.service';
-import { vmNavMenu } from '../../navmenu/navmenu';
-import { SharedService } from '../../shared-service'
+import { SharedService } from '../../shared-service';
+import { AuthService } from '../../../api/system_auth/auth.service';
 
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css'],
-  //providers: [UserService] //已在app.module.ts統一provide了  
+  //providers: [AuthService] //已在app.module.ts統一provide了  
 })
 export class SignInComponent implements OnInit {
 
+  hide: boolean = true;
   isLoginError: boolean = false;
-  AllowedMenuList: vmNavMenu[];
-  AllowedSignList: vmNavMenu[];
-  public hide:boolean = true;
 
-  //@Output() SignEvent: EventEmitter<null> = new EventEmitter();
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private sharedService: SharedService,
+  ) {
 
-  constructor(private AuthREST: UserService, private router: Router, private _sharedService: SharedService) { }
+  }
 
   ngOnInit() {
   }
 
-  OnSubmit(account: string, password: string) {
-    this.AuthREST.userAuthentication(account, password)
-      .subscribe(
-        (data: any) => {
-          localStorage.setItem('userToken', data.access_token);
-          console.log('Sign in success!');
+  onSubmit(account: string, password: string) {
+    this.authService.userAuthentication(account, password).subscribe((data: any) => {
+      localStorage.setItem('userToken', data.access_token);
+      console.log('Sign in success!');
 
-          //觸發事件，讓menu監聽此事件，並觸發rebuildMenu以動態產生選單
-          //this.SignEvent.emit(null);      
-          this._sharedService.emitChange('sign-in OnSubmitemit=>navmenu')
+      //觸發事件，讓menu監聽此事件，並觸發rebuildMenu以動態產生選單
+      //this.SignEvent.emit(null);      
+      this.sharedService.emitChange('sign-in onSubmitemit=>navmenu')
 
-          //登入成功後重新導向至首頁
-          this.router.navigate(['/Home']);
-        },
-        (err: HttpErrorResponse) => {
-          localStorage.removeItem('userToken');
-          this.isLoginError = true;
-        }
-      );
+      //登入成功後重新導向至首頁
+      this.router.navigate(['/Home']);
+    }, (error: HttpErrorResponse) => {
+      console.log(error)
+      localStorage.removeItem('userToken');
+      this.isLoginError = true;
+    });
   }
 
 }

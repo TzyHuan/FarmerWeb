@@ -1,6 +1,5 @@
-import { Component, OnInit, AfterContentInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
-import { GpioService } from '../../api/raspberry/RaspGpio.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GpioService } from '../../api/raspberry/rasp_gpio.service';
 
 import videojs from 'video.js';
 
@@ -22,7 +21,7 @@ export class LiveComponent implements OnInit, OnDestroy {
 
     player: any;
 
-    constructor(private _GpioService: GpioService) {
+    constructor(private gpioService: GpioService) {
 
     }
 
@@ -52,42 +51,39 @@ export class LiveComponent implements OnInit, OnDestroy {
      * @param pin BCM接腳編號
      * @param event on: true, off: false
      */
-    SetGpio(pin: number, event: boolean) {
-
+    setGpio(pin: number, event: boolean) {
         let onoff = Number(!event);
-        this._GpioService.SetGpio(pin, onoff).subscribe(x => {
+        this.gpioService.setGpio(pin, onoff).subscribe(x => {
             console.log(x);
         });
     }
 
-    UnexportGpio(pin: number, event: string) {
-
-        this._GpioService.SetGpio(pin, event).subscribe(x => {
+    unexportGpio(pin: number, event: string) {
+        this.gpioService.setGpio(pin, event).subscribe(x => {
             console.log(x);
         });
     }
 
-    ReadGpioStatus(pin: number, event: string) {
-
-        this._GpioService.ReadGpioStatus(pin).subscribe(x => {
+    readGpioStatus(pin: number, event: string) {
+        this.gpioService.readGpioStatus(pin).subscribe(x => {
             console.log(x);
         })
     }
 
-    ReadAllGpioStatus(pins: any[]) {
-        this._GpioService.ReadAllGpioStatus(pins).subscribe(x => {
+    readAllGpioStatus(pins: any[]) {
+        this.gpioService.readAllGpioStatus(pins).subscribe(x => {
             console.log(x);
         })
     }
 }
 
-function AllowDrop(event){
+function allowDrop(event){
     event.preventDefault();
 }
-function Drag(event){
+function drag(event){
     event.dataTransfer.setData("text",event.currentTarget.id);
 }
-function Drop(event){
+function drop(event){
     event.preventDefault();
     var data=event.dataTransfer.getData("text");
     event.currentTarget.appendChild(document.getElementById(data));

@@ -4,10 +4,10 @@
   地點：
   <select (change)="onSelect($event.target.value)" [value]="selectedStations.stationId">
     <option *ngFor="let station of stations" value="{{station.stationId}}">
-      {{station.stationName}}
+      {{station.name}}
     </option>
   </select>
-  <br /> Selected Station ID: {{selectedStations.stationId}} & Name: {{selectedStations.stationName}}
+  <br /> Selected Station ID: {{selectedStations.stationId}} & Name: {{selectedStations.name}}
   <br />  
 
   <div class="highchart" #TemperatureChart>
@@ -15,7 +15,7 @@
   </div>
   <br>
   
-  <div class="highchart" #HumidityChart>
+  <div class="highchart" #humidityChart>
     Oops! There are some errors when loading humidities...
   </div>
 </div>

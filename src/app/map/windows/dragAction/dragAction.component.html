@@ -1,15 +1,12 @@
 <mat-expansion-panel class=" actionItems">
-                        
         <mat-expansion-panel-header>
             <p>功能選單</p>
         </mat-expansion-panel-header>
 
-        
-        <div *ngFor="let SwitchButton of sideSwitchButtonList; last as isLast">
-            <button type="button" mat-raised-button color="primary" (click)="onToggle($event, SwitchButton.value)">
-                {{SwitchButton.name}}
+        <div *ngFor="let switchButton of sideSwitchButtonList; last as isLast">
+            <button type="button" mat-raised-button color="primary" (click)="onToggle($event, switchButton.value)">
+                {{switchButton.name}}
             </button>
             <br *ngIf="!isLast">
         </div>
-
 </mat-expansion-panel>

@@ -9,24 +9,20 @@ import { WindowService } from './window.service';
 
 export class WindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @Input('Title') Title: string;
-    @Input('Index') Index: number;
-    @Input('Bound') LimitedBound: HTMLDivElement;
+    @Input('title') title: string;
+    @Input('index') index: number;
+    @Input('bound') limitedBound: HTMLDivElement;
     @ViewChild('dropTarget') dropTarget: ElementRef;
 
-    constructor(public _WindowService: WindowService) {
-
-
+    constructor(public windowService: WindowService) {
     }
 
     ngOnInit() {
-        console.log("open:" + this.Title);
+        console.log("open: " + this.title);
     }
 
     ngAfterViewInit() {
         if (this.dropTarget != undefined && this.dropTarget != null) {
-            
-
             let dropTarget = this.dropTarget.nativeElement;
             dropTarget.addEventListener('drop', dropped);
             dropTarget.addEventListener('dragenter', cancelDefault);
@@ -49,11 +45,10 @@ export class WindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        console.log("close:" + this.Title);
+        console.log("close: " + this.title);
     }
 
     clickClose() {
-        this._WindowService.emitWindowClose(this.Index);
+        this.windowService.emitWindowClose(this.index);
     }
-
 }

@@ -7,27 +7,25 @@ require('highcharts/modules/exporting')(Highcharts);
     selector: 'window-dragChart',
     templateUrl: './dragChart.component.html',
     styleUrls: ['../window.component.css'],
-    //providers: []
 })
 
-export class DragChartComponent implements OnInit{ 
+export class DragChartComponent implements OnInit {
 
-    @Input('windowTitle') Title:string;
+    @Input('windowTitle') title: string;
     //Highchart
-    Cahrt: Highcharts;
+    cahrt: Highcharts;
 
-    constructor() {      
+    constructor() {
+    }
 
-    } 
-
-    ngOnInit(){         
+    ngOnInit() {
         //塞資料入highchart //todo
         this.createHighchart();
     }
-   
+
     createHighchart() {
-        this.Cahrt = Highcharts.chart('highcahrtContainer', {
-            chart: {               
+        this.cahrt = Highcharts.chart('highcahrtContainer', {
+            chart: {
                 // width: 800
             },
             title: {
@@ -63,6 +61,6 @@ export class DragChartComponent implements OnInit{
 
     onResizing(event: Event) {
         //Highchart automatic resize to the div
-        this.Cahrt.reflow();
+        this.cahrt.reflow();
     }
 }

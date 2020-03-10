@@ -10,8 +10,8 @@ export class MapService {
     private emitDrawerDetailClickSource = new Subject<number[]>();
 
     // Observable string streams
-    CompanyFilterEmitted$ = this.emitCompanyFilterSource.asObservable();
-    DrawerDetailClickEmitted$ = this.emitDrawerDetailClickSource.asObservable();
+    companyFilterEmitted$ = this.emitCompanyFilterSource.asObservable();
+    drawerDetailClickEmitted$ = this.emitDrawerDetailClickSource.asObservable();
 
     constructor() {
     }

@@ -1,5 +1,4 @@
 <div class="mat-elevation-z8">
-
   <mat-tab-group (selectedIndexChange)="setDataSourceAttributes($event)">
 
     <!-- Actions Tab -->
@@ -7,7 +6,7 @@
       <ng-template matTabContent>
 
         <!-- MatTable component of actions-->
-        <mat-table-action [Paginator]="Paginator"></mat-table-action>
+        <mat-table-action [paginator]="paginator"></mat-table-action>
 
       </ng-template>
     </mat-tab>
@@ -17,14 +16,13 @@
       <ng-template matTabContent>
 
         <!-- MatTable component of controllers-->
-        <mat-table-ctrl [Paginator]="Paginator"></mat-table-ctrl>
+        <mat-table-ctrl [paginator]="paginator"></mat-table-ctrl>
 
       </ng-template>
     </mat-tab>
   </mat-tab-group>
 
   <!--Common paginator-->
-  <mat-paginator #Paginator showFirstLastButtons [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  <mat-paginator #paginator showFirstLastButtons [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
-
 </div>

@@ -1,21 +1,21 @@
-import { Component, Input, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Validators, FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { Member } from '../member';
-import { MemberService } from '../member.service';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { Validators, FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { Member } from '../../../../interface/system_auth/member';
+import { MemberService } from '../../../../api/system_auth/member.service';
 
 @Component({
     //moduleId: module.id,
     selector: 'dialog-member-create',
     templateUrl: 'dialog-member-create.html',
     styleUrls: ['../member.component.css'],
-    providers: [MemberService]
+    providers: [MemberService],
 })
 
 export class DialogMemberCreateComponent {
 
-    public MemberForm: FormGroup = new FormGroup({
+    memberForm: FormGroup = new FormGroup({
         domain: new FormControl(),
         firstName: new FormControl(),
         lastName: new FormControl(),
@@ -26,31 +26,30 @@ export class DialogMemberCreateComponent {
         isActive: new FormControl(true)
     });
 
-    public matcher = new MyErrorStateMatcher();
+    matcher = new MyErrorStateMatcher();
 
-    constructor(public dialogRef: MatDialogRef<DialogMemberCreateComponent>, private MemberREST: MemberService) {
+    constructor(
+        public dialogRef: MatDialogRef<DialogMemberCreateComponent>,
+        private memberService: MemberService,
+    ) {
 
     }
 
-    onNoClick(): void {
+    onNoClick() {
         this.dialogRef.close(false);
     }
 
-    onYesClick(InsertData: Member): void {
-        //console.log(InsertData)
-        this.createMember(InsertData);
+    onYesClick(insertData: Member) {
+        this.createMember(insertData);
         this.dialogRef.close(true);
     }
 
     createMember(data: Member) {
-        this.MemberREST.PostMember(data).subscribe(
-            (result: any) => {
-                //console.log(result);
-            },
-            error => {
-                console.log(error);
-            }
-        )
+        this.memberService.postMember(data).subscribe((result: any) => {
+            //console.log(result);
+        }, (error) => {
+            console.log(error);
+        });
     }
 }
 

@@ -1,32 +1,36 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { RoleGroup } from '../character';
-import { CharacterService } from '../character.service'
-import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { RoleGroup } from '../../../../interface/system_auth/role_group';
+import { RoleGroupService } from '../../../../api/system_auth/role_group.service';
 
 @Component({
     selector: 'dialog-character-create',
     templateUrl: 'dialog-character-create.html',
-    providers: [CharacterService]
+    providers: [RoleGroupService],
 })
+
 export class DialogCharacterCreateComponent {
 
-    public addRoleForm: FormGroup;
+    addRoleForm: FormGroup;
 
-    constructor(public dialogRef: MatDialogRef<DialogCharacterCreateComponent>,
-        private CharacterREST: CharacterService, public _fb:FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public RoleList: RoleGroup[]) {
+    constructor(
+        public fb: FormBuilder,
+        public dialogRef: MatDialogRef<DialogCharacterCreateComponent>,
+        private roleGroupService: RoleGroupService,
+        @Inject(MAT_DIALOG_DATA) public RoleList: RoleGroup[],
+    ) {
 
-        this.addRoleForm = this._fb.group({
-            containLists: this._fb.array([
+        this.addRoleForm = this.fb.group({
+            containLists: this.fb.array([
                 this.initaddRoleForm(),
             ])
         });
     }
-   
+
     initaddRoleForm() {
         //若此地不加require，而在子component加入，則會發生前後不一致的警告！
-        let DefaultRow = {
+        return this.fb.group({
             roleId: ['', Validators.required],
             roleName: ['', Validators.required],
             sortNo: ['', Validators.required],
@@ -37,9 +41,8 @@ export class DialogCharacterCreateComponent {
             approveScope: [false],
             submitScope: [false],
             passScope: [false],
-            printScope: [false]            
-        }
-        return this._fb.group(DefaultRow);
+            printScope: [false],
+        });
     }
 
     addRoleList() {
@@ -59,21 +62,18 @@ export class DialogCharacterCreateComponent {
     }
 
     onYesClick(InsertData: RoleGroup[]): void {
-        console.log(InsertData)
+        // console.log(InsertData)
         this.createRole(InsertData);
         this.dialogRef.close(true);
     }
 
     createRole(dataList: RoleGroup[]) {
         dataList.forEach(data => {
-            this.CharacterREST.PostRoleGroup(data).subscribe(
-                (result: any) => {
-                    console.log(result);
-                },
-                error => {
-                    console.log(error);
-                }
-            )
+            this.roleGroupService.postRoleGroup(data).subscribe((result: any) => {
+                console.log(result);
+            }, (error) => {
+                console.log(error);
+            });
         });
     }
 }

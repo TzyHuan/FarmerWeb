@@ -19,10 +19,10 @@
                 </a>
             </li> -->
 
-      <li *ngFor="let MenuItem of MenuList" class="nav-item" [routerLinkActive]="['link-active']">
-        <a class="nav-link" [routerLink]="MenuItem?.path">
+      <li *ngFor="let menuItem of menuList" class="nav-item" [routerLinkActive]="['link-active']">
+        <a class="nav-link" [routerLink]="menuItem?.path">
           <i class="fa fa-cloud" aria-hidden="true" style="color:white"></i>
-          {{MenuItem?.menuText}}
+          {{menuItem?.menuText}}
         </a>
       </li>
 
@@ -42,20 +42,16 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <div *ngIf="!isSignIn">
-            <a *ngFor="let SignItem of SignList" class="dropdown-item" [routerLink]="SignItem?.path">
-              {{SignItem?.menuText}}
+            <a *ngFor="let signItem of signList" class="dropdown-item" [routerLink]="signItem?.path">
+              {{signItem?.menuText}}
             </a>
           </div>
           <div *ngIf="isSignIn">
-            <button class="dropdown-item" (click)="SignOut()">Sign Out</button>
+            <button class="dropdown-item" (click)="signOut()">Sign Out</button>
           </div>
         </div>
       </li>
     </ul>
-    <!-- <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form> -->
 
     <div class="nav-time">
       現在時間

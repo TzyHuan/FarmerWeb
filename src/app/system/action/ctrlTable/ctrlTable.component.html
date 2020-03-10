@@ -42,7 +42,7 @@
     </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="CtrlDataSource" matSort>
+<table mat-table [dataSource]="ctrlDataSource" matSort>
 
     <!-- Note that these columns can be defined in any order.
          The actual rendered columns are set as a property on the row definition" -->
@@ -85,8 +85,8 @@
         </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="CtrlDisplayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: CtrlDisplayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="ctrlDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: ctrlDisplayedColumns;"></tr>
 </table>
 
 <div class="no-results" [style.display]="paginator.length == 0 ? '' : 'none'">

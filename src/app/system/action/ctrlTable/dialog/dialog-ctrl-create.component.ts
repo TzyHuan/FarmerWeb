@@ -1,9 +1,8 @@
-import { Component, Input, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
-import { Ctrl } from '../../action';
-import { CtrlService } from '../../action.service';
-import { formControlBinding } from '@angular/forms/src/directives/reactive_directives/form_control_directive';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Ctrl } from '../../../../../interface/system_auth/ctrl';
+import { CtrlService } from '../../../../../api/system_auth/ctrl.service';
 import { environment } from '../../../../../environments/environment'
 
 @Component({
@@ -11,19 +10,22 @@ import { environment } from '../../../../../environments/environment'
     selector: 'dialog-ctrl-create',
     templateUrl: 'dialog-ctrl-create.html',
     styleUrls: ['../../action.component.css'],
-    providers: [CtrlService]
+    providers: [CtrlService],
 })
 
 export class DialogCtrlCreateComponent {
-    
-    public CtrlForm: FormGroup= new FormGroup({
+
+    ctrlForm: FormGroup = new FormGroup({
         id: new FormControl(),
         name: new FormControl(),
         description: new FormControl(),
-        appId:new FormControl({value: environment.AppID})
-     });
+        appId: new FormControl({ value: environment.appId }),
+    });
 
-    constructor(public dialogRef: MatDialogRef<DialogCtrlCreateComponent>, private CtrlREST: CtrlService ) {
+    constructor(
+        public dialogRef: MatDialogRef<DialogCtrlCreateComponent>,
+        private ctrlService: CtrlService,
+    ) {
 
     }
 
@@ -38,13 +40,10 @@ export class DialogCtrlCreateComponent {
     }
 
     createCtrl(data: Ctrl) {
-        this.CtrlREST.PostCtrl(data).subscribe(
-            (result: any) => {
-                //console.log(result);
-            },
-            error => {
-                console.log(error);
-            }
-        )
+        this.ctrlService.postCtrl(data).subscribe((result: any) => {
+            //console.log(result);
+        }, (error) => {
+            console.log(error);
+        });
     }
 }

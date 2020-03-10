@@ -5,10 +5,11 @@ import { SharedService } from './shared-service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ SharedService ]
+  providers: [SharedService],
 })
+
 export class AppComponent {
-  constructor(private _sharedService:SharedService) {
+  constructor(private sharedService: SharedService) {
   };
 
   /** 點選router-outlet時，若此router-outlet還有子選，
@@ -16,7 +17,6 @@ export class AppComponent {
    * 再利用sharedService傳給router-outlet 
   */
   public onRouterOutletActivate(event: Object) {
-    this._sharedService.emitChildRoutes(event);   
+    this.sharedService.emitChildRoutes(event);
   }
-
 }

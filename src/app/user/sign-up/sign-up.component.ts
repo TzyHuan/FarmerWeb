@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../shared/user.service';
-import { Member } from '../../system/member/member';
+import { Member } from '../../../interface/system_auth/member';
 
 @Component({
   selector: 'app-sign-up',
@@ -31,7 +30,6 @@ export class SignUpComponent implements OnInit {
     // }
   }
 
-  OnSubmit(form?: NgForm){
-
+  onSubmit(form?: NgForm){
   }
 }

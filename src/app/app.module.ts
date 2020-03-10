@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser'; //沒加這列無法�
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularDraggableModule } from 'angular2-draggable';
@@ -12,8 +11,8 @@ import { NavMenuComponent } from './navmenu/navmenu.component';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
-import { UserService } from './user/shared/user.service';
-import { AuthInterceptor } from '../auth/auth.interceptor';
+import { AuthService } from '../api/system_auth/auth.service';
+import { AuthInterceptor } from '../interceptor/auth.interceptor';
 import { SharedService } from './shared-service';
 import { SharedMaterialModule, MatComponents } from './shared-material.module';
 
@@ -37,7 +36,7 @@ import { SharedMaterialModule, MatComponents } from './shared-material.module';
   ],
   providers: [    
     SharedService,
-    UserService,
+    AuthService,
     {
       provide : HTTP_INTERCEPTORS,  //過濾封包
       useClass : AuthInterceptor,

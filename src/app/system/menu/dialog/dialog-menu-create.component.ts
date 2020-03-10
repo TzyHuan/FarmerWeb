@@ -1,48 +1,52 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Menu } from '../menu';
-import { MenuService } from '../menu.service'
-import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
-import { environment } from '../../../../environments/environment'
+import { Menu } from '../../../../interface/system_auth/menu';
+import { MenuService } from '../../../../api/system_auth/menu.service'
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'dialog-menu-create',
     templateUrl: 'dialog-menu-create.html',
-    providers: [MenuService]
+    providers: [MenuService],
 })
+
 export class DialogMenuCreateComponent {
 
-    public addMenuForm: FormGroup;
+    addMenuForm: FormGroup;
 
-    constructor(public dialogRef: MatDialogRef<DialogMenuCreateComponent>,
-        private MenuREST: MenuService, public _fb: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public MenuList: Menu[]) {
-        this.addMenuForm = this._fb.group({
-            containLists: this._fb.array([
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public menuList: Menu[],
+        public fb: FormBuilder,
+        public dialogRef: MatDialogRef<DialogMenuCreateComponent>,
+        private menuService: MenuService,
+    ) {
+        this.addMenuForm = this.fb.group({
+            containLists: this.fb.array([
                 this.initaddMenuForm(),
             ])
-        });      
+        });
     }
 
     initaddMenuForm() {
         //若此地不加require，而在子component加入，則會發生前後不一致的警告！
-        let DefaultRow = {
+        let defaultRow = {
             menuId: ['', Validators.required],
             path: ['', Validators.required],
             menuText: ['', Validators.required],
             sortNo: ['', Validators.required],
-            selector:[''],
+            selector: [''],
             component: ['', Validators.required],
             rootMenuId: null,
-            appId:[environment.AppID] //第一個應用程式 todo
+            appId: [environment.appId] //第一個應用程式 todo
         }
-        return this._fb.group(DefaultRow);
+        return this.fb.group(defaultRow);
     }
 
     addMenuList() {
         // add address to the list   
         const control = <FormArray>this.addMenuForm.controls['containLists'];
-        control.push(this.initaddMenuForm());       
+        control.push(this.initaddMenuForm());
     }
 
     removeMenuList(i: number) {
@@ -51,25 +55,22 @@ export class DialogMenuCreateComponent {
         control.removeAt(i);
     }
 
-    onNoClick(): void {
+    onNoClick() {
         this.dialogRef.close(false);
     }
 
-    onYesClick(InsertData:Menu[]): void {
+    onYesClick(InsertData: Menu[]) {
         this.createMenu(InsertData);
         this.dialogRef.close(true);
     }
 
     createMenu(dataList: Menu[]) {
         dataList.forEach(data => {
-            this.MenuREST.PostMenu(data).subscribe(
-                (result: any) => {
-                    //console.log(result);
-                },
-                error => {
-                    console.log(error);
-                }
-            )
+            this.menuService.postMenu(data).subscribe((result: any) => {
+                //console.log(result);
+            }, (error) => {
+                console.log(error);
+            });
         });
     }
 }

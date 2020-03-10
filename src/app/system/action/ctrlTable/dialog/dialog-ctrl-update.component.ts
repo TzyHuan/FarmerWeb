@@ -1,40 +1,40 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Ctrl } from '../../action';
-import { CtrlService } from '../../action.service'
+import { Ctrl } from '../../../../../interface/system_auth/ctrl';
+import { CtrlService } from '../../../../../api/system_auth/ctrl.service'
 
 @Component({
   selector: 'dialog-ctrl-update',
   templateUrl: 'dialog-ctrl-update.html',
-  providers: [CtrlService]
+  providers: [CtrlService],
 })
 export class DialogCtrlUpdateComponent {
-  public CtrlDetail: Ctrl;
-  constructor(public dialogRef: MatDialogRef<DialogCtrlUpdateComponent>,
-    private CtrlREST: CtrlService,
-    @Inject(MAT_DIALOG_DATA) public data: Ctrl) {
-    this.CtrlDetail = data;
+  
+  ctrlDetail: Ctrl;
 
+  constructor(
+    public dialogRef: MatDialogRef<DialogCtrlUpdateComponent>,
+    private ctrlService: CtrlService,
+    @Inject(MAT_DIALOG_DATA) public data: Ctrl,
+  ) {
+    this.ctrlDetail = data;
   }
 
-  onNoClick(): void {
+  onNoClick() {
     this.dialogRef.close();
   }
 
-  onYesClick(): void {
+  onYesClick() {
     //console.log(this.CtrlDetial.CtrlId);
-    this.putCtrl(this.CtrlDetail.ctrlId, this.CtrlDetail);
+    this.putCtrl(this.ctrlDetail.ctrlId, this.ctrlDetail);
     this.dialogRef.close();
   }
 
-  putCtrl(id: number, UpdatedCtrl: Ctrl) {
-    this.CtrlREST.PutCtrl(id, UpdatedCtrl).subscribe(
-      (result: any) => {
-        //console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+  putCtrl(id: number, updatedCtrl: Ctrl) {
+    this.ctrlService.putCtrl(id, updatedCtrl).subscribe((result: any) => {
+      //console.log(result);
+    }, (error) => {
+      console.log(error);
+    });
   }
 }

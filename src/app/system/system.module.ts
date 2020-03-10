@@ -14,8 +14,8 @@ import { DialogMenuCreateComponent } from './menu/dialog/dialog-menu-create.comp
 import { DialogCharacterCreateComponent } from './character/dialog/dialog-character-create.component';
 import { DialogCharacterDeleteComponent } from './character/dialog/dialog-character-delete.component';
 import { DialogCharacterUpdateComponent } from './character/dialog/dialog-character-update.component';
-import { DialogImenuRoleComponent } from './character/dialog/dialog-ImenuRole.component';
-import { DialogIactionRoleComponent } from './character/dialog/dialog-IactionRole.component';
+import { DialogIMenuRoleComponent } from './character/dialog/dialog-i-menu-role.component';
+import { DialogIActionRoleComponent } from './character/dialog/dialog-i-action-role.component';
 //Controller
 import { DialogCtrlCreateComponent } from './action/ctrlTable/dialog/dialog-ctrl-create.component';
 import { DialogCtrlDeleteComponent } from './action/ctrlTable/dialog/dialog-ctrl-delete.component';
@@ -28,7 +28,7 @@ import { DialogActionUpdateComponent } from './action/actionTable/dialog/dialog-
 import { DialogMemberCreateComponent } from './member/dialog/dialog-member-create.component';
 import { DialogMemberUpdateComponent } from './member/dialog/dialog-member-update.component';
 import { DialogMemberDeleteComponent } from './member/dialog/dialog-member-delete.component';
-import { DialogImemRoleComponent } from './member/dialog/dialog-ImemRole.component';
+import { DialogIMemberRoleComponent } from './member/dialog/dialog-i-member-role.component';
 
 /** Child components in dialogs */
 //Menus
@@ -42,7 +42,6 @@ import { ActionCreateComponent } from './action/actionTable/dialog/action-create
 //Actions
 import { ActionTableComponent } from './action/actionTable/actionTable.component';
 import { CtrlTableComponent } from './action/ctrlTable/ctrlTable.component';
-
 
 export class SystemModule { }
 
@@ -67,8 +66,8 @@ export const SystemComponents = [
   DialogCharacterUpdateComponent,
   CharacterCreateComponent,
   //系統管理-角色權限-角色選單
-  DialogImenuRoleComponent,
-  DialogIactionRoleComponent,
+  DialogIMenuRoleComponent,
+  DialogIActionRoleComponent,
 
   //系統管理-控制動作
   ActionTableComponent,
@@ -85,6 +84,5 @@ export const SystemComponents = [
   DialogMemberCreateComponent,
   DialogMemberUpdateComponent,
   DialogMemberDeleteComponent,
-  DialogImemRoleComponent,
-
+  DialogIMemberRoleComponent,
 ]

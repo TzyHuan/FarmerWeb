@@ -1,16 +1,16 @@
-<h1 mat-dialog-title>修改 {{CtrlDetail.name}}, ID={{CtrlDetail.ctrlId}}</h1>
+<h1 mat-dialog-title>修改 {{ctrlDetail.name}}, ID={{ctrlDetail.ctrlId}}</h1>
 <div mat-dialog-content style="overflow: unset;">  
-    <form #CtrlForm="ngForm">        
+    <form #ctrlForm="ngForm">        
         <mat-form-field class="insert-full-width">
-            <input matInput type="text" [(ngModel)]="CtrlDetail.name" name="name" placeholder="名稱" required>
+            <input matInput type="text" [(ngModel)]="ctrlDetail.name" name="name" placeholder="名稱" required>
         </mat-form-field>
         <mat-form-field class="insert-full-width">
-            <input matInput #inputDes type="text" maxlength="20" [(ngModel)]="CtrlDetail.description" name="description" placeholder="描述">
+            <input matInput #inputDes type="text" maxlength="20" [(ngModel)]="ctrlDetail.description" name="description" placeholder="描述">
             <mat-hint align="end">{{inputDes.value?.length || 0}}/20</mat-hint>
         </mat-form-field>
     </form>
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button color="primary" (click)="onNoClick()">No</button>
-    <button mat-raised-button color="primary" [disabled]="!CtrlForm.valid" (click)="onYesClick()">Yes</button>
+    <button mat-raised-button color="primary" [disabled]="!ctrlForm.valid" (click)="onYesClick()">Yes</button>
 </div>

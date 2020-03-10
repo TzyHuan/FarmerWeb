@@ -35,6 +35,5 @@ export const MapComponents = [
     
     /** Others */
     DrawerSupplyChainComponent,
-    WindowComponent
-    
+    WindowComponent,    
 ]

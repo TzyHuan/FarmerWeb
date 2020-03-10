@@ -12,7 +12,6 @@
     </p>
 </video>
 
-
 <div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all">
     <table>
         <thead>
@@ -28,7 +27,7 @@
                     沉水馬達(GPIO_20)
                 </td>
                 <td>
-                    <mat-slide-toggle class="example-margin" (change)="SetGpio(20, $event.checked)">
+                    <mat-slide-toggle class="example-margin" (change)="setGpio(20, $event.checked)">
                     </mat-slide-toggle>
                 </td>
             </tr>
@@ -37,7 +36,7 @@
                     LED散熱風扇(GPIO_22)
                 </td>
                 <td>
-                    <mat-slide-toggle class="example-margin" (change)="SetGpio(22,$event.checked)">
+                    <mat-slide-toggle class="example-margin" (change)="setGpio(22, $event.checked)">
                     </mat-slide-toggle>
                 </td>
             </tr>
@@ -46,9 +45,9 @@
 </div>
 
 <!-- 
-<div id="Box2" ondrop="Drop(event)" ondragover="AllowDrop(event)">
-        <img id="Img2" src="圖片網址" draggable="true" ondragstart="Drag(event)">
+<div id="Box2" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="Img2" src="圖片網址" draggable="true" ondragstart="drag(event)">
     </div>
-    <div id="Box3" ondrop="Drop(event)" ondragover="AllowDrop(event)"></div>
-    <div id="Box4" ondrop="Drop(event)" ondragover="AllowDrop(event)"></div>
+    <div id="Box3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <div id="Box4" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     <div style="clear:both;"></div> -->

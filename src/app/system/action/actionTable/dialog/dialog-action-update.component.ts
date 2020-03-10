@@ -1,23 +1,25 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Action } from '../../action';
-import { ActionService } from '../../action.service'
+import { Action } from '../../../../../interface/system_auth/action';
+import { ActionService } from '../../../../../api/system_auth/action.service';
 
 @Component({
   selector: 'dialog-action-update',
   templateUrl: 'dialog-action-update.html',
-  providers: [ActionService]
+  providers: [ActionService],
 })
+
 export class DialogActionUpdateComponent {
-  public ActionDetail: Action;
-  public MethodList: string[] = ['GET', 'POST', 'PUT', 'DELETE'];
 
+  actionDetail: Action;
+  methodList: string[] = ['GET', 'POST', 'PUT', 'DELETE'];
 
-  constructor(public dialogRef: MatDialogRef<DialogActionUpdateComponent>,
-    private ActionREST: ActionService,
-    @Inject(MAT_DIALOG_DATA) public data: Action) {
-      //console.log(data)
-    this.ActionDetail = data;
+  constructor(
+    public dialogRef: MatDialogRef<DialogActionUpdateComponent>,
+    private actionService: ActionService,
+    @Inject(MAT_DIALOG_DATA) public data: Action,
+  ) {
+    this.actionDetail = data;
   }
 
   onNoClick(): void {
@@ -26,19 +28,16 @@ export class DialogActionUpdateComponent {
 
   onYesClick(): void {
     //console.log(this.ActionDetial.ActionId);
-    this.putAction(this.ActionDetail.id, this.ActionDetail);
+    this.putAction(this.actionDetail.actionId, this.actionDetail);
     this.dialogRef.close(true);
   }
 
-  putAction(id: number, UpdatedAction: Action) {
-    this.ActionREST.PutAction(id, UpdatedAction).subscribe(
-      (result: any) => {
-        //console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+  putAction(id: number, updatedAction: Action) {
+    this.actionService.putAction(id, updatedAction).subscribe((result: any) => {
+      //console.log(result);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   compareObjects(o1: any, o2: any): boolean {

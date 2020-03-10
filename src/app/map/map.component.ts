@@ -65,11 +65,11 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
     //leaflet
     map: any;
-    WorldGeoJson: any;
+    worldGeoJson: any;
     infoControl: any;
     slideControl: any;
 
-    constructor(public dialog: MatDialog, public _WindowService: WindowService, public _MapService: MapService) {
+    constructor(public dialog: MatDialog, public windowService: WindowService, public mapService: MapService) {
 
         //隱藏footer，調整map顯示於全屏
         var element = document.getElementsByClassName('push');
@@ -95,14 +95,12 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
         //訂閱sidenav開啟/關閉事件
-        this.subSideChange = this._WindowService.sideChangeEmitted$.subscribe((emittedId: number) => {
-
+        this.subSideChange = this.windowService.sideChangeEmitted$.subscribe((emittedId: number) => {
             this.onToggle(emittedId);
-
         });
 
         //訂閱window開啟/關閉事件
-        this.subWindowClose = this._WindowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
+        this.subWindowClose = this.windowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
             this.windowList[emittedIndex].opened = !this.windowList[emittedIndex].opened;
 
             //刷新button active class
@@ -163,9 +161,9 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
         //#region 設定底圖與圖層來源
         var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var PositronUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-        var AntiqueUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-antique/{z}/{x}/{y}.png';
-        var EcoUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-eco/{z}/{x}/{y}.png';
+        var positronUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+        var antiqueUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-antique/{z}/{x}/{y}.png';
+        var ecoUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-eco/{z}/{x}/{y}.png';
 
         var option = {
             minZoom: this.minZoom,
@@ -174,12 +172,12 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         }
 
         var osm = new L.TileLayer(osmUrl, option);
-        var positron = new L.TileLayer(PositronUrl, option);
-        var antique = new L.TileLayer(AntiqueUrl, option);
-        var eco = new L.TileLayer(EcoUrl, option);
+        var positron = new L.TileLayer(positronUrl, option);
+        var antique = new L.TileLayer(antiqueUrl, option);
+        var eco = new L.TileLayer(ecoUrl, option);
 
         // 匯入GeoJSON世界地圖檔
-        this.WorldGeoJson = new L.geoJson(GEOdata, {
+        this.worldGeoJson = new L.geoJson(GEOdata, {
             style: (feature) => {
                 return {
                     weight: 2,
@@ -197,7 +195,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //#endregion
 
         //#region Markers、多邊形標籤
-        var MyLand = L.polygon([
+        var myLand = L.polygon([
             [25.272156, 121.492556],
             [25.272322, 121.492739],
             [25.271947, 121.493200],
@@ -214,7 +212,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         //.openPopup();
 
         //自訂標籤
-        var ClusterMarkers = L.markerClusterGroup({
+        var clusterMarkers = L.markerClusterGroup({
             spiderLegPolylineOptions: {
                 weight: 5, color: '#222', opacity: 0.5
             },
@@ -238,8 +236,8 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
 
         //監聽「客戶/供應商」drawer Filter事件，連動地圖Marker項目
-        this._MapService.CompanyFilterEmitted$.subscribe((result: v34[]) => {
-            ClusterMarkers.clearLayers();
+        this.mapService.companyFilterEmitted$.subscribe((result: v34[]) => {
+            clusterMarkers.clearLayers();
             result.filter(x => x.v3435 != null && x.v3436 != null).forEach((v, i, a) => {
                 let CompanyIcon;
                 if (v.v3404 == 1) {
@@ -278,11 +276,11 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
                     e.target.setLatLng([v.v3435, v.v3436]);
                 });
 
-                ClusterMarkers.addLayer(Marker);
+                clusterMarkers.addLayer(Marker);
             });
         });
         //監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
-        this._MapService.DrawerDetailClickEmitted$.subscribe((result: number[]) => {
+        this.mapService.drawerDetailClickEmitted$.subscribe((result: number[]) => {
             this.map.panTo(result);
         });
 
@@ -297,16 +295,16 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             "Eco": eco
         };
         var overlayMaps = {
-            "Countries": this.WorldGeoJson,
-            "MyLand": MyLand,
-            "Cluster": ClusterMarkers
+            "Countries": this.worldGeoJson,
+            "MyLand": myLand,
+            "Cluster": clusterMarkers
         };
 
         //設定經緯度座標等初始值，匯入html div中
         this.map = L.map('MapDiv', {
             zoomSnap: this.step,
             worldCopyJump: false,
-            layers: [osm, ClusterMarkers],
+            layers: [osm, clusterMarkers],
             maxBounds: [
                 [-90, -180],
                 [90, 180]
@@ -416,7 +414,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     resetHighlight(e) {
-        this.WorldGeoJson.resetStyle(e.target);
+        this.worldGeoJson.resetStyle(e.target);
         this.infoControl.update();
     }
 
@@ -491,7 +489,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     dockOnClick(index: number) {
-        this._WindowService.emitWindowClose(index);
+        this.windowService.emitWindowClose(index);
     }
 
     dockButtomActive() {

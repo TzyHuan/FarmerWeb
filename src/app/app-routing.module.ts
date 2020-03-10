@@ -1,6 +1,5 @@
-import { NgModule, ComponentFactoryResolver, OnInit, Injectable, RenderComponentType } from '@angular/core';
+import { NgModule, ComponentFactoryResolver, Injectable } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http'
 
 //----Component----//
 import { ClimateComponent } from './climate/climate.component';
@@ -18,10 +17,10 @@ import { LiveComponent } from './live/live.component';
 
 
 //----Service----//
-import { NavMenuService } from './navmenu/navmenu.service';
+import { SystemService } from '../api/system_auth/system.service';
 
 //----ViewModel----//
-import { vmNavMenu } from './navmenu/navmenu';
+import { VmMenu } from '../interface/system_auth/vm_menu';
 
 //routes會由上而下依照順序比對url路徑
 //若把path:'**'放第一位，就無法去其他Component
@@ -37,7 +36,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: HomeComponent
+    component: HomeComponent,
   },
 ];
 
@@ -57,26 +56,29 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)], //routes
   exports: [RouterModule],
-  providers: [NavMenuService]
+  providers: [SystemService],
 })
 
 @Injectable()
 export class AppRoutingModule {
   public factories: any = [];
 
-  constructor(private MenuREST: NavMenuService, private router: Router, private resolver: ComponentFactoryResolver) {
+  constructor(
+    private router: Router,
+    private systemService: SystemService,
+    private resolver: ComponentFactoryResolver,
+  ) {
     // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
     this.factories = Array.from(this.resolver['_factories'].values());
-    
-    this.MenuREST.getAllowedMenu().subscribe(
-      (result: vmNavMenu[]) => {
-        this.router.resetConfig(this.processRoute(result));
-      },
-      error => console.error(error)
-    )
+
+    this.systemService.getAllowedMenu().subscribe((result: VmMenu[]) => {
+      this.router.resetConfig(this.processRoute(result));
+    }, (error) => {
+      console.error(error);
+    });
   }
 
-  processRoute(routes: vmNavMenu[]) {
+  processRoute(routes: VmMenu[]) {
     let finalRoutes = [];
 
     //routes會由上而下依照順序比對url路徑
@@ -88,45 +90,43 @@ export class AppRoutingModule {
     });
 
     routes.forEach(r => {
-      let Tree: any = this.TreeMenu(r);
+      let tree: any = this.treeMenu(r);
 
       //is tree is not undefined
-      if (Tree.length != 0) {
-        finalRoutes.push(Tree[0]);
+      if (tree.length != 0) {
+        finalRoutes.push(tree[0]);
       }
     });
 
     //最後才加入path:'**'路徑導入至Home，佇列在array最下面    
     //若把path:'**'放第一位，就無法去排在後面其他的Component
     //path '**' should direct to PageNotFoundComponent!
-    finalRoutes.push({ path: '**', redirectTo:'' });
+    finalRoutes.push({ path: '**', redirectTo: '' });
 
     //console.log(finalRoutes);
     return finalRoutes;
   }
 
-  private GetComponentType(route: vmNavMenu): any {
+  private getComponentType(route: VmMenu): any {
     // 根據 componentType 名字取出對應的 componentType
-    let factory: any = this.factories.find(
-      (x: any) => {
-        return x.selector == route.selector;
-      }
-    );
+    let factory: any = this.factories.find((x: any) => {
+      return x.selector == route.selector;
+    });
     return factory;
   }
 
-  private TreeMenu(root: vmNavMenu): any[] {
+  private treeMenu(root: VmMenu): any[] {
 
-    var factory: any = this.GetComponentType(root);
-    var ReturnTree = [];
-    var TreeRoot: vmNavMenu;
+    var factory: any = this.getComponentType(root);
+    var returnTree = [];
+    var treeRoot: VmMenu;
 
     //if factory is not undefined
     if (factory) {
-      TreeRoot = {
+      treeRoot = {
         path: root.path,
         component: factory.componentType,
-        children:[]        
+        children: [],
       }
       //if root have children
       if (root.children != null) {
@@ -140,22 +140,22 @@ export class AppRoutingModule {
             childrenRoutes.push({
               path: '',
               redirectTo: r.path,
-              pathMatch: 'full'
-            })
+              pathMatch: 'full',
+            });
             first_iteration = false;
           }
 
-          let NodeChild: any = this.TreeMenu(r);
-          if (NodeChild.length != 0) {
-            childrenRoutes.push(NodeChild[0]);
+          let nodeChild: any = this.treeMenu(r);
+          if (nodeChild.length != 0) {
+            childrenRoutes.push(nodeChild[0]);
           }
-          TreeRoot.children = childrenRoutes;
+          treeRoot.children = childrenRoutes;
 
         })
       }
-      ReturnTree.push(TreeRoot);
+      returnTree.push(treeRoot);
     }
-    return ReturnTree;
+    return returnTree;
   }
 }
 

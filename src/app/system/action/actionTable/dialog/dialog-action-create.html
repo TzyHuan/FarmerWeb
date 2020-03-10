@@ -15,7 +15,7 @@
                 </div>
                 <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
                 <div [formGroupName]="i">
-                    <ActionCreateUnit [Group]="addActionForm.get('containLists')['controls'][i]"></ActionCreateUnit>
+                    <action-create-unit [group]="addActionForm.get('containLists')['controls'][i]"></action-create-unit>
                 </div>
             </div>
         </div>

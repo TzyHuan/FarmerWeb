@@ -1,14 +1,11 @@
 import { Component, OnInit, AfterContentInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Subscriber, Subject, Subscription, interval } from 'rxjs';
-
-import { HomeService } from './home.service';
-import { RealtimeData, WeatherStation } from './home';
-import { ClimateService } from '../climate/climate.service';
-import { climate } from '../../api/mongoDb/Climate';
-
+import { Observable, Subscriber } from 'rxjs';
 import * as signalR from '@aspnet/signalr';
+import { StationInfo } from '../../interface/greenhouse/station_info';
+import { RealtimeWeather } from '../../interface/greenhouse/realtime_weather';
 import { environment } from '../../environments/environment';
-
+import { RealtimeService } from '../../api/greenhouse/realtime.service';
+import { StationInfoService } from '../../api/greenhouse/station_into.service';
 import * as Highcharts from 'highcharts';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
@@ -20,48 +17,54 @@ require('highcharts/modules/export-data')(Highcharts);
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [HomeService, ClimateService]
+  providers: [StationInfoService, RealtimeService]
 })
+
 export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
 
-  public timeNow: Observable<string>;
-  public APIRealtimeDate: RealtimeData;
-  private connection = new signalR.HubConnectionBuilder()
-    .withUrl(environment.ApiUrl_WebSocket + "weatherHub")
+  // 氣象站台清單、已選取之站台
+  stations: StationInfo[];
+  timeNow: Observable<string>;
+  realtimeData: RealtimeWeather;
+  selectedStations: StationInfo = new StationInfo();
+  connection = new signalR.HubConnectionBuilder()
+    .withUrl(environment.sensorHubUrl)
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
-  //Highchart 
-  public RealtimeTempGauge: any;
-  public RealtimeRHGauge: any;
-  public RealtimeLux: any;
-  @ViewChild('RealtimeTempGauge') public RealtimeTempGaugeEle: ElementRef;
-  @ViewChild('RealtimeRHGauge') public RealtimeRHGaugeEle: ElementRef;
-  @ViewChild('RealtimeLux') RealtimeLuxEle: ElementRef;
+  // Highchart
+  realtimeLux: any;
+  realtimeRhGauge: any;
+  realtimeTempGauge: any;
+  @ViewChild('realtimeLux') realtimeLuxEle: ElementRef;
+  @ViewChild('realtimeRhGauge') realtimeRhGaugeEle: ElementRef;
+  @ViewChild('realtimeTempGauge') realtimeTempGaugeEle: ElementRef;
 
-  //氣象站台清單、已選取之站台  
-  public stations: WeatherStation[];
-  public selectedStations: WeatherStation = new WeatherStation();
+  constructor(
+    private stationInfoService: StationInfoService, 
+    private realtimeService: RealtimeService,
+    ) {
 
-  constructor(private homeREST: HomeService, private StationREST: ClimateService) {
-
-    // 初始化建立SignalR連線   
-    this.connection.start().catch(err => console.error(err));
+    // 初始化建立SignalR連線
+    this.connection.start().then(() => {
+      this.listenWebSocket(this.connection);
+    }).catch(err => {
+      console.error(err);
+    });
 
     // 抓Station Selector選項    
-    this.StationREST.getSelectItem()
-      .subscribe(
-        (result: WeatherStation[]) => {
-          this.stations = result;
+    this.stationInfoService.getStationInfo().subscribe((result: StationInfo[]) => {
+      this.stations = result;
+      if (this.stations.length > 0) {
+        //預設初始選項為第一個選項
+        this.selectedStations = result[0];
 
-          //預設初始選項為倒數第一個選項
-          this.selectedStations = result[result.length-1];
-
-          //得到station id後，馬上初始化即時資料
-          this.RefreshRealtimeData(this.selectedStations.stationId);
-        },
-        error => console.error(error)
-      );
+        //得到station id後，馬上初始化即時資料
+        this.drawRealtimeData(this.selectedStations.stationId);
+      }
+    }, error => {
+      console.error(error)
+    });
   }
 
   ngOnInit() {
@@ -82,7 +85,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
-    //#region 設定Highstock屬性
+    // #region 設定Highstock屬性
     const optionsTemp: Highcharts.Options = {
       chart: {
         type: 'gauge',
@@ -276,93 +279,73 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       },
       series: [{
         name: 'Illuminance',
-        data: 
+        data:
           (function () {
-          // generate an initial zero data
-          var data = [],
-            time = (new Date()).getTime()
-          for (let i = -199; i <= 0; i += 1) {
-            data.push({
-              x: time + i * 1000,
-              y: 0
-            });
-          }
-          return data;
-        }())
+            // generate an initial zero data
+            var data = [],
+              time = (new Date()).getTime()
+            for (let i = -199; i <= 0; i += 1) {
+              data.push({
+                x: time + i * 1000,
+                y: 0
+              });
+            }
+            return data;
+          }())
       }]
     }
-    //#endregion
+    // #endregion
 
-    //將基本參數代入，初始化Highchart畫面格式    
-    this.RealtimeTempGauge = Highcharts.chart(this.RealtimeTempGaugeEle.nativeElement, optionsTemp);
-    this.RealtimeRHGauge = Highcharts.chart(this.RealtimeRHGaugeEle.nativeElement, optionsRH);
-    this.RealtimeLux = Highcharts.chart(this.RealtimeLuxEle.nativeElement, optionsLux);
+    // 將基本參數代入，初始化Highchart畫面格式
+    this.realtimeTempGauge = Highcharts.chart(this.realtimeTempGaugeEle.nativeElement, optionsTemp);
+    this.realtimeRhGauge = Highcharts.chart(this.realtimeRhGaugeEle.nativeElement, optionsRH);
+    this.realtimeLux = Highcharts.chart(this.realtimeLuxEle.nativeElement, optionsLux);
+  }
 
-    //SignalR開始連線接收刷新數據
-    this.connection.on("TempRhSensorReceived", (DetectedData: climate) => {
-      if (this.selectedStations.stationId == DetectedData.stationId) {
-        // 送來的stationIdID與選擇的相同時才刷新 todo
-        this.APIRealtimeDate = {
-          StationId: DetectedData.stationId,
-          stationName: this.stations.find(x => x.stationId == DetectedData.stationId).stationName,
-          recTemp: DetectedData.temperature,
-          recRH: DetectedData.rh,
-          lux: DetectedData.lux
-        }
+  ngOnDestroy() {
+    // 關閉SignalR連線
+    this.connection.off;
+  }
 
-        this.RealtimeTempGauge.series[0].update({
-          data: [DetectedData.temperature]
+  onSelect(stationId: number) {
+    for (var i = 0; i < this.stations.length; i++) {
+      if (this.stations[i].stationId == stationId) {
+        this.selectedStations = this.stations[i];
+      }
+    }
+    // 切換後馬上初始化即時資料，不等WebSocket慢慢廣播過來
+    this.drawRealtimeData(this.selectedStations.stationId);
+  }
+
+  private listenWebSocket(connection: signalR.HubConnection) {
+    connection.on("SensorDetected", (detectedData: RealtimeWeather) => {
+      if (this.selectedStations.stationId == detectedData.stationId) {
+        this.realtimeData = detectedData;
+
+        this.realtimeTempGauge.series[0].update({
+          data: [detectedData.temperature]
         }, true);
 
-        this.RealtimeRHGauge.series[0].update({
-          data: [DetectedData.rh]
+        this.realtimeRhGauge.series[0].update({
+          data: [detectedData.rh]
         }, true);
 
-        //console.log(new Date(DetectedData.obsTime).getTime());
-        //console.log([DetectedData.obsTime.getTime(), DetectedData.lux]);
-        this.RealtimeLux.series[0].addPoint([
-          new Date(DetectedData.obsTime).getTime(), DetectedData.lux
+        this.realtimeLux.series[0].addPoint([
+          new Date(detectedData.dateFormatted).getTime(), detectedData.lux
         ], true, true);
       }
     });
   }
 
-  ngOnDestroy() {
-    //關閉SignalR連線
-    this.connection.off;
-  }
-
-  onSelect(StationId: number) {
-    for (var i = 0; i < this.stations.length; i++) {
-      if (this.stations[i].stationId == StationId) {
-        this.selectedStations = this.stations[i];
+  private drawRealtimeData(stationId: number) {
+    this.realtimeService.getRealtimeData(stationId).subscribe((data: RealtimeWeather) => {
+      if (data) {
+        this.realtimeData = data;
+        this.realtimeRhGauge.series[0].update({ data: [data.rh] }, true);
+        this.realtimeTempGauge.series[0].update({ data: [data.temperature] }, true);
       }
-    }
-    //切換後馬上初始化即時資料，不等WebSocket慢慢廣播過來
-    this.RefreshRealtimeData(this.selectedStations.stationId);
+    }, (error) => {
+      console.log(error);
+    });
   }
-
-  public async RefreshRealtimeData(StationId: number) {
-    //Asynchronous execution is pushed out of the synchronous flow. 
-    //That is, the asynchronous code will never execute while the synchronous code stack is executing. 
-    //https://stackoverflow.com/questions/23667086/why-is-my-variable-unaltered-after-i-modify-it-inside-of-a-function-asynchron
-
-    //置入資料至溫度的Highchart
-    await this.homeREST.getRealtimeData(StationId).subscribe((data: RealtimeData) => {
-      console.log(data)
-      this.APIRealtimeDate = data;
-      this.RealtimeTempGauge.series[0].update({
-        data: [data.recTemp]
-      }, true);
-
-      this.RealtimeRHGauge.series[0].update({
-        data: [data.recRH]
-      }, true);
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-
 }

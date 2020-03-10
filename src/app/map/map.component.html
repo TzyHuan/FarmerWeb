@@ -47,7 +47,7 @@
 
                 <!--Draggable windows-->
                 <div *ngFor="let window of windowList; let i=index" id={{window.name}}>
-                    <window *ngIf="window.opened" [Title]="windowList[i].name" [Index]="i" [Bound]="dragBounds"></window>
+                    <window *ngIf="window.opened" [title]="windowList[i].name" [index]="i" [bound]="dragBounds"></window>
                 </div>
             </div>
 

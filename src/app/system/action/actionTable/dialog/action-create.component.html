@@ -1,15 +1,14 @@
-<form [formGroup]="ActionForm">
+<form [formGroup]="actionForm">
     <mat-form-field class="insert-full-width formNum">
-        <input matInput type="number" formControlName="id" placeholder="ID" required>
+        <input matInput type="number" formControlName="actionId" placeholder="ID" required>
     </mat-form-field>
     <mat-form-field class="insert-full-width">
         <input matInput type="text" formControlName="name" placeholder="名稱" required>
     </mat-form-field>
 
-    
     <mat-form-field class="insert-full-width">
         <mat-select formControlName="method" [compareWith]="compareObjects" placeholder="傳送方法" required>
-            <mat-option *ngFor="let Method of MethodList" value="{{Method}}">{{Method}}</mat-option>
+            <mat-option *ngFor="let method of methodList" value="{{method}}">{{method}}</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -19,6 +18,4 @@
     <mat-form-field class="insert-full-width">
         <input matInput type="text" formControlName="description" placeholder="描述">
     </mat-form-field>
-
-   
 </form>
