@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { MatDrawer } from '@angular/material';
 import { SystemService } from '../../api/system_auth/system.service';
 import { VmMenu } from '../../interface/system_auth/vm_menu';
 import { AppRoutingModule } from '../app-routing.module';
 import { Router } from '@angular/router';
-import { SharedService } from '../shared-service';
+import { SharedService, NavMenuService } from '../shared-service';
 import { Observable, Subscriber } from 'rxjs';
 
 @Component({
@@ -15,23 +16,27 @@ import { Observable, Subscriber } from 'rxjs';
 
 export class NavMenuComponent {
 
-    public menuList: VmMenu[];
-    public signList: VmMenu[];
-    public isSignIn: boolean;
-    public timeNow: Observable<string>;
+    menuList: VmMenu[];
+    signList: VmMenu[];
+    isSignIn: boolean;
+    timeNow: Observable<string>;
+    drawer: MatDrawer;
+    account: string;
+    @Input() childMenuList: VmMenu[];
 
     constructor(
         private router: Router,
         private reRouting: AppRoutingModule,
         private systemService: SystemService,
         private sharedService: SharedService,
+        private navMenuService: NavMenuService,
     ) {
 
-        if (localStorage.getItem('userToken') == null) {
+        if (!localStorage.getItem('userToken')) {
             this.isSignIn = false;
-        }
-        else if (localStorage.getItem('userToken') != null) {
+        } else if (localStorage.getItem('userToken')) {
             this.isSignIn = true;
+            this.account = localStorage.getItem('account');
         }
 
         //雖然第一次執行時app.module.ts會自動執行app-routing.module.ts建立Routers
@@ -39,16 +44,21 @@ export class NavMenuComponent {
         this.rebuildRoutes();
 
         //監聽從sign-in.component.ts傳來觸發事件，登入時重新抓Routes
-        this.sharedService.changeEmitted$.subscribe(text => {
+        this.sharedService.loginEmitted$.subscribe(text => {
             console.log(text);
             this.rebuildRoutes();
 
-            if (localStorage.getItem('userToken') == null) {
+            if (localStorage.getItem('userToken')) {
                 this.isSignIn = false;
             }
-            else if (localStorage.getItem('userToken') != null) {
+            else if (localStorage.getItem('userToken')) {
                 this.isSignIn = true;
+                this.account = localStorage.getItem('account');
             }
+        });
+
+        this.navMenuService.getMenuDrawer().subscribe((drawer) => {
+            this.drawer = drawer;
         });
     }
 
@@ -69,16 +79,21 @@ export class NavMenuComponent {
 
     signOut() {
         localStorage.removeItem("userToken");
+        localStorage.removeItem('account');
         this.isSignIn = false;
         this.rebuildRoutes();
     }
 
-    rebuildRoutes() {
+    drawerToggle() {
+        if (this.drawer) this.drawer.toggle();
+    }
+
+    private rebuildRoutes() {
         this.systemService.getAllowedMenu().subscribe((result: VmMenu[]) => {
             this.router.resetConfig(this.reRouting.processRoute(result));
             this.menuList = result.filter(menu => !menu.path.startsWith('Sign'));
             this.signList = result.filter(menu => menu.path.startsWith('Sign'));
-            console.log("RebuildRoutes success!!");
+            this.sharedService.emitFullRoutes(result);
         }, (error) => {
             console.error(error);
         });

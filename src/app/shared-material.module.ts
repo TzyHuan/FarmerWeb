@@ -58,6 +58,3 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 })
 
 export class SharedMaterialModule { }
-
-// 這邊宣告所有Material的Components
-export const MatComponents = [ ]

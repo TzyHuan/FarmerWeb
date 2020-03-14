@@ -187,7 +187,8 @@ export class ClimateComponent implements AfterContentInit {
     //初始化Highstock
     this.temperatureChart = new Highcharts.stockChart(this.temperatureChartEle.nativeElement, optionsA);
     this.humidityChart = new Highcharts.stockChart(this.humidityChartEle.nativeElement, optionsB);
-
+    
+    console.log(this.selectedStations);
     //初始查詢條件
     const params = new HttpParams()
       .set('StationId', String(this.selectedStations.stationId))

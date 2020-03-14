@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser'; //沒加這列無法使用HttpClientModule
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularDraggableModule } from 'angular2-draggable';
@@ -9,38 +9,35 @@ import { AngularDraggableModule } from 'angular2-draggable';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
 
-import { AppRoutingModule, routingComponents } from './app-routing.module';
+import { AppRoutingModule, AppRoutingComponents } from './app-routing.module';
 
-import { AuthService } from '../api/system_auth/auth.service';
 import { AuthInterceptor } from '../interceptor/auth.interceptor';
-import { SharedService } from './shared-service';
-import { SharedMaterialModule, MatComponents } from './shared-material.module';
+import { SharedMaterialModule } from './shared-material.module';
+import { SystemComponents } from './system/system.module';
+import { MapComponents } from './map/map.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    routingComponents,
-    MatComponents
+    AppRoutingComponents,
   ],
   imports: [
     BrowserModule,            //must put first
     HttpClientModule,
-    FormsModule,    
+    FormsModule,
     ReactiveFormsModule,
-    NgbModule.forRoot(),    
+    NgbModule.forRoot(),
     AppRoutingModule,         //component 路徑樹狀結構
     BrowserAnimationsModule,  //angular material animation
     SharedMaterialModule,     //used material
     AngularDraggableModule    //directive of ngDraggable/ngResizable to make the DOM element draggable
   ],
-  providers: [    
-    SharedService,
-    AuthService,
+  providers: [
     {
-      provide : HTTP_INTERCEPTORS,  //過濾封包
-      useClass : AuthInterceptor,
-      multi : true
+      provide: HTTP_INTERCEPTORS,  //過濾封包
+      useClass: AuthInterceptor,
+      multi: true,
     }
   ],
   bootstrap: [AppComponent],
@@ -52,9 +49,10 @@ import { SharedMaterialModule, MatComponents } from './shared-material.module';
   // (which means you’re not referencing it in the template), by type. 
   // You specify an entry component by bootstrapping it in an NgModule,
   // or including it in a routing definition.
-  entryComponents:[   
-    routingComponents,
-    MatComponents,    
+  entryComponents: [
+    AppRoutingComponents,
+    MapComponents,
+    SystemComponents[0],
   ]
 })
 

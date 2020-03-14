@@ -1,5 +1,5 @@
 import { NgModule, ComponentFactoryResolver, Injectable } from '@angular/core';
-import { Routes, RouterModule, Router } from '@angular/router';
+import { Routes, RouterModule, Router, Route } from '@angular/router';
 
 //----Component----//
 import { ClimateComponent } from './climate/climate.component';
@@ -21,6 +21,8 @@ import { SystemService } from '../api/system_auth/system.service';
 
 //----ViewModel----//
 import { VmMenu } from '../interface/system_auth/vm_menu';
+import { SharedService } from './shared-service';
+import { ComponentFactoryBoundToModule } from '@angular/core/src/linker/component_factory_resolver';
 
 //routes會由上而下依照順序比對url路徑
 //若把path:'**'放第一位，就無法去其他Component
@@ -28,13 +30,41 @@ import { VmMenu } from '../interface/system_auth/vm_menu';
 //初始化時先保留路徑''、'**'，讓空白的或亂打的url能進入統一進入HomeComponent
 //因為reset routes是事後API讀進去，這樣一開始沒抓到component會顯示空白
 //todo: '**' should guard to the 404 not found page
+
+// 這邊宣告所有要用的Components
+export const AppRoutingComponents = [
+
+  //Climate
+  ClimateComponent,
+
+  //Home
+  HomeComponent,
+
+  //User登入&登出
+  UserComponents,
+
+  //統計
+  StatisticsComponent,
+
+  //直播
+  LiveComponent,
+]
+
+/**
+ * lazy loading的module要先放在這讓Angular能先編譯成.js file，後續dynamic路徑再透過API修改才可以
+ */
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     pathMatch: 'full'
-  },
-  {
+  }, {
+    path: 'Map',
+    loadChildren: './map/map.module#MapModule',
+  }, {
+    path: 'System',
+    loadChildren: './system/system.module#SystemModule',
+  }, {
     path: '**',
     component: HomeComponent,
   },
@@ -56,130 +86,101 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)], //routes
   exports: [RouterModule],
-  providers: [SystemService],
 })
 
 @Injectable()
 export class AppRoutingModule {
-  public factories: any = [];
 
   constructor(
     private router: Router,
-    private systemService: SystemService,
+    private sharedService: SharedService,
     private resolver: ComponentFactoryResolver,
   ) {
-    // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
-    this.factories = Array.from(this.resolver['_factories'].values());
-
-    this.systemService.getAllowedMenu().subscribe((result: VmMenu[]) => {
-      this.router.resetConfig(this.processRoute(result));
-    }, (error) => {
-      console.error(error);
-    });
+    this.sharedService.fullRoutesEmitted$.subscribe(
+      (result: VmMenu[]) => {
+        this.router.resetConfig(this.processRoute(result, resolver));
+        console.log('rebuildRoutes success!!');
+      }, (error) => {
+        console.error(error);
+      },
+    );
   }
 
-  processRoute(routes: VmMenu[]) {
-    let finalRoutes = [];
+  public processRoute(receiveRoutes: VmMenu[],
+    resolver: ComponentFactoryResolver = this.resolver) {
+    const finalRoutes = [];
 
-    //routes會由上而下依照順序比對url路徑
-    //宣告finalroutes後馬上加入url空白起頭
+    // routes會由上而下依照順序比對url路徑
+    // 宣告finalroutes後馬上加入url空白起頭
     finalRoutes.push({
       path: '',
       component: HomeComponent,
-      pathMatch: 'full'
+      pathMatch: 'full',
     });
 
-    routes.forEach(r => {
-      let tree: any = this.treeMenu(r);
+    receiveRoutes.forEach((r) => {
+      const tree: Route[] = this.treeMenu(r, resolver);
 
-      //is tree is not undefined
-      if (tree.length != 0) {
+      // if tree is not undefined
+      if (tree.length !== 0) {
         finalRoutes.push(tree[0]);
       }
     });
 
-    //最後才加入path:'**'路徑導入至Home，佇列在array最下面    
-    //若把path:'**'放第一位，就無法去排在後面其他的Component
-    //path '**' should direct to PageNotFoundComponent!
+    // 最後才加入path:'**'路徑導入至Home，佇列在array最下面
+    // 若把path:'**'放第一位，就無法去排在後面其他的Component
+    // path '**' should direct to PageNotFoundComponent!
     finalRoutes.push({ path: '**', redirectTo: '' });
-
-    //console.log(finalRoutes);
     return finalRoutes;
   }
 
-  private getComponentType(route: VmMenu): any {
-    // 根據 componentType 名字取出對應的 componentType
-    let factory: any = this.factories.find((x: any) => {
-      return x.selector == route.selector;
-    });
-    return factory;
-  }
+  private treeMenu(root: VmMenu, resolver: ComponentFactoryResolver): Route[] {
+    const factoryComponentType = SharedService
+      .getComponentType(resolver, root);
+    const returnTree = [];
+    let treeRoot: Route;
 
-  private treeMenu(root: VmMenu): any[] {
-
-    var factory: any = this.getComponentType(root);
-    var returnTree = [];
-    var treeRoot: VmMenu;
-
-    //if factory is not undefined
-    if (factory) {
+    // if factory is not undefined
+    if (factoryComponentType) {
       treeRoot = {
         path: root.path,
-        component: factory.componentType,
+        component: factoryComponentType,
         children: [],
-      }
-      //if root have children
+      };
+
+      // if root have children
       if (root.children != null) {
-        var first_iteration: boolean = true;
-        let childrenRoutes = [];
-        root.children.forEach(r => {
+        const childrenRoutes = [];
+        const lazyRoute = routes.find(x => x.path.trim() === root.path.trim());
 
-          //若有不只一個children，路徑path=''時自動轉跳至第一個child路徑
-          //因此第一筆foreach需加入path=''且redirectTo 第一個子componet之路徑
-          if (first_iteration) {
-            childrenRoutes.push({
-              path: '',
-              redirectTo: r.path,
-              pathMatch: 'full',
-            });
-            first_iteration = false;
-          }
+        if (lazyRoute) {
+          treeRoot = {
+            path: lazyRoute.path,
+            loadChildren: lazyRoute.loadChildren,
+          };
+        } else {
+          root.children.forEach((r, i) => {
+            // 若有不只一個children，路徑path=''時自動轉跳至第一個child路徑
+            // 因此第一筆foreach需加入path=''且redirectTo 第一個子componet之路徑
+            if (i === 0) {
+              childrenRoutes.push({
+                path: '',
+                redirectTo: r.path,
+                pathMatch: 'full',
+              });
+            }
 
-          let nodeChild: any = this.treeMenu(r);
-          if (nodeChild.length != 0) {
-            childrenRoutes.push(nodeChild[0]);
-          }
-          treeRoot.children = childrenRoutes;
-
-        })
+            const NodeChild: any = this.treeMenu(r, resolver);
+            if (NodeChild.length !== 0) {
+              childrenRoutes.push(NodeChild[0]);
+            }
+            treeRoot.children = childrenRoutes;
+          });
+        }
       }
+
       returnTree.push(treeRoot);
     }
     return returnTree;
   }
 }
-
-// 這邊宣告所有要用的Components
-export const routingComponents = [
-
-  //Climate
-  ClimateComponent,
-
-  //Home
-  HomeComponent,
-
-  //User登入&登出
-  UserComponents,
-
-  //系統管理
-  SystemComponents,
-
-  //地圖
-  MapComponents,
-
-  //統計
-  StatisticsComponent,
-
-  //直播
-  LiveComponent,
-]

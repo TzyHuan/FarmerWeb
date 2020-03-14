@@ -1,56 +1,186 @@
-import { Subject } from 'rxjs';
-import { Injectable, ComponentFactoryResolver } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../environments/environment';
+import { Injectable, ComponentFactoryResolver, ComponentFactory, Type } from '@angular/core';
+import { ComponentFactoryBoundToModule } from '@angular/core/src/linker/component_factory_resolver';
+import { Routes, Router } from '@angular/router';
+import { LoadedRouterConfig } from '@angular/router/src/config';
+import { MatDrawer } from '@angular/material';
+import { Subject, ReplaySubject, Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 //----ViewModel----//
 import { VmMenu } from '../interface/system_auth/vm_menu';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class SharedService {
-    // Observable string sources
-    private emitChangeSource = new Subject<any>();
-    private emitChildRoutesSource = new Subject<VmMenu[]>();
-
-    // Observable string streams
-    changeEmitted$ = this.emitChangeSource.asObservable();
-    childRoutesEmitted$ = this.emitChildRoutesSource.asObservable();
 
     public factories: any = [];
 
-    constructor(private http: HttpClient, private resolver: ComponentFactoryResolver) {
+    // Observable string sources
+    private emitLoginSource = new ReplaySubject<any>();
+    private emitChildRoutesSource = new Subject<[string, VmMenu[]]>();
+    private emitFullRoutesSource = new ReplaySubject<VmMenu[]>(1);
+
+    // Observable string streams
+    public loginEmitted$ = this.emitLoginSource.asObservable();
+    public childRoutesEmitted$ = this.emitChildRoutesSource.asObservable();
+    public fullRoutesEmitted$ = this.emitFullRoutesSource.asObservable();
+
+    constructor( private resolver: ComponentFactoryResolver) {
         this.factories = Array.from(this.resolver['_factories'].values());
     }
 
     // Service message commands
     emitChange(change: any) {
-        this.emitChangeSource.next(change);
+        this.emitLoginSource.next(change);
     }
 
     emitChildRoutes(event: Object) {
-        this.http.get<VmMenu[]>(
-            `${environment.authUrl}/System/GetAllowedMenu`,
-        ).subscribe((menus: VmMenu[]) => {
-            /**ng build --prod會化簡component的名字減省空間，但不會改selector名字！
-             * 所以利用ComponentFactoryResolver抓此event的selector 
-             * 接著與資料庫比對是event是按下哪個component後，回傳此component的child清單*/
-            let parentProto: any = Object.getPrototypeOf(event);
-            var parentfactory: any = this.getComponentType(parentProto.constructor.name);
-            let parentMenu = menus.filter(x => x.selector != null).find(x => x.selector === parentfactory.selector);
-
+        const emitEvent = this.fullRoutesEmitted$.subscribe((menus: VmMenu[]) => {
+            const parentProto: ComponentFactory<any> = Object.getPrototypeOf(event);
+            const parentfactory:
+                ComponentFactory<any> = this._getComponentType(parentProto.constructor.name);
+            // ng build --prod會化簡component名字為代號以壓縮空間，但不會改selector名字。
+            // 所以別用component名稱比對，會失敗！
+            const parentMenu: VmMenu = menus.filter(x => x.selector != null)
+                .find(x => x.selector === parentfactory.selector);
             if (parentMenu && parentMenu.children != null) {
-                this.emitChildRoutesSource.next(parentMenu.children);
+                this.emitChildRoutesSource.next([parentMenu.path, parentMenu.children]);
+            }
+        });
+        // 查詢fullRoutes資料後，記得取消訂閱，避免後面不斷重新訂閱浪費資源
+        emitEvent.unsubscribe();
+    }
+
+    emitFullRoutes(fullRoutes: VmMenu[]) {
+        this.emitFullRoutesSource.next(fullRoutes);
+    }
+
+    public static getComponentType(resolver: ComponentFactoryResolver,
+        route: VmMenu): any {
+        // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
+        // 根據 componentType 名字取出對應的 componentType
+        let temp = Array.from(resolver['_factories'].values())
+            .find((x: any) => x.selector === route.selector) as ComponentFactoryBoundToModule<any>;
+    
+        if(temp){
+            return temp.componentType;
+        }else{
+            return null;
+        }
+    }
+
+    public static addDynamicPath(resolver: ComponentFactoryResolver, config: Routes, modulePath: string,
+        dynamicChildRoutes: VmMenu[]) {
+        const foundChild: any = config.find(x => x.path === modulePath);
+
+        if (foundChild && foundChild._loadedConfig) {
+            const childLoadedRouterConfig: LoadedRouterConfig = foundChild._loadedConfig;
+            childLoadedRouterConfig.routes.forEach((route) => {
+                if (Object.keys(route).some(proptertyName => proptertyName.includes('children')) && route.children.length === 0) {
+                    dynamicChildRoutes.forEach((child, i) => {
+                        if (i === 0) {
+                            // 若有不只一個children，路徑path=''時自動轉跳至第一個child路徑
+                            // 因此第一筆foreach需加入path=''且redirectTo 第一個子componet之路徑
+                            route.children.push({
+                                path: '',
+                                redirectTo: child.path,
+                                pathMatch: 'full',
+                            });
+                        }
+
+                        route.children.push({
+                            path: child.path,
+                            component: SharedService
+                                .getComponentType(resolver, child),
+                        });
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * 根據 componentType 名字取出對應的 componentType
+     * @param routeName 路徑名稱
+     */
+    private _getComponentType(routeName: string): any {
+        return this.factories.find(
+            (x: ComponentFactory<any>) =>
+                x.componentType.name === routeName ||
+                routeName.toLocaleLowerCase() === x.componentType.name.split('_')[0]
+        );
+    }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class NavMenuService {
+
+    public drawer: MatDrawer;
+    private drawerSubject: Subject<MatDrawer> = new Subject<MatDrawer>();
+
+    constructor() {
+    }
+
+    setMenuDrawer(drawer: MatDrawer) {
+        this.drawer = drawer;
+        this.drawerSubject.next(drawer);
+    }
+
+    getMenuDrawer() {
+        return this.drawerSubject.asObservable();
+    }
+
+    toggleMenuDrawer() {
+        if (this.drawer) {
+            this.drawer.toggle();
+        }
+    }
+
+    clearMenuDrawer() {
+        this.drawerSubject.next(this.drawer = null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class CheckService {
+
+    constructor() {
+    }
+    /**
+     * check subject has had data, or get the data from resource
+     * @param subject 
+     * @param resource 
+     */
+    public static check<T>(subject: Subject<T[]>, resource: Observable<T[]>) {
+        subject.pipe(
+            take(1),
+        ).subscribe((resultFromSubject: T[]) => {
+            if (!resultFromSubject || resultFromSubject.length === 0) {
+                resource.subscribe((resultFromApi: T[]) => {
+                    console.log(typeof subject, ' from api');
+                    subject.next(resultFromApi);
+                });
             }
         });
     }
 
-    private getComponentType(routeName: string): any {
-        // 根據 componentType 名字取出對應的 componentType
-        let factory: any = this.factories.find(
-            (x: any) => {
-                return x.componentType.name == routeName;
-            }
-        );
-        return factory;
+    public static checkLazyRouter(parentPath: string, childList: VmMenu[],
+        resolver: ComponentFactoryResolver,
+        router: Router, moduleClass: any, renderRoutingUnsubscribe: Subject<any>) {
+        if ((parentPath === moduleClass.name.split(/(?=[A-Z])/)[0] ||
+            parentPath.toLocaleLowerCase() === moduleClass.name.split('_')[0])
+            && childList.length > 0) {
+            // Outside the subscribe may use setTimeout at first!!
+            // It seems to "_loadedConfig" would be gotten in the end of RecivableRoutingModule
+            SharedService
+                .addDynamicPath(resolver, router.config, parentPath, childList);
+            renderRoutingUnsubscribe.next();
+            renderRoutingUnsubscribe.complete();
+        }
     }
 }

@@ -28,12 +28,11 @@ export class MemberComponent implements OnInit {
 
     /** Parameters of Mat-Table */
     dataSource: MatTableDataSource<Member> | null;
-    displayedColumns: string[]
-    // = [
-    //     'domain', 'firstName', 'lastName', 'deptId',
-    //     'account', 'password', 'email', 'isActive',
-    //     'addTime', 'updatedTime', 'actions'
-    // ];
+    displayedColumns: string[] = [
+        'domain', 'firstName', 'lastName',
+        'account', 'password', 'email', 'isActive',
+        'addTime', 'updatedTime', 'actions',
+    ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -43,8 +42,7 @@ export class MemberComponent implements OnInit {
         private roleGroupService: RoleGroupService,
         private iMemberRoleService: IMemberRoleService,
     ) {
-        this.displayedColumns = Object.getOwnPropertyNames(new Member());
-        this.displayedColumns.push("actions");
+        console.log(this.displayedColumns);
     }
 
     ngOnInit() {

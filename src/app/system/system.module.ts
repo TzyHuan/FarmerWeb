@@ -42,8 +42,12 @@ import { ActionCreateComponent } from './action/actionTable/dialog/action-create
 //Actions
 import { ActionTableComponent } from './action/actionTable/actionTable.component';
 import { CtrlTableComponent } from './action/ctrlTable/ctrlTable.component';
-
-export class SystemModule { }
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedMaterialModule } from '../shared-material.module';
+import { SystemRoutingModule } from './system-routing.module';
 
 // 這邊宣告所有Material的Components
 export const SystemComponents = [
@@ -86,3 +90,23 @@ export const SystemComponents = [
   DialogMemberDeleteComponent,
   DialogIMemberRoleComponent,
 ]
+
+@NgModule({
+  imports: [
+      CommonModule,
+      RouterModule,
+      FormsModule,
+      ReactiveFormsModule,
+      SharedMaterialModule,
+      SystemRoutingModule,
+  ],
+  declarations: SystemComponents,
+  entryComponents: [
+      // 加在這裡root NgModule吃不到，只有此NgModule讀得到，所以兩邊都要加
+      // 未來版本可能會改進 https://github.com/angular/angular/issues/14324#issuecomment-481898762
+      SystemComponents,
+  ],
+})
+
+export class SystemModule { }
+

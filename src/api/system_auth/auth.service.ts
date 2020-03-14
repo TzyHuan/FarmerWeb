@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthRequest } from '../../interface/system_auth/auth_request';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
 
     constructor(private http: HttpClient) {

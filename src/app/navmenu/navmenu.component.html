@@ -1,61 +1,51 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">Richard Farm</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-    aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+  <button mat-icon-button class="btn btn-link btn-drawer" (click)="drawerToggle()"
+      [style.display]="childMenuList.length > 0 ? 'inline': 'none'">
+      <mat-icon>menu</mat-icon>
   </button>
+
+  <a class="navbar-brand" href="#">Greenhouse</a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav mr-auto">
-      <!-- <li class="nav-item" [routerLinkActive]="['link-active']">
-              <a class="nav-link" [routerLink]="['/home']">Home <span class="sr-only"></span>
-            </a>
-            </li>            
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            <li class="nav-item" [routerLinkActive]="['link-active']">
-                <a class="nav-link" [routerLink]="test">
-                    <i class="fa fa-cloud" aria-hidden="true" style="color:white"></i> Climate
-                </a>
-            </li> -->
+      <ul class="navbar-nav mr-auto">
 
-      <li *ngFor="let menuItem of menuList" class="nav-item" [routerLinkActive]="['link-active']">
-        <a class="nav-link" [routerLink]="menuItem?.path">
-          <i class="fa fa-cloud" aria-hidden="true" style="color:white"></i>
-          {{menuItem?.menuText}}
-        </a>
-      </li>
+          <li *ngFor="let menuItem of menuList" class="nav-item" [routerLinkActive]="['link-active']">
+              <a class="nav-link" [routerLink]="menuItem?.path">
+                  <i class="fa fa-cloud" aria-hidden="true" style="color:white"></i>
+                  {{menuItem?.menuText}}
+              </a>
+          </li>
 
-      <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false">
+                  <i class="fa fa-universal-access" aria-hidden="true" style="color:white"></i>
+                  Sign
+              </a>
               <div class="dropdown-menu" aria-labelledby="dropdown01">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+                  <div *ngIf="!isSignIn">
+                      <a *ngFor="let signItem of signList" class="dropdown-item" [routerLink]="signItem?.path">
+                          {{signItem?.menuText}}
+                      </a>
+                  </div>
+                  <div *ngIf="isSignIn">
+                      <button class="dropdown-item" (click)="signOut()">Sign Out</button>
+                  </div>
               </div>
-            </li> -->
-
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-universal-access" aria-hidden="true" style="color:white"></i>
-          Sign
-        </a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <div *ngIf="!isSignIn">
-            <a *ngFor="let signItem of signList" class="dropdown-item" [routerLink]="signItem?.path">
-              {{signItem?.menuText}}
-            </a>
-          </div>
-          <div *ngIf="isSignIn">
-            <button class="dropdown-item" (click)="signOut()">Sign Out</button>
-          </div>
-        </div>
-      </li>
-    </ul>
-
-    <div class="nav-time">
-      現在時間
-      {{ timeNow | async }}
-    </div>
+          </li>
+      </ul>
+      <div class="nav-time">
+          {{ account }}
+      </div>
+      <div class="nav-time">
+          現在時間
+          {{ timeNow | async }}
+      </div>
   </div>
 </nav>
