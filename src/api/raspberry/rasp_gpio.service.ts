@@ -11,22 +11,31 @@ export class GpioService {
 
     constructor(private http: HttpClient) { }
 
-    setGpio(pin: number, onoff: number | string) {
-        return this.http.get<boolean>(
-            `${environment.raspGpioUrl}/${pin.toString()}/set/${onoff.toString()}`,
+    putGpio(pin: number, onoff: number) {
+        return this.http.put(
+            `${environment.raspGpioUrl}/${pin.toString()}`,
+            {
+                onoff: onoff,
+            },
+            { headers: this.headers },
         );
     }
 
-    readGpioStatus(pin: number) {
-        return this.http.get<status>(
-            `${environment.raspGpioUrl}/${pin.toString()}/status`,
-        );
+    getGpioStatus(pin: number) {
+        return this.http.get(`${environment.raspGpioUrl}/${pin.toString()}/status`);
     }
 
-    readAllGpioStatus(pins: any[]) {
-        return this.http.post<status>(
-            `${environment.raspGpioUrl}/status`,
-            pins,
+    getAllGpioStatus() {
+        return this.http.get(`${environment.raspGpioUrl}/status`);
+    }
+
+    putPwm(pin: number, freq: number, duty: number) {
+        return this.http.put(
+            `${environment.raspGpioUrl}/pwm/${pin}`,
+            {
+                freq: freq,
+                duty: duty * 3000,
+            },
             { headers: this.headers },
         );
     }

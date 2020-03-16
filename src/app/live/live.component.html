@@ -24,7 +24,7 @@
             <!--todo : 之後改從database抓，ngFor呈現-->
             <tr>
                 <td>
-                    沉水馬達(GPIO_20)
+                    LED Switch
                 </td>
                 <td>
                     <mat-slide-toggle class="example-margin" (change)="setGpio(20, $event.checked)">
@@ -33,11 +33,24 @@
             </tr>
             <tr>
                 <td>
-                    LED散熱風扇(GPIO_22)
+                    Cooling Fans
                 </td>
                 <td>
-                    <mat-slide-toggle class="example-margin" (change)="setGpio(22, $event.checked)">
+                    <mat-slide-toggle class="example-margin" (change)="setGpio(21, $event.checked)">
                     </mat-slide-toggle>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    LED Light Intensity
+                </td>
+                <td>
+                    <mat-slider
+                        class="example-margin"
+                        [thumbLabel]="true"
+                        [tickInterval]="'auto'"
+                        (change)="changeIntensityOfLed($event.value)">
+                    </mat-slider>
                 </td>
             </tr>
         </tbody>

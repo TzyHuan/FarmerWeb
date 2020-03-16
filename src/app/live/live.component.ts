@@ -45,6 +45,12 @@ export class LiveComponent implements OnInit, OnDestroy {
         this.player.dispose();
     }
 
+    changeIntensityOfLed(value: number) {
+        this.gpioService.putPwm(12, 500, value).subscribe(x=>{
+            console.log(x);
+        });
+    }
+
     /**
      * gpio off = 1, 3.3v
      * gpio on  = 0, 0v
@@ -53,38 +59,32 @@ export class LiveComponent implements OnInit, OnDestroy {
      */
     setGpio(pin: number, event: boolean) {
         let onoff = Number(!event);
-        this.gpioService.setGpio(pin, onoff).subscribe(x => {
-            console.log(x);
-        });
-    }
-
-    unexportGpio(pin: number, event: string) {
-        this.gpioService.setGpio(pin, event).subscribe(x => {
+        this.gpioService.putGpio(pin, onoff).subscribe(x => {
             console.log(x);
         });
     }
 
     readGpioStatus(pin: number, event: string) {
-        this.gpioService.readGpioStatus(pin).subscribe(x => {
+        this.gpioService.getGpioStatus(pin).subscribe(x => {
             console.log(x);
-        })
+        });
     }
 
     readAllGpioStatus(pins: any[]) {
-        this.gpioService.readAllGpioStatus(pins).subscribe(x => {
+        this.gpioService.getAllGpioStatus().subscribe(x => {
             console.log(x);
-        })
+        });
     }
 }
 
-function allowDrop(event){
-    event.preventDefault();
-}
-function drag(event){
-    event.dataTransfer.setData("text",event.currentTarget.id);
-}
-function drop(event){
-    event.preventDefault();
-    var data=event.dataTransfer.getData("text");
-    event.currentTarget.appendChild(document.getElementById(data));
-}
+// function allowDrop(event){
+//     event.preventDefault();
+// }
+// function drag(event){
+//     event.dataTransfer.setData("text",event.currentTarget.id);
+// }
+// function drop(event){
+//     event.preventDefault();
+//     var data=event.dataTransfer.getData("text");
+//     event.currentTarget.appendChild(document.getElementById(data));
+// }
