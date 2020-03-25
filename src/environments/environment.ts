@@ -10,5 +10,6 @@ export const environment = {
   greenhouseUrl: 'http://localhost/FarmerAPI/api',
   sensorHubUrl: 'http://localhost/FarmerAPI/SensorHub',
   raspGpioUrl: 'http://192.168.43.120:3000/gpio',
+  raspPwmUrl: 'http://192.168.43.120:3000/pwm',
   appId: 0,
 };

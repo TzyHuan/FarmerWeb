@@ -12,7 +12,7 @@
     </p>
 </video>
 
-<div style="width: 500px;position: relative; display: inline-block;" ngResizable ngDraggable rzHandles="all">
+<div style="width: 500px;position: relative; display: inline-block;">
     <table>
         <thead>
             <tr>
@@ -27,7 +27,7 @@
                     LED Switch
                 </td>
                 <td>
-                    <mat-slide-toggle class="example-margin" (change)="setGpio(20, $event.checked)">
+                    <mat-slide-toggle class="example-margin" (change)="setGpio(21, $event.checked)">
                     </mat-slide-toggle>
                 </td>
             </tr>
@@ -36,7 +36,7 @@
                     Cooling Fans
                 </td>
                 <td>
-                    <mat-slide-toggle class="example-margin" (change)="setGpio(21, $event.checked)">
+                    <mat-slide-toggle class="example-margin" (change)="setGpio(20, $event.checked)">
                     </mat-slide-toggle>
                 </td>
             </tr>

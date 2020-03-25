@@ -31,7 +31,7 @@ export class GpioService {
 
     putPwm(pin: number, freq: number, duty: number) {
         return this.http.put(
-            `${environment.raspGpioUrl}/pwm/${pin}`,
+            `${environment.raspPwmUrl}/${pin}`,
             {
                 freq: freq,
                 duty: duty * 3000,

@@ -58,7 +58,7 @@ export class LiveComponent implements OnInit, OnDestroy {
      * @param event on: true, off: false
      */
     setGpio(pin: number, event: boolean) {
-        let onoff = Number(!event);
+        let onoff = Number(event);
         this.gpioService.putGpio(pin, onoff).subscribe(x => {
             console.log(x);
         });
