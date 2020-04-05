@@ -17,7 +17,7 @@ import { MapService } from '../map.service';
     providers: [V34Service]
 })
 
-export class DrawerSupplyChainComponent implements OnInit {    
+export class DrawerSupplyChainComponent implements OnInit {
     sideCompanyList: v34[] = [];
     CompanyFilter = new FormControl();
     filteredCompany: v34[];
@@ -27,7 +27,7 @@ export class DrawerSupplyChainComponent implements OnInit {
     }
 
     ngOnInit() {
-        //抓側欄資料
+        // 抓側欄資料
         this.getContent();
     }
 
@@ -35,10 +35,10 @@ export class DrawerSupplyChainComponent implements OnInit {
         this.REST_v34.GetV34().subscribe((result: v34[]) => {
             this.filteredCompany = this.sideCompanyList = result;
 
-            //Listen CompanyFilter
+            // Listen CompanyFilter
             this.CompanyFilter.valueChanges.pipe(startWith('')).subscribe(value => {
                 this.filteredCompany = this.sideCompanyList.filter((v, i, a) => {
-                    return this.companyFilter(v, value)
+                    return this.companyFilter(v, value);
                 });
 
                 this._MapService.emitCompanyFilter(this.filteredCompany);
@@ -47,25 +47,24 @@ export class DrawerSupplyChainComponent implements OnInit {
     }
 
     companyFilter(Data: v34, searchTerms: string): boolean {
-        //Filter obj
+        // Filter obj
         let FilterItem = JSON.stringify(Data).replace(/"|{|}|:| |,/g, '');
 
         Object.getOwnPropertyNames(Data).forEach((v) => {
             FilterItem = FilterItem.replace(v, '');
-        })
-        
-        let Judged: boolean = FilterItem.toLowerCase().indexOf(searchTerms.toLowerCase()) != -1;
+        });
 
-        //為true者，才是要顯示的Data
-        return Judged
+        const Judged: boolean = FilterItem.toLowerCase().indexOf(searchTerms.toLowerCase()) !== -1;
+
+        // 為true者，才是要顯示的Data
+        return Judged;
     }
 
-    onClickDetail(Lat:number, Lng:number){
-        let position:number[] = [Lat, Lng];
+    onClickDetail(Lat: number, Lng: number) {
+        const position: number[] = [Lat, Lng];
         this._MapService.emitDrawerDetailClick(position);
     }
 
-    //#region Dialogs    
     openDeleteDialog(item: v34): void {
         const dialogRef = this.dialog.open(DialogSupplyChainDeleteComponent, {
             width: '250px',
@@ -74,11 +73,10 @@ export class DrawerSupplyChainComponent implements OnInit {
     }
 
     openUpdateDialog(item: v34): void {
-        var isModified: boolean = true;
+        const isModified = true;
         const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
             width: '80%',
             data: [item, isModified]
-        });       
+        });
     }
-    //#endregion    
 }

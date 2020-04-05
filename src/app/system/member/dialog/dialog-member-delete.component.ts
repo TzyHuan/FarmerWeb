@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Member } from '../../../../interface/system_auth/member';
-import { MemberService } from '../../../../api/system_auth/member.service'
+import { MemberService } from '../../../../api/system_auth/member.service';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class DialogMemberDeleteComponent {
 
   deleteMenu(id: string) {
     this.memberService.deleteMember(id).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

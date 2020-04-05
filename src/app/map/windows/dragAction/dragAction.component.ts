@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { WindowService } from '../window.service'
+import { WindowService } from '../window.service';
 
 @Component({
     selector: 'window-dragAction',
@@ -19,7 +19,7 @@ export class DragActionComponent {
     }
 
     onToggle(event: any, id: number) {
-        console.log("click:" + id);
+        console.log('click:' + id);
         this.windowService.emitSideChange(id);
     }
 }

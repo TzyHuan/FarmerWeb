@@ -11,14 +11,14 @@ import { MatPaginator } from '@angular/material';
 })
 export class ActionComponent implements OnInit {
 
-  //監聽Tab切換，初始值第一頁
+  // 監聽Tab切換，初始值第一頁
   private emitTabChange = new BehaviorSubject<number>(0);
   private TabChangeEmitted$ = this.emitTabChange.asObservable();
   public tabLoadedData: any[] = [];
 
   @ViewChild('paginator') paginator: MatPaginator;
 
-  /** 每更動DOM(按排序或下一頁都算)都會自動重新偵測，若該變數在非選擇的tab，得到 ms 則為 undefine 
+  /** 每更動DOM(按排序或下一頁都算)都會自動重新偵測，若該變數在非選擇的tab，得到 ms 則為 undefine
    * angular有bug，每切tab時 dataSource.sort自動歸零對應
   */
   // @ViewChild('ActionSort') set matActionSort(ms: MatSort) {
@@ -29,7 +29,7 @@ export class ActionComponent implements OnInit {
   //   });
   // }
   // @ViewChild('CtrlSort') set matCtrlSort(ms: MatSort) {
-  //   this.TabChangeEmitted$.subscribe((index: number) => { 
+  //   this.TabChangeEmitted$.subscribe((index: number) => {
   //     if (ms && index == 1 && this.CtrlDataSource) {
   //       this.CtrlDataSource.sort = ms;
   //     }
@@ -57,7 +57,7 @@ export class ActionComponent implements OnInit {
   constructor(private ActionREST: ActionService) { }
 
   ngOnInit() {
-    //初始讀第一個tab的資料
+    // 初始讀第一個tab的資料
     this.loadData(0);
   }
 
@@ -65,21 +65,21 @@ export class ActionComponent implements OnInit {
   loadData(index: number) {
     switch (index) {
       case 0: {
-        //statements; 
+        // statements;
         break;
       }
       case 1: {
-        //statements; 
+        // statements;
         break;
       }
       default: {
-        //statements; 
+        // statements;
         break;
       }
     }
   }
 
-  /** 統一在parent頁面讀取tabs的資料暫存  //todo
+  /** 統一在parent頁面讀取tabs的資料暫存  // todo
    * 要是在tab的component讀，每切換就會重新讀取API浪費資源*/
   setDataSourceAttributes(index: number) {
 
@@ -88,8 +88,8 @@ export class ActionComponent implements OnInit {
     // }
     // return this.tabLoadedData[index];
 
-    //切換tab時移至第一頁
+    // 切換tab時移至第一頁
     this.paginator.firstPage();
   }
-  
+
 }

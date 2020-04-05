@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Menu } from '../../../../interface/system_auth/menu';
-import { MenuService } from '../../../../api/system_auth/menu.service'
+import { MenuService } from '../../../../api/system_auth/menu.service';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 
@@ -29,8 +29,8 @@ export class DialogMenuCreateComponent {
     }
 
     initaddMenuForm() {
-        //若此地不加require，而在子component加入，則會發生前後不一致的警告！
-        let defaultRow = {
+        // 若此地不加require，而在子component加入，則會發生前後不一致的警告！
+        const defaultRow = {
             menuId: ['', Validators.required],
             path: ['', Validators.required],
             menuText: ['', Validators.required],
@@ -38,13 +38,13 @@ export class DialogMenuCreateComponent {
             selector: [''],
             component: ['', Validators.required],
             rootMenuId: null,
-            appId: [environment.appId] //第一個應用程式 todo
-        }
+            appId: [environment.appId] // 第一個應用程式 todo
+        };
         return this.fb.group(defaultRow);
     }
 
     addMenuList() {
-        // add address to the list   
+        // add address to the list
         const control = <FormArray>this.addMenuForm.controls['containLists'];
         control.push(this.initaddMenuForm());
     }
@@ -67,7 +67,7 @@ export class DialogMenuCreateComponent {
     createMenu(dataList: Menu[]) {
         dataList.forEach(data => {
             this.menuService.postMenu(data).subscribe((result: any) => {
-                //console.log(result);
+                // console.log(result);
             }, (error) => {
                 console.log(error);
             });

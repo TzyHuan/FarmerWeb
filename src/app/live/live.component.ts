@@ -16,7 +16,7 @@ export class LiveComponent implements OnInit, OnDestroy {
         width: 848,
         height: 480,
         controls: true,
-        preload: "auto", //預載：string；'auto'|'true'|'metadata'|'none'
+        preload: 'auto', // 預載：string；'auto'|'true'|'metadata'|'none'
     };
 
     player: any;
@@ -31,7 +31,7 @@ export class LiveComponent implements OnInit, OnDestroy {
             videojs.log('Your player is ready!');
 
             // In this context, `this` is the player that was created by Video.js.
-            //this.play();
+            // this.play();
 
             // How about an event listener?
             this.on('ended', function () {
@@ -41,12 +41,12 @@ export class LiveComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        //離開時釋放撥放器
+        // 離開時釋放撥放器
         this.player.dispose();
     }
 
     changeIntensityOfLed(value: number) {
-        this.gpioService.putPwm(12, 500, value).subscribe(x=>{
+        this.gpioService.putPwm(12, 500, value).subscribe(x => {
             console.log(x);
         });
     }
@@ -58,7 +58,7 @@ export class LiveComponent implements OnInit, OnDestroy {
      * @param event on: true, off: false
      */
     setGpio(pin: number, event: boolean) {
-        let onoff = Number(event);
+        const onoff = Number(event);
         this.gpioService.putGpio(pin, onoff).subscribe(x => {
             console.log(x);
         });

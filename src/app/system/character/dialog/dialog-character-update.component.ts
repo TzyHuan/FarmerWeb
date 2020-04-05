@@ -31,14 +31,14 @@ export class DialogCharacterUpdateComponent {
 
   putMenu(id: number, UpdatedRole: RoleGroup) {
     this.roleGroupService.putRoleGroup(id, UpdatedRole).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });
   }
 
   compareObjects(o1: any, o2: any): boolean {
-    if (o1 == '') o1 = null;
-    return o1 == o2;
+    if (o1 === '') { o1 = null; }
+    return o1 === o2;
   }
 }

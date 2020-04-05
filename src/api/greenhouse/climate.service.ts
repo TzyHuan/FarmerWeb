@@ -8,7 +8,7 @@ import { HighchartsTempratures, HighchartsHumidities } from '../../interface/gre
 export class ClimateService {
 
     constructor(private http: HttpClient) { }
-    
+
     getTemperatures(params?: HttpParams) {
         return this.http.get<HighchartsTempratures[]>(
             `${environment.greenhouseUrl}/Climate/Temperatures`,

@@ -22,16 +22,16 @@ import value from '*.png';
 })
 export class MenuComponent implements OnInit {
 
-  //列舉選項傳至Dialog
+  // 列舉選項傳至Dialog
   menuList: Menu[];
 
-  //Parameters of Mat-Table
+  // Parameters of Mat-Table
   dataSource: MatTableDataSource<Menu> | null;
   displayedColumns: string[] = ['menuId', 'path', 'menuText', 'sortNo', 'selector', 'component', 'rootMenuId', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  //Parameters of filters
+  // Parameters of filters
   menuIdFilter = new FormControl();
   pathFilter = new FormControl();
   menuTextFilter = new FormControl();
@@ -56,172 +56,172 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    //重新讀取Mat-Table資料
+    // 重新讀取Mat-Table資料
     this.loadData();
   }
 
   loadData() {
-    //Call api reload data
-    this.menuService.getMenu().subscribe((data: Menu[]) => {
+    // Call api reload data
+    this.menuService.getMenu().subscribe((menus: Menu[]) => {
 
-      this.dataSource = new MatTableDataSource<Menu>(data);
+      this.dataSource = new MatTableDataSource<Menu>(menus);
 
       if (this.dataSource) {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
-        /** 
+        /**
          * 開始監聽來至各FormControl地filter有無輸入關鍵字
          * 監聽時給入初始值startwith('')
-         * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 
+         * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單
          */
-        //Listen menuIdFilter
+        // Listen menuIdFilter
         this.menuIdFilteredOptions = this.menuIdFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.menuId = value;
+          tap(changedValue => {
+            this.filterValues.menuId = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.map(v => v.menuId.toString()),
-            value,
+          map(changedValue => this.autoFilter(
+            menus.map(v => v.menuId.toString()),
+            changedValue,
           ))
         );
 
-        //Listen pathFilter
+        // Listen pathFilter
         this.pathFilteredOptions = this.pathFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.path = value;
+          tap(changedValue => {
+            this.filterValues.path = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.path != null).map(v => v.path),
-            value,
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.path != null).map(v => v.path),
+            changedValue,
           ))
         );
 
-        //Listen menuTextFilter
+        // Listen menuTextFilter
         this.menuTextFilteredOptions = this.menuTextFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.menuText = value;
+          tap(changedValue => {
+            this.filterValues.menuText = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.menuText != null).map(v => v.menuText),
-            value,
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.menuText != null).map(v => v.menuText),
+            changedValue,
           ))
         );
 
-        //Listen sortNoFilter
+        // Listen sortNoFilter
         this.sortNoFilteredOptions = this.sortNoFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.sortNo = value;
+          tap(changedValue => {
+            this.filterValues.sortNo = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.sortNo != null)
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.sortNo != null)
               .map(v => v.sortNo.toString())
               .sort((a, b) => parseFloat(a) - parseFloat(b)),
-            value,
+            changedValue,
           ))
         );
 
-        //Listen selectorFilter
+        // Listen selectorFilter
         this.selectorFilteredOptions = this.selectorFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.selector = value;
+          tap(changedValue => {
+            this.filterValues.selector = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.selector != null)
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.selector != null)
               .map(v => v.selector.toString())
               .sort((a, b) => parseFloat(a) - parseFloat(b)),
-            value,
+            changedValue,
           ))
         );
 
-        //Listen componentFilter
+        // Listen componentFilter
         this.componentFilteredOptions = this.componentFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.component = value;
+          tap(changedValue => {
+            this.filterValues.component = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.component != null).map(v => v.component),
-            value,
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.component != null).map(v => v.component),
+            changedValue,
           ))
         );
 
-        //Listen rootMenuIdFilter
+        // Listen rootMenuIdFilter
         this.rootMenuIdFilteredOptions = this.rootMenuIdFilter.valueChanges.pipe(
           startWith(''),
-          tap(value => {
-            this.filterValues.rootMenuId = value;
+          tap(changedValue => {
+            this.filterValues.rootMenuId = changedValue;
             this.dataSource.filter = JSON.stringify(this.filterValues);
             this.dataSource.paginator.firstPage();
           }),
-          map(value => this.autoFilter(
-            data.filter(x => x.rootMenuId != null)
+          map(changedValue => this.autoFilter(
+            menus.filter(x => x.rootMenuId != null)
               .map(v => v.rootMenuId.toString())
               .sort((a, b) => parseFloat(a) - parseFloat(b)),
-            value,
+            changedValue,
           ))
         );
       }
 
-      //把選單資料代入Dialog選項 且 增加"無隸屬"的選項。Deep copy!不然MatTable也會多一個"無"的資料
-      this.menuList = JSON.parse(JSON.stringify(data));
+      // 把選單資料代入Dialog選項 且 增加"無隸屬"的選項。Deep copy!不然MatTable也會多一個"無"的資料
+      this.menuList = JSON.parse(JSON.stringify(menus));
       this.menuList.unshift({ menuId: null, path: null, menuText: '無', sortNo: null, component: null, rootMenuId: null });
     });
   }
 
-  private autoFilter(options: string[], value: string): string[] {
-    const filterValue = value.toLowerCase();
-    options = [...new Set(options)];//distinct the array  
+  private autoFilter(options: string[], changedValue: string): string[] {
+    const filterValue = changedValue.toLowerCase();
+    options = [...new Set(options)]; // distinct the array
     return options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   customFilter(Data: Menu, Filter: string): boolean {
-    //取Filter條件
-    let searchTerms = JSON.parse(Filter);
+    // 取Filter條件
+    const searchTerms = JSON.parse(Filter);
 
-    //先預判是否有沒有值的欄位，無值不篩選進來
-    let judgedMenuId: boolean = isNullOrUndefined(Data.menuId) ?
-      true : Data.menuId.toString().toLowerCase().indexOf(searchTerms.menuId.toLowerCase()) != -1;
+    // 先預判是否有沒有值的欄位，無值不篩選進來
+    const judgedMenuId: boolean = isNullOrUndefined(Data.menuId) ?
+      true : Data.menuId.toString().toLowerCase().indexOf(searchTerms.menuId.toLowerCase()) !== -1;
 
-    let judgedPath: boolean = isNullOrUndefined(Data.path) ?
-      true : Data.path.toString().toLowerCase().indexOf(searchTerms.path.toLowerCase()) != -1;
+    const judgedPath: boolean = isNullOrUndefined(Data.path) ?
+      true : Data.path.toString().toLowerCase().indexOf(searchTerms.path.toLowerCase()) !== -1;
 
-    let judgedMenuText: boolean = isNullOrUndefined(Data.menuText) ?
-      true : Data.menuText.toString().toLowerCase().indexOf(searchTerms.menuText.toLowerCase()) != -1;
+    const judgedMenuText: boolean = isNullOrUndefined(Data.menuText) ?
+      true : Data.menuText.toString().toLowerCase().indexOf(searchTerms.menuText.toLowerCase()) !== -1;
 
-    let judgedSortNo: boolean = isNullOrUndefined(Data.sortNo) ?
-      true : Data.sortNo.toString().toLowerCase().indexOf(searchTerms.sortNo.toLowerCase()) != -1;
+    const judgedSortNo: boolean = isNullOrUndefined(Data.sortNo) ?
+      true : Data.sortNo.toString().toLowerCase().indexOf(searchTerms.sortNo.toLowerCase()) !== -1;
 
-    let judgedSelector: boolean = isNullOrUndefined(Data.selector) ?
-      true : Data.selector.toString().toLowerCase().indexOf(searchTerms.selector.toLowerCase()) != -1;
+    const judgedSelector: boolean = isNullOrUndefined(Data.selector) ?
+      true : Data.selector.toString().toLowerCase().indexOf(searchTerms.selector.toLowerCase()) !== -1;
 
-    let judgedComponent: boolean = isNullOrUndefined(Data.component) ?
-      true : Data.component.toString().toLowerCase().indexOf(searchTerms.component.toLowerCase()) != -1;
+    const judgedComponent: boolean = isNullOrUndefined(Data.component) ?
+      true : Data.component.toString().toLowerCase().indexOf(searchTerms.component.toLowerCase()) !== -1;
 
-    //Because of data.rootMenuId may contain null, searchTerms without anything should not filter out this data
-    let judgedRootMenuId: boolean = searchTerms.rootMenuId == "" ?
+    // Because of data.rootMenuId may contain null, searchTerms without anything should not filter out this data
+    const judgedRootMenuId: boolean = searchTerms.rootMenuId === '' ?
       true : (isNullOrUndefined(Data.rootMenuId) ?
-        false : Data.rootMenuId.toString().toLowerCase().indexOf(searchTerms.rootMenuId.toLowerCase()) != -1);
+        false : Data.rootMenuId.toString().toLowerCase().indexOf(searchTerms.rootMenuId.toLowerCase()) !== -1);
 
-    //交集為true者，才是要顯示的Dat
+    // 交集為true者，才是要顯示的Dat
     return judgedMenuId && judgedPath && judgedMenuText && judgedSortNo && judgedSelector && judgedComponent && judgedRootMenuId;
   }
 
@@ -232,7 +232,7 @@ export class MenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 
@@ -243,7 +243,7 @@ export class MenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 
@@ -254,7 +254,7 @@ export class MenuComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 

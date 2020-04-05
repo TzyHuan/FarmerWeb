@@ -1,7 +1,7 @@
 <div *ngIf="isLoginError" class="red-text center error-message">
   <i class="material-icons">error</i> Incorrect account or password
 </div>
-<form #loginForm="ngForm" (ngSubmit)="onSubmit(account.value, password.value)">
+<form #loginForm="ngForm" class="sign-in-panel" (ngSubmit)="onSubmit(account.value, password.value)">
   <div class="row">
     <i class="material-icons">face</i>帳號
     <mat-form-field>

@@ -1,16 +1,16 @@
 import { Component, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
-import { HttpParams } from '@angular/common/http'
+import { HttpParams } from '@angular/common/http';
 
-import { ClimateService } from '../../api/greenhouse/climate.service'
+import { ClimateService } from '../../api/greenhouse/climate.service';
 import { StationInfoService } from '../../api/greenhouse/station_into.service';
 import { HighchartsTempratures, HighchartsHumidities } from '../../interface/greenhouse/climate';
-import { StationInfo } from '../../interface/greenhouse/station_info'
+import { StationInfo } from '../../interface/greenhouse/station_info';
 
-/** If there isn't a declaration file, the TypeScript compiler 
- * doesn't know if the module exists, so you need to use require 
+/** If there isn't a declaration file, the TypeScript compiler
+ * doesn't know if the module exists, so you need to use require
  * instead which lacks the compilation checking.*/
 import Highcharts from 'highcharts/highstock';
-//import HighchartsMore from 'highcharts/highcharts-more';
+// import HighchartsMore from 'highcharts/highcharts-more';
 
 /**https://www.highcharts.com/docs/getting-started/install-from-npm
  * 兩種方式都可載入，請看highcharts-more.js最上方的code
@@ -20,11 +20,11 @@ import Highcharts from 'highcharts/highstock';
     } else {
         factory(Highcharts);
     }*/
-//1.
-//HighchartsMore(Highcharts) 
+// 1.
+// HighchartsMore(Highcharts)
 /** dirty and quick, set tsconfig.app.ts is better */
-//declare var require: any; 
-//2.
+// declare var require: any;
+// 2.
 require('highcharts/highcharts-more')(Highcharts);
 
 @Component({
@@ -50,18 +50,18 @@ export class ClimateComponent implements AfterContentInit {
     // 抓Station Selector選項
     this.stationInfoService.getStationInfo().subscribe((result: StationInfo[]) => {
       this.stations = result;
-      //預設初始選項為第一個選項
+      // 預設初始選項為第一個選項
       this.selectedStations = this.stations[0];
     }, (error) => {
       console.error(error);
     });
-  };
+  }
 
   ngAfterContentInit() {
-    //設定Highstock屬性
+    // 設定Highstock屬性
     const optionsA: Highcharts.Highstock.Options = {
       chart: {
-        //type: 'spline'
+        // type: 'spline'
         zoomType: 'x'
       },
       title: {
@@ -95,10 +95,10 @@ export class ClimateComponent implements AfterContentInit {
         selected: 2
       },
       xAxis: {
-        type: 'datetime', //'categories'/*: ['Apples', 'Bananas', 'Oranges']*/
+        type: 'datetime', // 'categories'/*: ['Apples', 'Bananas', 'Oranges']*/
         dateTimeLabelFormats: { // don't display the dummy year
-          day: "%b. %e",
-          week: "%b. %e",
+          day: '%b. %e',
+          week: '%b. %e',
           month: '%b. %e',
           year: '%Y',
         },
@@ -119,11 +119,11 @@ export class ClimateComponent implements AfterContentInit {
         name: 'Temperature',
         data: []
       }]
-      //createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/             
+      // createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/
     };
     const optionsB: Highcharts.Highstock.Options = {
       chart: {
-        //type: 'spline'
+        // type: 'spline'
         zoomType: 'x'
       },
       title: {
@@ -157,10 +157,10 @@ export class ClimateComponent implements AfterContentInit {
         selected: 2
       },
       xAxis: {
-        type: 'datetime', //'categories'/*: ['Apples', 'Bananas', 'Oranges']*/
+        type: 'datetime', // 'categories'/*: ['Apples', 'Bananas', 'Oranges']*/
         dateTimeLabelFormats: { // don't display the dummy year
-          day: "%b. %e",
-          week: "%b. %e",
+          day: '%b. %e',
+          week: '%b. %e',
           month: '%b. %e',
           year: '%Y',
         },
@@ -181,45 +181,45 @@ export class ClimateComponent implements AfterContentInit {
         name: 'RH',
         data: []
       }]
-      //createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/             
+      // createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/
     };
 
-    //初始化Highstock
+    // 初始化Highstock
     this.temperatureChart = new Highcharts.stockChart(this.temperatureChartEle.nativeElement, optionsA);
     this.humidityChart = new Highcharts.stockChart(this.humidityChartEle.nativeElement, optionsB);
-    
+
     console.log(this.selectedStations);
-    //初始查詢條件
+    // 初始查詢條件
     const params = new HttpParams()
       .set('StationId', String(this.selectedStations.stationId))
-      .set('SearchNum', "10000");
+      .set('SearchNum', '10000');
 
-    //置入資料至溫度的Highstock
+    // 置入資料至溫度的Highstock
     this.climateService.getTemperatures(params).subscribe((result: HighchartsTempratures[]) => {
       this.drawTempHighcharts(this.temperatureChart, result);
     }, (error) => {
       console.error(error);
     });
 
-    //置入資料至溫度的Highstock
+    // 置入資料至溫度的Highstock
     this.climateService.getRelativeHumidities(params).subscribe((result: HighchartsHumidities[]) => {
       this.drawRhHighcharts(this.humidityChart, result);
     }, (error) => {
       console.error(error);
     });
-  };
+  }
 
   onSelect(stationId: number) {
-    //this.selectedStations;
+    // this.selectedStations;
     this.stations.forEach(value => {
-      if (value.stationId == stationId) {
+      if (value.stationId === stationId) {
         this.selectedStations = value;
       }
     });
 
     const params = new HttpParams()
       .set('StationId', stationId.toString())
-      .set('SearchNum', "100000");
+      .set('SearchNum', '100000');
 
     this.climateService.getTemperatures(params).subscribe(
       (result: HighchartsTempratures[]) => {
@@ -237,9 +237,9 @@ export class ClimateComponent implements AfterContentInit {
   }
 
   private drawTempHighcharts(chart: Highcharts.ChartObject, updateData: any[]) {
-    let temperatureData: any = [];
-    updateData.forEach(v=>{
-      let timeTemp: any = v.dateFormatted.split("-");
+    const temperatureData: any = [];
+    updateData.forEach(v => {
+      const timeTemp: any = v.dateFormatted.split('-');
       temperatureData.push([
         Date.UTC(timeTemp[0], timeTemp[1], timeTemp[2], timeTemp[3], timeTemp[4]),
         v.temperatureC
@@ -249,9 +249,9 @@ export class ClimateComponent implements AfterContentInit {
   }
 
   private drawRhHighcharts(chart: Highcharts.ChartObject, updateData: any[]) {
-    let relativeHumidityData: any = [];
-    updateData.forEach(v=>{
-      let timeTemp: any = v.dateFormatted.split("-");
+    const relativeHumidityData: any = [];
+    updateData.forEach(v => {
+      const timeTemp: any = v.dateFormatted.split('-');
       relativeHumidityData.push([
         Date.UTC(timeTemp[0], timeTemp[1], timeTemp[2], timeTemp[3], timeTemp[4]),
         v.relativeHumidities

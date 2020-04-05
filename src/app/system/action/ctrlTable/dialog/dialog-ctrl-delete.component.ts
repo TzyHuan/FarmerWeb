@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Ctrl } from '../../../../../interface/system_auth/ctrl';
-import { CtrlService } from '../../../../../api/system_auth/ctrl.service'
+import { CtrlService } from '../../../../../api/system_auth/ctrl.service';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class DialogCtrlDeleteComponent {
 
   deleteMenu(id: number) {
     this.ctrlService.deleteCtrl(id).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

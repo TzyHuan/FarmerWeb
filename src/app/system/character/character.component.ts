@@ -30,12 +30,12 @@ import { zip } from 'rxjs/observable/zip';
 export class CharacterComponent implements OnInit {
 
   /** 傳至Dialog */
-  //列舉選項
+  // 列舉選項
   roleList: RoleGroup[];
-  //IMenuRole
+  // IMenuRole
   iMenuRoleList: IMenuRole[];
   treeMenu: MenuNode[];
-  //IActionRole
+  // IActionRole
   iActionRoleList: IActionRole[];
   treeAction: ActionNode[];
 
@@ -59,7 +59,7 @@ export class CharacterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //讀取Mat-Table資料
+    // 讀取Mat-Table資料
     this.loadData();
   }
 
@@ -72,15 +72,15 @@ export class CharacterComponent implements OnInit {
       if (this.dataSource) {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        //this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
+        // this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
       }
 
       /** 把選單資料代入Dialog選項 且 增加"無隸屬"的選項 */
-      // 由於JavaScript shallow copy的緣故，unshift this.RoleList會連動改變data，因此放最後再unshift
-      // StackOverFlow-6612385:
-      // An array in JavaScript is also an object and variables only hold a reference to an object, 
-      // not the object itself. Thus both variables have a reference to the same object.
-      // Deep copy!不然MatTable也會多一個"無"的資料
+      //  由於JavaScript shallow copy的緣故，unshift this.RoleList會連動改變data，因此放最後再unshift
+      //  StackOverFlow-6612385:
+      //  An array in JavaScript is also an object and variables only hold a reference to an object,
+      //  not the object itself. Thus both variables have a reference to the same object.
+      //  Deep copy!不然MatTable也會多一個"無"的資料
       this.roleList = JSON.parse(JSON.stringify(data));
       this.roleList.unshift({
         roleId: null,
@@ -100,7 +100,7 @@ export class CharacterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 
@@ -111,7 +111,7 @@ export class CharacterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 
@@ -122,7 +122,7 @@ export class CharacterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.reloadData();
+      if (saved) { this.reloadData(); }
     });
   }
 
@@ -133,7 +133,7 @@ export class CharacterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.loadIMenuRole();
+      if (saved) { this.loadIMenuRole(); }
     });
   }
 
@@ -144,7 +144,7 @@ export class CharacterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((saved: boolean) => {
-      if (saved) this.loadIActionRole();
+      if (saved) { this.loadIActionRole(); }
     });
   }
 

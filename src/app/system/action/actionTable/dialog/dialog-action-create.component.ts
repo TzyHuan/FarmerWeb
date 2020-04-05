@@ -28,7 +28,7 @@ export class DialogActionCreateComponent {
     }
 
     initaddActionForm() {
-        //若此地不加require，而在子component加入，則會發生前後不一致的警告！
+        // 若此地不加require，而在子component加入，則會發生前後不一致的警告！
         return this.fb.group({
             actionId: ['', Validators.required],
             name: ['', Validators.required],
@@ -39,7 +39,7 @@ export class DialogActionCreateComponent {
     }
 
     addActionList() {
-        // add address to the list   
+        // add address to the list
         const control = <FormArray>this.addActionForm.controls['containLists'];
         control.push(this.initaddActionForm());
     }
@@ -62,7 +62,7 @@ export class DialogActionCreateComponent {
     createAction(dataList: Action[]) {
         dataList.forEach(data => {
             this.actionService.postAction(data).subscribe((result: any) => {
-                //console.log(result);
+                // console.log(result);
             }, (error) => {
                 console.log(error);
             });

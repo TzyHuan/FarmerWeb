@@ -9,18 +9,19 @@ import { Member } from '../../../interface/system_auth/member';
 })
 export class SignUpComponent implements OnInit {
   user: Member;
-  emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+  emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
 
   constructor() { }
 
   ngOnInit() {
     this.resetForm();
   }
-  
+
 
   resetForm(form?: NgForm) {
-    if (form != null)
+    if (form != null) {
       form.reset();
+    }
     // this.user = {
     //   UserName: '',
     //   Password: '',
@@ -30,6 +31,6 @@ export class SignUpComponent implements OnInit {
     // }
   }
 
-  onSubmit(form?: NgForm){
+  onSubmit(form?: NgForm) {
   }
 }

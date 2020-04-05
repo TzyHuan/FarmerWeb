@@ -6,7 +6,7 @@ import { MatDrawer } from '@angular/material';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-//----ViewModel----//
+// ----ViewModel----//
 import { VmMenu } from '../interface/system_auth/vm_menu';
 
 @Injectable({
@@ -26,46 +26,16 @@ export class SharedService {
     public childRoutesEmitted$ = this.emitChildRoutesSource.asObservable();
     public fullRoutesEmitted$ = this.emitFullRoutesSource.asObservable();
 
-    constructor( private resolver: ComponentFactoryResolver) {
-        this.factories = Array.from(this.resolver['_factories'].values());
-    }
-
-    // Service message commands
-    emitChange(change: any) {
-        this.emitLoginSource.next(change);
-    }
-
-    emitChildRoutes(event: Object) {
-        const emitEvent = this.fullRoutesEmitted$.subscribe((menus: VmMenu[]) => {
-            const parentProto: ComponentFactory<any> = Object.getPrototypeOf(event);
-            const parentfactory:
-                ComponentFactory<any> = this._getComponentType(parentProto.constructor.name);
-            // ng build --prod會化簡component名字為代號以壓縮空間，但不會改selector名字。
-            // 所以別用component名稱比對，會失敗！
-            const parentMenu: VmMenu = menus.filter(x => x.selector != null)
-                .find(x => x.selector === parentfactory.selector);
-            if (parentMenu && parentMenu.children != null) {
-                this.emitChildRoutesSource.next([parentMenu.path, parentMenu.children]);
-            }
-        });
-        // 查詢fullRoutes資料後，記得取消訂閱，避免後面不斷重新訂閱浪費資源
-        emitEvent.unsubscribe();
-    }
-
-    emitFullRoutes(fullRoutes: VmMenu[]) {
-        this.emitFullRoutesSource.next(fullRoutes);
-    }
-
     public static getComponentType(resolver: ComponentFactoryResolver,
         route: VmMenu): any {
         // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
         // 根據 componentType 名字取出對應的 componentType
-        let temp = Array.from(resolver['_factories'].values())
+        const temp = Array.from(resolver['_factories'].values())
             .find((x: any) => x.selector === route.selector) as ComponentFactoryBoundToModule<any>;
-    
-        if(temp){
+
+        if (temp) {
             return temp.componentType;
-        }else{
+        } else {
             return null;
         }
     }
@@ -98,6 +68,36 @@ export class SharedService {
                 }
             });
         }
+    }
+
+    constructor( private resolver: ComponentFactoryResolver) {
+        this.factories = Array.from(this.resolver['_factories'].values());
+    }
+
+    // Service message commands
+    emitChange(change: any) {
+        this.emitLoginSource.next(change);
+    }
+
+    emitChildRoutes(event: Object) {
+        const emitEvent = this.fullRoutesEmitted$.subscribe((menus: VmMenu[]) => {
+            const parentProto: ComponentFactory<any> = Object.getPrototypeOf(event);
+            const parentfactory:
+                ComponentFactory<any> = this._getComponentType(parentProto.constructor.name);
+            // ng build --prod會化簡component名字為代號以壓縮空間，但不會改selector名字。
+            // 所以別用component名稱比對，會失敗！
+            const parentMenu: VmMenu = menus.filter(x => x.selector != null)
+                .find(x => x.selector === parentfactory.selector);
+            if (parentMenu && parentMenu.children != null) {
+                this.emitChildRoutesSource.next([parentMenu.path, parentMenu.children]);
+            }
+        });
+        // 查詢fullRoutes資料後，記得取消訂閱，避免後面不斷重新訂閱浪費資源
+        emitEvent.unsubscribe();
+    }
+
+    emitFullRoutes(fullRoutes: VmMenu[]) {
+        this.emitFullRoutesSource.next(fullRoutes);
     }
 
     /**
@@ -153,8 +153,8 @@ export class CheckService {
     }
     /**
      * check subject has had data, or get the data from resource
-     * @param subject 
-     * @param resource 
+     * @param subject
+     * @param resource
      */
     public static check<T>(subject: Subject<T[]>, resource: Observable<T[]>) {
         subject.pipe(

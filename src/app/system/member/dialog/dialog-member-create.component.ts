@@ -6,7 +6,7 @@ import { Member } from '../../../../interface/system_auth/member';
 import { MemberService } from '../../../../api/system_auth/member.service';
 
 @Component({
-    //moduleId: module.id,
+    // moduleId: module.id,
     selector: 'dialog-member-create',
     templateUrl: 'dialog-member-create.html',
     styleUrls: ['../member.component.css'],
@@ -14,6 +14,8 @@ import { MemberService } from '../../../../api/system_auth/member.service';
 })
 
 export class DialogMemberCreateComponent {
+
+    matcher = new MyErrorStateMatcher();
 
     memberForm: FormGroup = new FormGroup({
         domain: new FormControl(),
@@ -25,8 +27,6 @@ export class DialogMemberCreateComponent {
         email: new FormControl('', [Validators.email]),
         isActive: new FormControl(true)
     });
-
-    matcher = new MyErrorStateMatcher();
 
     constructor(
         public dialogRef: MatDialogRef<DialogMemberCreateComponent>,
@@ -46,7 +46,7 @@ export class DialogMemberCreateComponent {
 
     createMember(data: Member) {
         this.memberService.postMember(data).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });

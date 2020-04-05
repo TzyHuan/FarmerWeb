@@ -15,7 +15,7 @@ import * as GEOdata from '../../geojson/custom.geo.json';
 import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
 import { v34 } from '../../api/ApiKmv/v34';
-//import { V34Service } from '../ApiKmv/v34.service';
+// import { V34Service } from '../ApiKmv/v34.service';
 import { WindowService } from './windows/window.service';
 import { MapService } from './map.service';
 import { startWith } from '../../../node_modules/rxjs/operators';
@@ -34,20 +34,20 @@ import { startWith } from '../../../node_modules/rxjs/operators';
     providers: [WindowService, MapService]
 })
 
-export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
-    //mat-slider
-    maxZoom: number = 18;
-    minZoom: number = 3;
-    step: number = 0.25;
-    thumbLabel: boolean = true;
-    initZoom: number = 5;
-    Zoom: number = 5;
-    vertical: boolean = true;
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
+    // mat-slider
+    maxZoom = 18;
+    minZoom = 3;
+    step = 0.25;
+    thumbLabel = true;
+    initZoom = 5;
+    Zoom = 5;
+    vertical = true;
 
-    //mat-sidenav
+    // mat-sidenav
     @ViewChild('drawer') drawer: any;
     drawerPage: number;
-    opened: boolean = false;
+    opened = false;
     subSideChange: Subscription;
     subWindowClose: Subscription;
 
@@ -61,9 +61,9 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         { name: 'dragWindow1', value: 2, opened: false, icon: 'work' },
         { name: 'dragWindow2', value: 3, opened: false, icon: 'domain' },
         { name: 'dragWindow3', value: 4, opened: false, icon: 'assignment' }
-    ]
+    ];
 
-    //leaflet
+    // leaflet
     map: any;
     worldGeoJson: any;
     infoControl: any;
@@ -71,17 +71,17 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(public dialog: MatDialog, public windowService: WindowService, public mapService: MapService) {
 
-        //隱藏footer，調整map顯示於全屏
-        var element = document.getElementsByClassName('push');
-        (element[0] as HTMLElement).style.display = 'none';
-        var element = document.getElementsByClassName('wrapper');
-        (element[0] as HTMLElement).style.display = 'contents';
-        var element = document.getElementsByClassName('content');
-        (element[0] as HTMLElement).style.display = 'contents';
+        // 隱藏footer，調整map顯示於全屏
+        const pushElement = document.getElementsByClassName('push');
+        (pushElement[0] as HTMLElement).style.display = 'none';
+        const wrapperElement = document.getElementsByClassName('wrapper');
+        (wrapperElement[0] as HTMLElement).style.display = 'contents';
+        const contentElement = document.getElementsByClassName('content');
+        (contentElement[0] as HTMLElement).style.display = 'contents';
 
-        //事件：視窗大小變換時，leaflet的size一起變動
+        // 事件：視窗大小變換時，leaflet的size一起變動
         window.onresize = (event: any) => {
-            //變動時sidenav為關閉狀態，以免css被影響
+            // 變動時sidenav為關閉狀態，以免css被影響
             this.opened = false;
             this.resizeToScreen(document.getElementById('MapDiv'), 56);
             this.resizeToScreen(document.getElementById('MapDetail'), 56);
@@ -90,47 +90,47 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        //leaflet size 初始化
+        // leaflet size 初始化
         this.resizeToScreen(document.getElementById('MapDiv'), 56);
         this.resizeToScreen(document.getElementById('MapDetail'), 56);
 
-        //訂閱sidenav開啟/關閉事件
+        // 訂閱sidenav開啟/關閉事件
         this.subSideChange = this.windowService.sideChangeEmitted$.subscribe((emittedId: number) => {
             this.onToggle(emittedId);
         });
 
-        //訂閱window開啟/關閉事件
+        // 訂閱window開啟/關閉事件
         this.subWindowClose = this.windowService.windowCloseEmitted$.subscribe((emittedIndex: number) => {
             this.windowList[emittedIndex].opened = !this.windowList[emittedIndex].opened;
 
-            //刷新button active class
+            // 刷新button active class
             this.dockButtomActive();
         });
 
     }
 
     ngAfterViewInit() {
-        //建立地圖
+        // 建立地圖
         this.createMap();
 
-        //初始化dock button 開啟/關閉狀態的class以調整css
-        //必須在ngAfterViewInit，等*ngFor完成buttom
+        // 初始化dock button 開啟/關閉狀態的class以調整css
+        // 必須在ngAfterViewInit，等*ngFor完成buttom
         this.dockButtomActive();
     }
 
     ngOnDestroy() {
-        //回復footer隱藏特例
-        var element = document.getElementsByClassName('push');
-        (element[0] as HTMLElement).style.display = '';
-        var element = document.getElementsByClassName('wrapper');
-        (element[0] as HTMLElement).style.display = '';
-        var element = document.getElementsByClassName('content');
-        (element[0] as HTMLElement).style.display = '';
+        // 回復footer隱藏特例
+        const pushElement = document.getElementsByClassName('push');
+        (pushElement[0] as HTMLElement).style.display = '';
+        const wrapperElement = document.getElementsByClassName('wrapper');
+        (wrapperElement[0] as HTMLElement).style.display = '';
+        const contentElement = document.getElementsByClassName('content');
+        (contentElement[0] as HTMLElement).style.display = '';
 
-        //取消onresize map
+        // 取消onresize map
         window.onresize = null;
 
-        //取消訂閱避免memory leak
+        // 取消訂閱避免memory leak
         this.subSideChange.unsubscribe();
         this.subWindowClose.unsubscribe();
     }
@@ -143,38 +143,39 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         // 有bug需手動抓，Webpack在leaflet Icon圖案_getIconUrl抓預設圖案url時字串有問題
         // https://github.com/Leaflet/Leaflet/issues/4968
 
-        //#region Icon設定
+        // #region Icon設定
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconUrl: icon,
             shadowUrl: iconShadow,
         });
-        var customIcon = L.icon({
+        const customIcon = L.icon({
             iconUrl: blueIcon,
             iconAnchor: [24, 48]
         });
-        var vendorIcon = L.icon({
+        const vendorIcon = L.icon({
             iconUrl: pinkIcon,
             iconAnchor: [24, 48]
         });
-        //#endregion
+        // #endregion
 
-        //#region 設定底圖與圖層來源
-        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var positronUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-        var antiqueUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-antique/{z}/{x}/{y}.png';
-        var ecoUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-eco/{z}/{x}/{y}.png';
+        // #region 設定底圖與圖層來源
+        const osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const positronUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+        const antiqueUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-antique/{z}/{x}/{y}.png';
+        const ecoUrl = 'https://cartocdn_{s}.global.ssl.fastly.net/base-eco/{z}/{x}/{y}.png';
 
-        var option = {
+        const option = {
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-        }
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> \
+                            contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        };
 
-        var osm = new L.TileLayer(osmUrl, option);
-        var positron = new L.TileLayer(positronUrl, option);
-        var antique = new L.TileLayer(antiqueUrl, option);
-        var eco = new L.TileLayer(ecoUrl, option);
+        const osm = new L.TileLayer(osmUrl, option);
+        const positron = new L.TileLayer(positronUrl, option);
+        const antique = new L.TileLayer(antiqueUrl, option);
+        const eco = new L.TileLayer(ecoUrl, option);
 
         // 匯入GeoJSON世界地圖檔
         this.worldGeoJson = new L.geoJson(GEOdata, {
@@ -189,13 +190,13 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
                 };
             },
             onEachFeature: (feature, layer) => {
-                this.onEachFeature(feature, layer)
+                this.onEachFeature(feature, layer);
             }
         });
-        //#endregion
+        // #endregion
 
-        //#region Markers、多邊形標籤
-        var myLand = L.polygon([
+        // #region Markers、多邊形標籤
+        const myLand = L.polygon([
             [25.272156, 121.492556],
             [25.272322, 121.492739],
             [25.271947, 121.493200],
@@ -207,12 +208,12 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
                 fillColor: '#f03',
                 fillOpacity: 0.5   // 透明度
             }
-        )//.addTo(this.map)
-            .bindPopup("三芝的地就沒碰到路呀...<br>荒涼~")
-        //.openPopup();
+        )// .addTo(this.map)
+            .bindPopup('三芝的地就沒碰到路呀...<br>荒涼~');
+        // .openPopup();
 
-        //自訂標籤
-        var clusterMarkers = L.markerClusterGroup({
+        // 自訂標籤
+        const clusterMarkers = L.markerClusterGroup({
             spiderLegPolylineOptions: {
                 weight: 5, color: '#222', opacity: 0.5
             },
@@ -232,27 +233,26 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         // ClusterMarkers.addLayer(MyMarker4);
         // ClusterMarkers.addLayer(MyMarker5);
 
-        //初始化客戶/供應商於地圖上
+        // 初始化客戶/供應商於地圖上
 
 
-        //監聽「客戶/供應商」drawer Filter事件，連動地圖Marker項目
+        // 監聽「客戶/供應商」drawer Filter事件，連動地圖Marker項目
         this.mapService.companyFilterEmitted$.subscribe((result: v34[]) => {
             clusterMarkers.clearLayers();
-            result.filter(x => x.v3435 != null && x.v3436 != null).forEach((v, i, a) => {
+            result.filter(x => x.v3435 !== null && x.v3436 !== null).forEach((v, i, a) => {
                 let CompanyIcon;
-                if (v.v3404 == 1) {
-                    //custom
+                if (v.v3404 === 1) {
+                    // custom
                     CompanyIcon = customIcon;
-                }
-                else if (v.v3404 == 2) {
-                    //vendor
+                } else if (v.v3404 === 2) {
+                    // vendor
                     CompanyIcon = vendorIcon;
                 }
 
-                let Marker = L.marker(
+                const Marker = L.marker(
                     [v.v3435, v.v3436],
                     {
-                        zIndexOffset:2000, //let marker on the top level
+                        zIndexOffset: 2000, // let marker on the top level
                         icon: CompanyIcon,
                         draggable: 'true'
                     }
@@ -279,28 +279,28 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
                 clusterMarkers.addLayer(Marker);
             });
         });
-        //監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
+        // 監聽「客戶/供應商」drawer項目被點擊時，地圖飛躍到該點
         this.mapService.drawerDetailClickEmitted$.subscribe((result: number[]) => {
             this.map.panTo(result);
         });
 
-        //#endregion
+        // #endregion
 
-        //#region 建立map於HTML div後，設定map相關屬性及監聽!
-        //圖層設定
-        var baseMaps = {
-            "OpenStreetMap": osm,
-            "Positron": positron,
-            "Antique": antique,
-            "Eco": eco
+        // #region 建立map於HTML div後，設定map相關屬性及監聽!
+        // 圖層設定
+        const baseMaps = {
+            'OpenStreetMap': osm,
+            'Positron': positron,
+            'Antique': antique,
+            'Eco': eco
         };
-        var overlayMaps = {
-            "Countries": this.worldGeoJson,
-            "MyLand": myLand,
-            "Cluster": clusterMarkers
+        const overlayMaps = {
+            'Countries': this.worldGeoJson,
+            'MyLand': myLand,
+            'Cluster': clusterMarkers
         };
 
-        //設定經緯度座標等初始值，匯入html div中
+        // 設定經緯度座標等初始值，匯入html div中
         this.map = L.map('MapDiv', {
             zoomSnap: this.step,
             worldCopyJump: false,
@@ -311,33 +311,33 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             ],
             maxBoundsViscosity: 1.0
         });
-        //取消雙擊放大地圖
+        // 取消雙擊放大地圖
         this.map.doubleClickZoom.disable();
 
-        //設定初始中心為Taiwan
+        // 設定初始中心為Taiwan
         this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
 
-        //加入圖層控制項
+        // 加入圖層控制項
         L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
-        //加入Esri地圖搜尋功能(google的要收錢)
+        // 加入Esri地圖搜尋功能(google的要收錢)
         const provider = new EsriProvider();
         const searchControl = new GeoSearchControl({
             provider: provider,
         });
         this.map.addControl(searchControl);
 
-        //監聽map是否正在調整Zoom  
+        // 監聽map是否正在調整Zoom
         this.map.on({
             zoom: () => {
                 this.Zoom = this.map.getZoom();
-                //console.log(this.map);
-                //this.map.setMaxBounds(this.map.getBounds());
+                // console.log(this.map);
+                // this.map.setMaxBounds(this.map.getBounds());
 
             },
             dblclick: (e) => {
-                //滑鼠座標點擊位置
-                let data: v34 = new v34();
+                // 滑鼠座標點擊位置
+                const data: v34 = new v34();
                 data.v3435 = e.latlng.lat;
                 data.v3436 = e.latlng.lng;
 
@@ -346,18 +346,18 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             // mousemove: (e) => {
             //     console.log(e.latlng);
             // }
-        })
-        //#endregion
+        });
+        // #endregion
 
-        //#region 其他自訂Legend Control append on map
+        // #region 其他自訂Legend Control append on map
         this.infoControl = L.control({ position: 'bottomright' });
         this.slideControl = L.control({ position: 'topleft' });
 
         this.infoControl.onAdd = function (map) {
-            //這裡this為map
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"           
+            // 這裡this為map
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
             L.DomEvent.disableClickPropagation(this._div);
-            var draggable = new L.Draggable(this._div);
+            const draggable = new L.Draggable(this._div);
             draggable.enable();
             this.update();
             return this._div;
@@ -371,32 +371,32 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this.slideControl.onAdd = function (map) {
-            //這裡this為map
-            this._div = L.DomUtil.get('slider'); // get a div element         
+            // 這裡this為map
+            this._div = L.DomUtil.get('slider'); // get a div element
             L.DomEvent.disableClickPropagation(this._div);
 
-            //var draggable = new L.Draggable(this._div);
-            //draggable.enable();  
+            // var draggable = new L.Draggable(this._div);
+            // draggable.enable();
             // draggable.on('down', function (e) {
             // });
             // draggable.on('drag', function (e) {
             // });
             return this._div;
-        }
+        };
 
         this.infoControl.addTo(this.map);
         this.slideControl.addTo(this.map);
-        //#endregion
+        // #endregion
 
-        //#region 與Map無關之視窗div屬性，click不與map連動
+        // #region 與Map無關之視窗div屬性，click不與map連動
         this.windowList.forEach((value, index, array) => {
-            let dragWindow = L.DomUtil.get(value.name);
+            const dragWindow = L.DomUtil.get(value.name);
             L.DomEvent.disableClickPropagation(dragWindow);
-        })
-        //#endregion
+        });
+        // #endregion
     }
 
-    //#region Event function about Leaflet geojson
+    // #region Event function about Leaflet geojson
     onEachFeature(feature, layer) {
         layer.on({
             mouseover: (e) => this.highlightFeature(e),
@@ -419,7 +419,7 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     }
 
     highlightFeature(e) {
-        var layer = e.target;
+        const layer = e.target;
         layer.setStyle({
             weight: 4,
             color: '#666',
@@ -433,18 +433,18 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
             layer.bringToFront();
         }
     }
-    //#endregion    
+    // #endregion
 
-    //#region Dialogs
+    // #region Dialogs
     openCreateDialog(data: v34): void {
-        var isModified: boolean = false;
+        const isModified = false;
         const dialogRef = this.dialog.open(DialogSupplyChainCreateComponent, {
             width: '80%',
             data: [data, isModified]
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            //this.loadData();
+            // this.loadData();
         });
     }
     openDeleteDialog(item: v34): void {
@@ -454,35 +454,32 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            //刷新側欄
-            //this.getSideDetail();
+            // 刷新側欄
+            // this.getSideDetail();
         });
     }
-    //#endregion
+    // #endregion
 
     resizeToScreen(element, diff) {
-        var wHeight = window.innerHeight;
-        var objHeight = wHeight - diff;
-        element.style.height = objHeight + "px";
+        const wHeight = window.innerHeight;
+        const objHeight = wHeight - diff;
+        element.style.height = objHeight + 'px';
     }
 
     onToggle(id: number) {
 
-        if (this.drawer.opened == false) {
-            //若drawer為關閉狀態
-            this.drawer.opened = true;  //打開side
-            this.drawerPage = id;       //顯示指定id page
-        }
-        else if (this.drawer.opened == true && this.drawerPage == id) {
-            //若drawer為開啟狀態且又再按同樣的button
-            this.drawer.opened = false; //關閉side
-        }
-        else if (this.drawer.opened == true && this.drawerPage != id) {
-            //開啟狀態點不同button
-            this.drawerPage = id;       //直接切換到指定id page
-        }
-        else {
-            //其他狀況就關了吧～
+        if (this.drawer.opened === false) {
+            // 若drawer為關閉狀態
+            this.drawer.opened = true;  // 打開side
+            this.drawerPage = id;       // 顯示指定id page
+        } else if (this.drawer.opened === true && this.drawerPage === id) {
+            // 若drawer為開啟狀態且又再按同樣的button
+            this.drawer.opened = false; // 關閉side
+        } else if (this.drawer.opened === true && this.drawerPage !== id) {
+            // 開啟狀態點不同button
+            this.drawerPage = id;       // 直接切換到指定id page
+        } else {
+            // 其他狀況就關了吧～
             this.drawer.opened = false;
         }
 
@@ -495,15 +492,15 @@ export class MapComponet implements OnInit, AfterViewInit, OnDestroy {
     dockButtomActive() {
         this.windowList.forEach((v, i, a) => {
 
-            let dockButtonClasses = document.getElementById("dockBtn" + i).classList;
+            const dockButtonClasses = document.getElementById('dockBtn' + i).classList;
 
             if (v.opened) {
-                dockButtonClasses.add("btn-active");
+                dockButtonClasses.add('btn-active');
             } else {
-                dockButtonClasses.remove("btn-active");
+                dockButtonClasses.remove('btn-active');
             }
 
-        })
+        });
     }
 }
 

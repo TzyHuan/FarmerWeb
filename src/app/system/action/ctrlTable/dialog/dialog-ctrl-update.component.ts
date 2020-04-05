@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Ctrl } from '../../../../../interface/system_auth/ctrl';
-import { CtrlService } from '../../../../../api/system_auth/ctrl.service'
+import { CtrlService } from '../../../../../api/system_auth/ctrl.service';
 
 @Component({
   selector: 'dialog-ctrl-update',
@@ -9,7 +9,7 @@ import { CtrlService } from '../../../../../api/system_auth/ctrl.service'
   providers: [CtrlService],
 })
 export class DialogCtrlUpdateComponent {
-  
+
   ctrlDetail: Ctrl;
 
   constructor(
@@ -25,14 +25,14 @@ export class DialogCtrlUpdateComponent {
   }
 
   onYesClick() {
-    //console.log(this.CtrlDetial.CtrlId);
+    // console.log(this.CtrlDetial.CtrlId);
     this.putCtrl(this.ctrlDetail.ctrlId, this.ctrlDetail);
     this.dialogRef.close();
   }
 
   putCtrl(id: number, updatedCtrl: Ctrl) {
     this.ctrlService.putCtrl(id, updatedCtrl).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

@@ -3,10 +3,10 @@ import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Ctrl } from '../../../../../interface/system_auth/ctrl';
 import { CtrlService } from '../../../../../api/system_auth/ctrl.service';
-import { environment } from '../../../../../environments/environment'
+import { environment } from '../../../../../environments/environment';
 
 @Component({
-    //moduleId: module.id,
+    // moduleId: module.id,
     selector: 'dialog-ctrl-create',
     templateUrl: 'dialog-ctrl-create.html',
     styleUrls: ['../../action.component.css'],
@@ -34,14 +34,14 @@ export class DialogCtrlCreateComponent {
     }
 
     onYesClick(InsertData: Ctrl): void {
-        //console.log(InsertData)
+        // console.log(InsertData)
         this.createCtrl(InsertData);
         this.dialogRef.close(true);
     }
 
     createCtrl(data: Ctrl) {
         this.ctrlService.postCtrl(data).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });

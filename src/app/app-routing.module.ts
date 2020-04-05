@@ -1,54 +1,49 @@
 import { NgModule, ComponentFactoryResolver, Injectable } from '@angular/core';
 import { Routes, RouterModule, Router, Route } from '@angular/router';
 
-//----Component----//
+// ----Component----//
 import { ClimateComponent } from './climate/climate.component';
 import { HomeComponent } from './home/home.component';
-//登入&登出
+// 登入&登出
 import { UserComponents } from './user/user.module';
-//系統管理
+// 系統管理
 import { SystemComponents } from './system/system.module';
-//地圖
+// 地圖
 import { MapComponents } from './map/map.module';
-//統計
+// 統計
 import { StatisticsComponent } from './statistics/statistics.component';
-//直播
+// 直播
 import { LiveComponent } from './live/live.component';
 
-
-//----Service----//
-import { SystemService } from '../api/system_auth/system.service';
-
-//----ViewModel----//
+// ----ViewModel----//
 import { VmMenu } from '../interface/system_auth/vm_menu';
 import { SharedService } from './shared-service';
-import { ComponentFactoryBoundToModule } from '@angular/core/src/linker/component_factory_resolver';
 
-//routes會由上而下依照順序比對url路徑
-//若把path:'**'放第一位，就無法去其他Component
-//所以加入新的route要用unshift堆疊上去
-//初始化時先保留路徑''、'**'，讓空白的或亂打的url能進入統一進入HomeComponent
-//因為reset routes是事後API讀進去，這樣一開始沒抓到component會顯示空白
-//todo: '**' should guard to the 404 not found page
+// routes會由上而下依照順序比對url路徑
+// 若把path:'**'放第一位，就無法去其他Component
+// 所以加入新的route要用unshift堆疊上去
+// 初始化時先保留路徑''、'**'，讓空白的或亂打的url能進入統一進入HomeComponent
+// 因為reset routes是事後API讀進去，這樣一開始沒抓到component會顯示空白
+// todo: '**' should guard to the 404 not found page
 
 // 這邊宣告所有要用的Components
 export const AppRoutingComponents = [
 
-  //Climate
+  // Climate
   ClimateComponent,
 
-  //Home
+  // Home
   HomeComponent,
 
-  //User登入&登出
+  // User登入&登出
   UserComponents,
 
-  //統計
+  // 統計
   StatisticsComponent,
 
-  //直播
+  // 直播
   LiveComponent,
-]
+];
 
 /**
  * lazy loading的module要先放在這讓Angular能先編譯成.js file，後續dynamic路徑再透過API修改才可以
@@ -84,7 +79,7 @@ const routes: Routes = [
 // ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)], //routes
+  imports: [RouterModule.forRoot(routes)], // routes
   exports: [RouterModule],
 })
 

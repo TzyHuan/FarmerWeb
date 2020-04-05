@@ -22,7 +22,7 @@ import { DialogIMemberRoleComponent } from './dialog/dialog-i-member-role.compon
 })
 export class MemberComponent implements OnInit {
     /** 傳至dialog */
-    //IMemberRole
+    // IMemberRole
     iMemberRoleList: IMemberRole[];
     treeRole: RoleGroupNode[];
 
@@ -50,66 +50,66 @@ export class MemberComponent implements OnInit {
     }
 
     loadData() {
-        //Call api reload data
-        this.memberService.getMember().subscribe((data: Member[]) => {
+        // Call api reload data
+        this.memberService.getMember().subscribe((members: Member[]) => {
 
-            this.dataSource = new MatTableDataSource<Member>(data);
+            this.dataSource = new MatTableDataSource<Member>(members);
 
             if (this.dataSource) {
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
-                // //#region 開始監聽來至各FormControl地filter有無輸入關鍵字
-                // //Listen MemberIdFilter
+                // // #region 開始監聽來至各FormControl地filter有無輸入關鍵字
+                // // Listen MemberIdFilter
                 // this.MemberIdFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.MemberId = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //Listen pathFilter
+                // // Listen pathFilter
                 // this.pathFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.path = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //Listen MemberTextFilter
+                // // Listen MemberTextFilter
                 // this.MemberTextFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.MemberText = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //Listen sortNoFilter
+                // // Listen sortNoFilter
                 // this.sortNoFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.sortNo = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //Listen componentFilter
+                // // Listen componentFilter
                 // this.componentFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.component = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //Listen rootMemberIdFilter
+                // // Listen rootMemberIdFilter
                 // this.rootMemberIdFilter.valueChanges.subscribe(value => {
                 //   this.filterValues.rootMemberId = value;
                 //   this.dataSource.filter = JSON.stringify(this.filterValues);
                 //   this.dataSource.paginator.firstPage();
                 // });
-                // //#endregion
+                // // #endregion
             }
         });
 
-        //進頁面先查詢再傳至dialog
+        // 進頁面先查詢再傳至dialog
         this.loadIMemberRole();
     }
 
     customFilter(Data: Member, Filter: string): boolean {
-        //取Filter條件
-        let searchTerms = JSON.parse(Filter);
+        // 取Filter條件
+        const searchTerms = JSON.parse(Filter);
 
-        //先預判是否有沒有值的欄位，無值不篩選進來
+        // 先預判是否有沒有值的欄位，無值不篩選進來
         // let JudgedMemberId: boolean = isNullOrUndefined(Data.MemberId) ?
         //   true : Data.MemberId.toString().toLowerCase().indexOf(searchTerms.MemberId.toLowerCase()) != -1
 
@@ -129,8 +129,8 @@ export class MemberComponent implements OnInit {
         //   true : (isNullOrUndefined(Data.rootMemberId) ?
         //     false : Data.rootMemberId.toString().toLowerCase().indexOf(searchTerms.rootMemberId.toLowerCase()) != -1);
 
-        //交集為true者，才是要顯示的Dat
-        return true//JudgedMemberId && JudgedPath && JudgedMemberText && JudgedSortNo && JudgedComponent && JudgedRootMemberId
+        // 交集為true者，才是要顯示的Dat
+        return true; // JudgedMemberId && JudgedPath && JudgedMemberText && JudgedSortNo && JudgedComponent && JudgedRootMemberId
     }
 
     openDeleteDialog(memberDetial: Member): void {
@@ -140,7 +140,7 @@ export class MemberComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -151,18 +151,18 @@ export class MemberComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
     openCreateDialog(): void {
         const dialogRef = this.dialog.open(DialogMemberCreateComponent, {
             width: '400px',
-            //data: this.MemberList,
+            // data: this.MemberList,
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -173,7 +173,7 @@ export class MemberComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.loadIMemberRole();
+            if (saved) { this.loadIMemberRole(); }
         });
     }
 

@@ -29,9 +29,9 @@ export class SystemRoutingModule {
             takeUntil(this.renderRoutingUnsubscribe),
         ).subscribe(([parentPath, childList]: [string, VmMenu[]]) => {
             CheckService.checkLazyRouter(
-                parentPath, childList, this.resolver, this.router, 
+                parentPath, childList, this.resolver, this.router,
                 SystemRoutingModule, this.renderRoutingUnsubscribe
-            )
+            );
         }, (error) => {
             console.error(error);
         });

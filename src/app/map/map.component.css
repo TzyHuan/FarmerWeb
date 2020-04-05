@@ -1,128 +1,139 @@
-.MapContent{
-    width:100%;
+.MapContent {
+    padding-top: 56px;
+    width: 100%;
 }
 
-#MapDiv{
-    width: 100%;   
+#MapDiv {
+    width: 100%;
     float: left;
 }
 
-.drawer-side{
-    width: 30%;   
+.drawer-side {
+    width: 30%;
 }
 
-.dragDiv {        
-    position: absolute;    
+.dragDiv {
+    position: absolute;
     z-index: 1000;
-    border-radius: 5px;  
-    background-color: rgba(138, 43, 226,0.9);
+    border-radius: 5px;
+    background-color: rgba(138, 43, 226, 0.9);
 }
-.dragDiv p {    
+
+.dragDiv p {
     padding: 5px;
-    margin: 0px;  
+    margin: 0px;
 }
-.dragDiv .selector{
+
+.dragDiv .selector {
     cursor: move;
-    color: #fff;    
+    color: #fff;
 }
-.dragDiv .selector .close{
+
+.dragDiv .selector .close {
     float: right;
     font-size: 17px;
     font-weight: 700;
     line-height: 1;
-    color:white;
-    text-shadow: 0 1px 0 black;    
+    color: white;
+    text-shadow: 0 1px 0 black;
     opacity: .2;
 }
-.dragDiv .selector button.close{
+
+.dragDiv .selector button.close {
     -webkit-appearance: none;
-    padding: 0;    
+    padding: 0;
     background: 0 0;
     border: 0;
 }
-.dragDiv .selector button.close:hover{
+
+.dragDiv .selector button.close:hover {
     opacity: 1;
 }
 
-.dragDiv .dragDivContent {    
-    cursor: text ;    
-    min-width:300px;  
-    margin: 0px auto; /* 置中*/
+.dragDiv .dragDivContent {
+    cursor: text;
+    min-width: 300px;
+    margin: 0px auto;
+    /* 置中*/
 }
 
-.actionList{
-    float: left;    
-    width:170px;
-    top: 20px;    
+.actionList {
+    float: left;
+    width: 170px;
+    top: 20px;
     left: 20px;
     z-index: 1002;
 }
-.actionList .actionItems button{
+
+.actionList .actionItems button {
     margin-top: 5px;
 }
-.application{
+
+.application {
     float: left;
-    top: 10px;    
-    left: 50px; 
+    top: 10px;
+    left: 50px;
     z-index: 1002;
 }
 
-.hideDrawer button{    
+.hideDrawer button {
     position: absolute;
     float: right;
-    right: 0px;    
-    top: 10%;   
+    right: 0px;
+    top: 10%;
     padding: 5px 6px;
     line-height: 50%;
     border: none;
     border-radius: 4px;
     color: white;
-    background-color:rgba(138, 43, 226, 0.8);
+    background-color: rgba(138, 43, 226, 0.8);
     z-index: 2000;
 }
-.hideDrawer button:hover{ 
+
+.hideDrawer button:hover {
     cursor: pointer;
     color: blueviolet;
-    background-color:white;
+    background-color: white;
 }
 
-.dock{    
+.dock {
     position: absolute;
-    float: left;
-    left: 50%;  
-    bottom: 0%;    
-    max-width: 80%;
+    text-align: center;
+    left: 50%;
+    bottom: 0%;
+    width: 100%;
     padding: 10px 15px;
     line-height: 50%;
     border: none;
-    border-radius: 15px;
     color: white;
-    background-color:rgba(220, 220, 220, 0.6);   
+    background-color: rgba(220, 220, 220, 0.6);
     z-index: 1001;
     transform: translateX(-50%);
 }
-.dock button{ 
+
+.dock button {
     margin: 0 .75em 0 .75em;
-    border-radius: 15px; 
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
-    -webkit-box-reflect: below 3px linear-gradient(transparent, rgba(0,0,0,0.3));
-    background-color: transparent ;
+    border-radius: 15px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    -webkit-box-reflect: below 3px linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+    background-color: transparent;
     transform-origin: center bottom;
     transition: all 200ms ease-out;
 }
-.dock button:hover{ 
+
+.dock button:hover {
     background-color: blueviolet;
     color: #fff;
-    transform:scale(1.25) translateY(-0.5em);    
+    transform: scale(1.25) translateY(-0.5em);
 }
-.dock button.btn-active{
+
+.dock button.btn-active {
     background-color: rgba(138, 43, 226, 0.4);
 }
-.dock button.btn-active:hover{
+
+.dock button.btn-active:hover {
     background-color: blueviolet;
 }
-
-
 
 #oval {
     width: 200px;
@@ -131,4 +142,11 @@
     -moz-border-radius: 100px / 50px;
     -webkit-border-radius: 100px / 50px;
     border-radius: 100%;
+}
+
+@media (min-width: 767px) {
+    .dock {
+        max-width: 80%;
+        border-radius: 15px;
+    }
 }

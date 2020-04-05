@@ -27,21 +27,21 @@ export class DialogActionUpdateComponent {
   }
 
   onYesClick(): void {
-    //console.log(this.ActionDetial.ActionId);
+    // console.log(this.ActionDetial.ActionId);
     this.putAction(this.actionDetail.actionId, this.actionDetail);
     this.dialogRef.close(true);
   }
 
   putAction(id: number, updatedAction: Action) {
     this.actionService.putAction(id, updatedAction).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });
   }
 
   compareObjects(o1: any, o2: any): boolean {
-    if (o1 == '') o1 = null;
-    return o1 == o2;
+    if (o1 === '') { o1 = null; }
+    return o1 === o2;
   }
 }

@@ -16,7 +16,7 @@ export class ActionCreateComponent {
     constructor() { }
 
     compareObjects(o1: any, o2: any): boolean {
-        if (o1 == '') o1 = 'GET';
-        return o1 == o2;
+        if (o1 === '') { o1 = 'GET'; }
+        return o1 === o2;
     }
 }

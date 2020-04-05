@@ -18,34 +18,34 @@ export class WindowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log("open: " + this.title);
+        console.log('open: ' + this.title);
     }
 
     ngAfterViewInit() {
-        if (this.dropTarget != undefined && this.dropTarget != null) {
-            let dropTarget = this.dropTarget.nativeElement;
+        if (this.dropTarget) {
+            const dropTarget = this.dropTarget.nativeElement;
             dropTarget.addEventListener('drop', dropped);
             dropTarget.addEventListener('dragenter', cancelDefault);
             dropTarget.addEventListener('dragover', cancelDefault);
             console.log(dropTarget);
-    
+
             function dropped(e) {
-                console.log('dropped')
-                cancelDefault(e)
-                //let id = e.dataTransfer.getData('text/plain')
-                //e.target.appendChild(document.querySelector('#' + id))
+                console.log('dropped');
+                cancelDefault(e);
+                // let id = e.dataTransfer.getData('text/plain')
+                // e.target.appendChild(document.querySelector('#' + id))
             }
-    
+
             function cancelDefault(e) {
-                e.preventDefault()
-                e.stopPropagation()
-                return false
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             }
-        }       
+        }
     }
 
     ngOnDestroy() {
-        console.log("close: " + this.title);
+        console.log('close: ' + this.title);
     }
 
     clickClose() {

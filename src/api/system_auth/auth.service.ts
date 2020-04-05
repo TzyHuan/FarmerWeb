@@ -12,13 +12,13 @@ export class AuthService {
     }
 
     userAuthentication(userName: string, password: string) {
-        let data: AuthRequest = {
+        const data: AuthRequest = {
             account: userName,
             password: password,
         };
         const headers = new HttpHeaders({
             'Content-Type': 'application/json; charset=UTF-8'
-        })
+        });
         return this.http.post(
             `${environment.authUrl}/Auth/Authenticate`,
             data,

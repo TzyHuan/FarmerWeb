@@ -7,8 +7,8 @@ import { v34 } from '../../../api/ApiKmv/v34';
 @Component({
     selector: 'dialog-supplychain-create',
     templateUrl: 'dialog-supplychain-create.component.html',
-    //styleUrls: ['../member.component.css'],
-    //providers: [MemberService]
+    // styleUrls: ['../member.component.css'],
+    // providers: [MemberService]
 })
 
 export class DialogSupplyChainCreateComponent {
@@ -17,7 +17,7 @@ export class DialogSupplyChainCreateComponent {
     public isModified: boolean;
 
 
-    //SelectedCompanyType: number = 2; //預設初始值為'供應商'
+    // SelectedCompanyType: number = 2; //預設初始值為'供應商'
     CompanyTypeList: CompanyType[] = [
         { typeName: '客戶', value: 1 },
         { typeName: '供應商', value: 2 }
@@ -31,8 +31,8 @@ export class DialogSupplyChainCreateComponent {
         this.isModified = recieve[1];
     }
 
-    closeDialog(event:any) {
-        console.log("saved: ",event);
+    closeDialog(event: any) {
+        console.log('saved: ', event);
         this.dialogRef.close();
     }
 

@@ -21,13 +21,13 @@ import { DialogActionUpdateComponent } from './dialog/dialog-action-update.compo
 
 export class ActionTableComponent implements OnInit {
 
-    //Parameters of Mat-Table    
+    // Parameters of Mat-Table
     @Input('paginator') paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     actionDataSource: MatTableDataSource<Action> | null;
     actionDisplayedColumns: string[] = ['actionId', 'name', 'method', 'controllerId', 'description', 'actions'];
 
-    //Parameters of filters
+    // Parameters of filters
     idFilter = new FormControl();
     nameFilter = new FormControl();
     methodFilter = new FormControl();
@@ -52,8 +52,8 @@ export class ActionTableComponent implements OnInit {
     }
 
     loadData() {
-        this.actionService.getActions().subscribe((data: Action[]) => {
-            this.actionDataSource = new MatTableDataSource<Action>(data);
+        this.actionService.getActions().subscribe((actions: Action[]) => {
+            this.actionDataSource = new MatTableDataSource<Action>(actions);
             if (this.actionDataSource) {
                 this.actionDataSource.sort = this.sort;
                 this.actionDataSource.paginator = this.paginator;
@@ -61,7 +61,7 @@ export class ActionTableComponent implements OnInit {
 
                 /** 監聽時給入初始值startwith('')
                  * 是為了讓FilterOptions可以在點擊時就似乎key過東西，自動會跑出下拉選單 */
-                //Listen idFilter
+                // Listen idFilter
                 this.idFilteredOptions = this.idFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -70,12 +70,12 @@ export class ActionTableComponent implements OnInit {
                         this.actionDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.actionId.toString()),
+                        actions.map(v => v.actionId.toString()),
                         value,
                     ))
-                )
+                );
 
-                //Listen nameFilter
+                // Listen nameFilter
                 this.nameFilteredOptions = this.nameFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -84,12 +84,12 @@ export class ActionTableComponent implements OnInit {
                         this.actionDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.name),
+                        actions.map(v => v.name),
                         value,
                     ))
                 );
 
-                //Listen methodFilter
+                // Listen methodFilter
                 this.methodFilteredOptions = this.methodFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -98,12 +98,12 @@ export class ActionTableComponent implements OnInit {
                         this.actionDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.method),
+                        actions.map(v => v.method),
                         value,
                     ))
                 );
 
-                //Listen controllerIdFilter
+                // Listen controllerIdFilter
                 this.controllerIdFilteredOptions = this.controllerIdFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -112,13 +112,13 @@ export class ActionTableComponent implements OnInit {
                         this.actionDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.controllerId.toString())
+                        actions.map(v => v.controllerId.toString())
                             .sort((a, b) => parseFloat(a) - parseFloat(b)),
                         value,
                     ))
                 );
 
-                //Listen descriptionFilter
+                // Listen descriptionFilter
                 this.descriptionFilteredOptions = this.descriptionFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -127,7 +127,7 @@ export class ActionTableComponent implements OnInit {
                         this.actionDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.filter(x => x.description != null && x.description.length > 0)
+                        actions.filter(x => x.description != null && x.description.length > 0)
                             .map(v => v.description),
                         value,
                     ))
@@ -138,34 +138,34 @@ export class ActionTableComponent implements OnInit {
 
     private _autoFilter(options: string[], value: string): string[] {
         const filterValue = value.toLowerCase();
-        options = [...new Set(options)];//distinct the array  
+        options = [...new Set(options)]; // distinct the array
         return options.filter(option => option.toLowerCase().includes(filterValue));
     }
 
     customFilter(data: Action, filter: string): boolean {
-        //取Filter條件
-        let searchTerms: Action = JSON.parse(filter);
+        // 取Filter條件
+        const searchTerms: Action = JSON.parse(filter);
 
-        //先預判是否有沒有值的欄位，無值不篩選進來
-        let judgedActionId: boolean = isNullOrUndefined(data.actionId) ?
-            true : data.actionId.toString().indexOf(searchTerms.actionId.toString()) != -1;
+        // 先預判是否有沒有值的欄位，無值不篩選進來
+        const judgedActionId: boolean = isNullOrUndefined(data.actionId) ?
+            true : data.actionId.toString().indexOf(searchTerms.actionId.toString()) !== -1;
 
-        let judgedName: boolean = isNullOrUndefined(data.name) ?
-            true : data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1;
+        const judgedName: boolean = isNullOrUndefined(data.name) ?
+            true : data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) !== -1;
 
-        let judgedMethod: boolean = isNullOrUndefined(data.method) ?
-            true : data.method.toString().toLowerCase().indexOf(searchTerms.method.toLowerCase()) != -1;
+        const judgedMethod: boolean = isNullOrUndefined(data.method) ?
+            true : data.method.toString().toLowerCase().indexOf(searchTerms.method.toLowerCase()) !== -1;
 
-        let judgedControllerId: boolean = isNullOrUndefined(data.controllerId) ?
-            true : data.controllerId.toString().indexOf(searchTerms.controllerId.toString()) != -1;
+        const judgedControllerId: boolean = isNullOrUndefined(data.controllerId) ?
+            true : data.controllerId.toString().indexOf(searchTerms.controllerId.toString()) !== -1;
 
 
-        //Because of data.description may contain null, searchTerms without anything should not filter out this data
-        let judgedDescription: boolean = searchTerms.description == "" ?
+        // Because of data.description may contain null, searchTerms without anything should not filter out this data
+        const judgedDescription: boolean = searchTerms.description === '' ?
             true : (isNullOrUndefined(data.description) ?
-                false : data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) != -1);
+                false : data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) !== -1);
 
-        //交集為true者，才是要顯示的Dat
+        // 交集為true者，才是要顯示的Dat
         return judgedActionId && judgedName && judgedMethod && judgedControllerId && judgedDescription;
     }
 
@@ -176,7 +176,7 @@ export class ActionTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -187,7 +187,7 @@ export class ActionTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -199,7 +199,7 @@ export class ActionTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
 
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 

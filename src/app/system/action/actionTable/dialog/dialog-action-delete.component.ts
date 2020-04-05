@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Action } from '../../../../../interface/system_auth/action';
-import { ActionService } from '../../../../../api/system_auth/action.service'
+import { ActionService } from '../../../../../api/system_auth/action.service';
 
 @Component({
   selector: 'dialog-action-delete',
@@ -28,7 +28,7 @@ export class DialogActionDeleteComponent {
 
   deleteMenu(id: number) {
     this.actionService.deleteAction(id).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatDrawer, MatTreeNestedDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { SharedService, NavMenuService } from './shared-service';
   providers: [],
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
 
   menuList: VmMenu[] = [];
   childRoutes$: Subscription;
@@ -27,8 +27,8 @@ export class AppComponent {
     private sharedService: SharedService,
     private navMenuService: NavMenuService,
   ) {
-    //只負責列出樹狀結構路徑在drawer中，路由跟導向由parent module實做
-    //因為lazy loading目前只能在child module才可以抓到entryComponents
+    // 只負責列出樹狀結構路徑在drawer中，路由跟導向由parent module實做
+    // 因為lazy loading目前只能在child module才可以抓到entryComponents
     this.childRoutes$ = this.sharedService.childRoutesEmitted$
       .subscribe(([parentPath, childMenusList]: [string, VmMenu[]]) => {
         this.menuList = this.treeMenuPath(
@@ -50,7 +50,7 @@ export class AppComponent {
   }
   /** 點選router-outlet時，若此router-outlet還有子選，
    * 其子選單的[routerLink]一併在此call api查詢完，
-   * 再利用sharedService傳給router-outlet 
+   * 再利用sharedService傳給router-outlet
   */
   onRouterOutletActivate(event: Record<string, any>) {
     this.menuList = [];
@@ -69,7 +69,7 @@ export class AppComponent {
     childMenusList.forEach(v => {
       v.path = `${parentPath}/${v.path}`;
 
-      if (!v.children || v.children.length == 0) {
+      if (!v.children || v.children.length === 0) {
         return;
       } else {
         this.treeMenuPath(v.path, v.children);

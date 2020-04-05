@@ -62,13 +62,13 @@ export class DialogIActionRoleComponent implements OnInit {
     }
 
     ngOnInit() {
-        /** 取出角色清單可用Memu清單 
+        /** 取出角色清單可用Memu清單
          *  先將database該角色資料show on the tree  */
-        this.iActionRoleList.filter(x => x.roleId == this.roleDetail.roleId).forEach(y => {
+        this.iActionRoleList.filter(x => x.roleId === this.roleDetail.roleId).forEach(y => {
             this.allowedAction.push(y);
             this.checklistSelection.select(
-                this.treeControl.dataNodes.find(x => x.id == y.actionId && x.level == 1)
-            )
+                this.treeControl.dataNodes.find(x => x.id === y.actionId && x.level === 1)
+            );
         });
     }
 
@@ -83,11 +83,10 @@ export class DialogIActionRoleComponent implements OnInit {
         const descendants = this.treeControl.getDescendants(node);
         const result = descendants.some(child => this.checklistSelection.isSelected(child));
 
-        // 只要有選到child或從DB抓來資料是已selected，就自動select parent      
+        // 只要有選到child或從DB抓來資料是已selected，就自動select parent
         if (result || this.checklistSelection.isSelected(node)) {
-            this.checklistSelection.select(node)
-        }
-        else {
+            this.checklistSelection.select(node);
+        } else {
             this.checklistSelection.deselect(node);
         }
 
@@ -100,16 +99,15 @@ export class DialogIActionRoleComponent implements OnInit {
 
         /** toggle在某些太難判斷情況，用select/deselect分開處理
          * 只要有選到child或本來就已selected，就自動select parent */
-        // this.checklistSelection.toggle(node); 
+        // this.checklistSelection.toggle(node);
 
-        const descendants = this.treeControl.getDescendants(node);//抓底下所有child
+        const descendants = this.treeControl.getDescendants(node); // 抓底下所有child
 
         if (!this.checklistSelection.isSelected(node)) {
-            this.checklistSelection.select(...descendants)//選取所有child
+            this.checklistSelection.select(...descendants); // 選取所有child
             this.checklistSelection.select(node);
-        }
-        else {
-            this.checklistSelection.deselect(...descendants); //取消所有child
+        } else {
+            this.checklistSelection.deselect(...descendants); // 取消所有child
             this.checklistSelection.deselect(node);
         }
     }
@@ -128,26 +126,26 @@ export class DialogIActionRoleComponent implements OnInit {
 
     onYesClick() {
 
-        let originActionIds: number[] = [];
-        let newActionIds: number[] = [];
+        const originActionIds: number[] = [];
+        const newActionIds: number[] = [];
 
         // 拉出來做一個只含menuId的array，抓出原來的權限
         this.allowedAction.forEach(action => {
             originActionIds.push(action.actionId);
         });
-        //level 0 are controllers list, level 1 are actions.因此篩選出勾選的level 1即可
-        this.checklistSelection.selected.filter(x => x.level == 1).forEach(action => {
+        // level 0 are controllers list, level 1 are actions.因此篩選出勾選的level 1即可
+        this.checklistSelection.selected.filter(x => x.level === 1).forEach(action => {
             newActionIds.push(action.id);
         });
 
         /** 交集*/
-        // let Intersection = OriginMenuIds.filter(v => NewMenuIds.includes(v)); 
+        // let Intersection = OriginMenuIds.filter(v => NewMenuIds.includes(v));
         // subtracting
-        let subtractingOfOrigin = originActionIds.filter(v => !newActionIds.includes(v));
-        let subtractingOfNew = newActionIds.filter(v => !originActionIds.includes(v));
+        const subtractingOfOrigin = originActionIds.filter(v => !newActionIds.includes(v));
+        const subtractingOfNew = newActionIds.filter(v => !originActionIds.includes(v));
 
         /** do nothing at 交集 Intersection */
-        // if( Intersection ){            
+        // if( Intersection ){
         //     console.log(Intersection);
         // }
 
@@ -165,12 +163,12 @@ export class DialogIActionRoleComponent implements OnInit {
     }
 
     postIactionRole(roleId: number, actionId: number) {
-        let data: IActionRole = {
+        const data: IActionRole = {
             roleId: roleId,
             actionId: actionId,
-        }
+        };
         this.iActionRoleService.postIActionRole(data).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });
@@ -178,7 +176,7 @@ export class DialogIActionRoleComponent implements OnInit {
 
     deleteactionRole(roleId: number, actionId: number) {
         this.iActionRoleService.deleteIActionRole(actionId, roleId).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });

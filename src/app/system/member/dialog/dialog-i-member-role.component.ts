@@ -61,13 +61,13 @@ export class DialogIMemberRoleComponent implements OnInit {
     }
 
     ngOnInit() {
-        /** 取出角色清單可用Memu清單 
+        /** 取出角色清單可用Memu清單
          *  先將database該角色資料show on the tree  */
-        this.iMemberRoleList.filter(x => x.account == this.memberDetial.account).forEach(y => {
+        this.iMemberRoleList.filter(x => x.account === this.memberDetial.account).forEach(y => {
             this.allowedRole.push(y);
             this.checklistSelection.select(
-                this.treeControl.dataNodes.find(x => x.id == y.roleId)
-            )
+                this.treeControl.dataNodes.find(x => x.id === y.roleId)
+            );
         });
     }
 
@@ -77,22 +77,22 @@ export class DialogIMemberRoleComponent implements OnInit {
 
     onYesClick(): void {
 
-        let originActionIds: number[] = [];
-        let newActionIds: number[] = [];
+        const originActionIds: number[] = [];
+        const newActionIds: number[] = [];
 
         // 拉出來做一個只含menuId的array，抓出原來的權限
         this.allowedRole.forEach(role => {
             originActionIds.push(role.roleId);
         });
-        //level 0 are controllers list, level 1 are actions.因此篩選出勾選的level 1即可
+        // level 0 are controllers list, level 1 are actions.因此篩選出勾選的level 1即可
         this.checklistSelection.selected.forEach(role => {
             newActionIds.push(role.id);
         });
 
         /** 交集*/
         // subtracting
-        let subtractingOfOrigin = originActionIds.filter(v => !newActionIds.includes(v));
-        let subtractingOfNew = newActionIds.filter(v => !originActionIds.includes(v));
+        const subtractingOfOrigin = originActionIds.filter(v => !newActionIds.includes(v));
+        const subtractingOfNew = newActionIds.filter(v => !originActionIds.includes(v));
 
         /** delete at subtractingOfOrigin */
         subtractingOfOrigin.forEach(roleId =>
@@ -108,12 +108,12 @@ export class DialogIMemberRoleComponent implements OnInit {
     }
 
     postIActionRole(account: string, roleId: number) {
-        let data: IMemberRole = {
+        const data: IMemberRole = {
             account: account,
             roleId: roleId
-        }
+        };
         this.iMemberRoleService.postIMemberRole(data).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });
@@ -121,7 +121,7 @@ export class DialogIMemberRoleComponent implements OnInit {
 
     deleteActionRole(account: string, roleId: number) {
         this.iMemberRoleService.deleteIMemberRole(account, roleId).subscribe((result: any) => {
-            //console.log(result);
+            // console.log(result);
         }, (error) => {
             console.log(error);
         });

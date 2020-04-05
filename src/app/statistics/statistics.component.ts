@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Highcharts from 'highcharts';
-require('highcharts/modules/series-label')(Highcharts)
+require('highcharts/modules/series-label')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
 
 @Component({

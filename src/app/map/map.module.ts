@@ -1,4 +1,4 @@
-import { MapComponet } from './map.component'
+import { MapComponent } from './map.component';
 
 import { DialogSupplyChainCreateComponent } from './dialog/dialog-supplychain-create.component';
 import { DialogSupplyChainDeleteComponent } from './dialog/dialog-supplychain-delete.component';
@@ -25,23 +25,23 @@ import { MapRoutingModule } from './map-routing.module';
 // 這邊宣告所有Material的Components
 export const MapComponents = [
 
-    //地圖-供應商
-    MapComponet,
+    // 地圖-供應商
+    MapComponent,
 
     /** Dialogs */
     DialogSupplyChainCreateComponent,
     DialogSupplyChainDeleteComponent,
-    /** Child components in dialogs */    
+    /** Child components in dialogs */
     VendorCreateComponent,
     CustomerCreateComponent,
     /** Child component in windows */
     DragActionComponent,
     DragChartComponent,
-    
+
     /** Others */
     DrawerSupplyChainComponent,
-    WindowComponent,    
-]
+    WindowComponent,
+];
 
 @NgModule({
     imports: [
@@ -55,7 +55,7 @@ export const MapComponents = [
         MapRoutingModule,
     ],
     declarations: MapComponents,
-    providers:[
+    providers: [
     ],
     entryComponents: [
         // 加在這裡root NgModule吃不到，只有此NgModule讀得到，所以兩邊都要加

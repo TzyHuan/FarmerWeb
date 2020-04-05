@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Menu } from '../../../../interface/system_auth/menu';
-import { MenuService } from '../../../../api/system_auth/menu.service'
+import { MenuService } from '../../../../api/system_auth/menu.service';
 
 @Component({
   selector: 'dialog-menu-update',
@@ -33,15 +33,16 @@ export class DialogMenuUpdateComponent {
 
   putMenu(id: number, menu: Menu) {
     this.menuService.putMenu(id, menu).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });
   }
 
   compareObjects(o1: any, o2: any): boolean {
-    if (o1 == '')
+    if (o1 === '') {
       o1 = null;
-    return o1 == o2;
+    }
+    return o1 === o2;
   }
 }

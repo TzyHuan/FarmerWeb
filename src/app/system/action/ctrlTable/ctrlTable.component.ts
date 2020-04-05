@@ -22,13 +22,13 @@ import { DialogCtrlCreateComponent } from './dialog/dialog-ctrl-create.component
 
 export class CtrlTableComponent implements OnInit {
 
-    //Parameters of Mat-Table    
+    // Parameters of Mat-Table
     @Input('paginator') paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     ctrlDataSource: MatTableDataSource<Ctrl> | null;
     ctrlDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
 
-    //Parameters of filters
+    // Parameters of filters
     idFilter = new FormControl();
     nameFilter = new FormControl();
     descriptionFilter = new FormControl();
@@ -48,14 +48,14 @@ export class CtrlTableComponent implements OnInit {
     }
 
     loadData() {
-        this.ctrlService.getCtrls().subscribe((data: Ctrl[]) => {
-            this.ctrlDataSource = new MatTableDataSource<Ctrl>(data);
+        this.ctrlService.getCtrls().subscribe((ctrls: Ctrl[]) => {
+            this.ctrlDataSource = new MatTableDataSource<Ctrl>(ctrls);
             if (this.ctrlDataSource) {
                 this.ctrlDataSource.sort = this.sort;
                 this.ctrlDataSource.paginator = this.paginator;
                 this.ctrlDataSource.filterPredicate = (data, filter) => this.customFilter(data, filter);
 
-                //Listen idFilter
+                // Listen idFilter
                 this.idFilteredOptions = this.idFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -64,12 +64,12 @@ export class CtrlTableComponent implements OnInit {
                         this.ctrlDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.ctrlId.toString()),
+                        ctrls.map(v => v.ctrlId.toString()),
                         value,
                     ))
                 );
 
-                //Listen nameFilter
+                // Listen nameFilter
                 this.nameFilteredOptions = this.nameFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -78,12 +78,12 @@ export class CtrlTableComponent implements OnInit {
                         this.ctrlDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.map(v => v.name),
+                        ctrls.map(v => v.name),
                         value,
                     ))
                 );
 
-                //Listen descriptionFilter
+                // Listen descriptionFilter
                 this.descriptionFilteredOptions = this.descriptionFilter.valueChanges.pipe(
                     startWith(''),
                     tap(value => {
@@ -92,7 +92,7 @@ export class CtrlTableComponent implements OnInit {
                         this.ctrlDataSource.paginator.firstPage();
                     }),
                     map(value => this._autoFilter(
-                        data.filter(x => x.description != null && x.description.length > 0)
+                        ctrls.filter(x => x.description != null && x.description.length > 0)
                             .map(v => v.description),
                         value,
                     ))
@@ -103,27 +103,27 @@ export class CtrlTableComponent implements OnInit {
 
     private _autoFilter(options: string[], value: string): string[] {
         const filterValue = value.toLowerCase();
-        options = [...new Set(options)];//distinct the array  
+        options = [...new Set(options)]; // distinct the array
         return options.filter(option => option.toLowerCase().includes(filterValue));
     }
 
     customFilter(data: Ctrl, filter: string): boolean {
-        //取Filter條件
-        let searchTerms: Ctrl = JSON.parse(filter);
+        // 取Filter條件
+        const searchTerms: Ctrl = JSON.parse(filter);
 
-        //先預判是否有沒有值的欄位，無值不篩選進來
-        let judgedId: boolean = isNullOrUndefined(data.ctrlId) ?
-            true : data.ctrlId.toString().indexOf(searchTerms.ctrlId.toString()) != -1;
+        // 先預判是否有沒有值的欄位，無值不篩選進來
+        const judgedId: boolean = isNullOrUndefined(data.ctrlId) ?
+            true : data.ctrlId.toString().indexOf(searchTerms.ctrlId.toString()) !== -1;
 
-        let judgedName: boolean = isNullOrUndefined(data.name) ?
-            true : data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) != -1;
+        const judgedName: boolean = isNullOrUndefined(data.name) ?
+            true : data.name.toString().toLowerCase().indexOf(searchTerms.name.toLowerCase()) !== -1;
 
-        //Because of data.description may contain null, searchTerms without anything should not filter out this data
-        let judgedDescription: boolean = searchTerms.description == "" ?
+        // Because of data.description may contain null, searchTerms without anything should not filter out this data
+        const judgedDescription: boolean = searchTerms.description === '' ?
             true : (isNullOrUndefined(data.description) ?
-                false : data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) != -1);
+                false : data.description.toString().toLowerCase().indexOf(searchTerms.description.toLowerCase()) !== -1);
 
-        //交集為true者，才是要顯示的Dat
+        // 交集為true者，才是要顯示的Dat
         return judgedId && judgedName && judgedDescription;
     }
 
@@ -134,7 +134,7 @@ export class CtrlTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -145,7 +145,7 @@ export class CtrlTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 
@@ -155,7 +155,7 @@ export class CtrlTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((saved: boolean) => {
-            if (saved) this.reloadData();
+            if (saved) { this.reloadData(); }
         });
     }
 

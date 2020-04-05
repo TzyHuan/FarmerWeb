@@ -12,14 +12,14 @@ require('highcharts/modules/exporting')(Highcharts);
 export class DragChartComponent implements OnInit {
 
     @Input('windowTitle') title: string;
-    //Highchart
+    // Highchart
     cahrt: Highcharts;
 
     constructor() {
     }
 
     ngOnInit() {
-        //塞資料入highchart //todo
+        // 塞資料入highchart //todo
         this.createHighchart();
     }
 
@@ -60,7 +60,7 @@ export class DragChartComponent implements OnInit {
     }
 
     onResizing(event: Event) {
-        //Highchart automatic resize to the div
+        // Highchart automatic resize to the div
         this.cahrt.reflow();
     }
 }

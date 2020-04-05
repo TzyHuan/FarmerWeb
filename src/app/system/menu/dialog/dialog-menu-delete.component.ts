@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Menu } from '../../../../interface/system_auth/menu';
-import { MenuService } from '../../../../api/system_auth/menu.service'
+import { MenuService } from '../../../../api/system_auth/menu.service';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class DialogMenuDeleteComponent {
 
   deleteMenu(id: number) {
     this.menuService.deleteMenu(id).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

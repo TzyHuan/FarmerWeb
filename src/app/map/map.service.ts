@@ -6,7 +6,7 @@ import { v34 } from '../../api/ApiKmv/v34';
 @Injectable()
 export class MapService {
     // Observable string sources
-    private emitCompanyFilterSource = new Subject<v34[]>();    
+    private emitCompanyFilterSource = new Subject<v34[]>();
     private emitDrawerDetailClickSource = new Subject<number[]>();
 
     // Observable string streams

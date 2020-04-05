@@ -35,7 +35,7 @@ export class DialogMemberUpdateComponent {
 
   putMenu(id: string, updatedMember: Member) {
     this.memberService.putMember(id, updatedMember).subscribe((result: any) => {
-      //console.log(result);
+      // console.log(result);
     }, (error) => {
       console.log(error);
     });

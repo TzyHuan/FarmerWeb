@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   @ViewChild('realtimeTempGauge') realtimeTempGaugeEle: ElementRef;
 
   constructor(
-    private stationInfoService: StationInfoService, 
+    private stationInfoService: StationInfoService,
     private realtimeService: RealtimeService,
     ) {
 
@@ -52,32 +52,32 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       console.error(err);
     });
 
-    // 抓Station Selector選項    
+    // 抓Station Selector選項
     this.stationInfoService.getStationInfo().subscribe((result: StationInfo[]) => {
       this.stations = result;
       if (this.stations.length > 0) {
-        //預設初始選項為第一個選項
+        // 預設初始選項為第一個選項
         this.selectedStations = result[0];
 
-        //得到station id後，馬上初始化即時資料
+        // 得到station id後，馬上初始化即時資料
         this.drawRealtimeData(this.selectedStations.stationId);
       }
     }, error => {
-      console.error(error)
+      console.error(error);
     });
   }
 
   ngOnInit() {
-    var options = {
-      //year: "numeric", month: "short", day: "numeric",
-      hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
-      //weekday: "short",
+    const options = {
+      // year: "numeric", month: "short", day: "numeric",
+      hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
+      // weekday: "short",
     };
 
-    //直接設定param類型為Observable
+    // 直接設定param類型為Observable
     this.timeNow = new Observable<string>((observer: Subscriber<string>) => {
       setInterval(() => observer.next(
-        //反應速度差不多
+        // 反應速度差不多
         new Date().toLocaleTimeString('zh-TW', options)
       ), 1000);
     });
@@ -152,7 +152,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         dataLabels: {
           formatter:
             function () {
-              var temp = this.y;
+              const temp = this.y;
               return '<span style="color:#339;font-size: 16px;">' + temp + ' °C</span><br/>';
             }
         },
@@ -227,7 +227,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         dataLabels: {
           formatter:
             function () {
-              var RH = this.y;
+              const RH = this.y;
               return '<span style="color:#339;font-size: 16px;">' + RH + ' %</span><br/>';
             }
         },
@@ -265,8 +265,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         }]
       },
       tooltip: {
-        headerFormat: '', //'<b>{series.name}</b><br/>',
-        //pointFormat: 'Illuminance: {point.y:.f} lux'
+        headerFormat: '', // '<b>{series.name}</b><br/>',
+        // pointFormat: 'Illuminance: {point.y:.f} lux'
       },
       legend: {
         enabled: false
@@ -282,8 +282,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         data:
           (function () {
             // generate an initial zero data
-            var data = [],
-              time = (new Date()).getTime()
+            const data = [],
+              time = (new Date()).getTime();
             for (let i = -199; i <= 0; i += 1) {
               data.push({
                 x: time + i * 1000,
@@ -293,7 +293,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
             return data;
           }())
       }]
-    }
+    };
     // #endregion
 
     // 將基本參數代入，初始化Highchart畫面格式
@@ -308,8 +308,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   onSelect(stationId: number) {
-    for (var i = 0; i < this.stations.length; i++) {
-      if (this.stations[i].stationId == stationId) {
+    for (let i = 0; i < this.stations.length; i++) {
+      if (this.stations[i].stationId === stationId) {
         this.selectedStations = this.stations[i];
       }
     }
@@ -318,8 +318,8 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private listenWebSocket(connection: signalR.HubConnection) {
-    connection.on("SensorDetected", (detectedData: RealtimeWeather) => {
-      if (this.selectedStations.stationId == detectedData.stationId) {
+    connection.on('SensorDetected', (detectedData: RealtimeWeather) => {
+      if (this.selectedStations.stationId === detectedData.stationId) {
         this.realtimeData = detectedData;
 
         this.realtimeTempGauge.series[0].update({
