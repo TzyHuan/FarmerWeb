@@ -1,6 +1,5 @@
 import 'reflect-metadata'; // 處理元數據，動態導入用
-import 'zone.js'; // 抓瀏覽器異步事件
-import 'hammerjs'; // Angular material needs
+import 'zone.js'; // Angular material needs
 
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

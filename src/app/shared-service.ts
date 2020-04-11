@@ -1,8 +1,6 @@
-import { Injectable, ComponentFactoryResolver, ComponentFactory, Type } from '@angular/core';
-import { ComponentFactoryBoundToModule } from '@angular/core/src/linker/component_factory_resolver';
+import { Injectable, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
 import { Routes, Router } from '@angular/router';
-import { LoadedRouterConfig } from '@angular/router/src/config';
-import { MatDrawer } from '@angular/material';
+import { MatDrawer } from '@angular/material/sidenav';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -31,7 +29,7 @@ export class SharedService {
         // resolver可取到 ngModule 裡 bootstrap、entryComponents 裡定義的 Component type
         // 根據 componentType 名字取出對應的 componentType
         const temp = Array.from(resolver['_factories'].values())
-            .find((x: any) => x.selector === route.selector) as ComponentFactoryBoundToModule<any>;
+            .find((x: ComponentFactory<any>) => x.selector === route.selector) as ComponentFactory<any>;
 
         if (temp) {
             return temp.componentType;
@@ -44,8 +42,10 @@ export class SharedService {
         dynamicChildRoutes: VmMenu[]) {
         const foundChild: any = config.find(x => x.path === modulePath);
 
+        console.log(foundChild);
+        
         if (foundChild && foundChild._loadedConfig) {
-            const childLoadedRouterConfig: LoadedRouterConfig = foundChild._loadedConfig;
+            const childLoadedRouterConfig: any = foundChild._loadedConfig;
             childLoadedRouterConfig.routes.forEach((route) => {
                 if (Object.keys(route).some(proptertyName => proptertyName.includes('children')) && route.children.length === 0) {
                     dynamicChildRoutes.forEach((child, i) => {

@@ -44,17 +44,16 @@ export const MapComponents = [
 ];
 
 @NgModule({
+    declarations: MapComponents,
     imports: [
         CommonModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
         SharedMaterialModule,
-        // directive of ngDraggable/ngResizable to make the DOM element draggable
         AngularDraggableModule,
         MapRoutingModule,
     ],
-    declarations: MapComponents,
     providers: [
     ],
     entryComponents: [

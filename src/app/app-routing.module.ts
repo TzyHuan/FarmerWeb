@@ -55,10 +55,12 @@ const routes: Routes = [
     pathMatch: 'full'
   }, {
     path: 'Map',
-    loadChildren: './map/map.module#MapModule',
+    loadChildren: () => import('./map/map.module').then(m => m.MapModule),
+    //loadChildren: './map/map.module#MapModule',
   }, {
     path: 'System',
-    loadChildren: './system/system.module#SystemModule',
+    loadChildren: () => import('./system/system.module').then(m => m.SystemModule),
+    //loadChildren: './system/system.module#SystemModule',
   }, {
     path: '**',
     component: HomeComponent,

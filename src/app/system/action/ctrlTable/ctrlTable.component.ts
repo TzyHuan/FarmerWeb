@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { startWith, tap, map } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';

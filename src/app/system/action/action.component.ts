@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionService } from '../../../api/system_auth/action.service';
 import { BehaviorSubject } from 'rxjs';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'system-action',

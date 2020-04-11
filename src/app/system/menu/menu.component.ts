@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Menu } from '../../../interface/system_auth/menu';
 import { MenuService } from '../../../api/system_auth/menu.service';
 import { Observable } from 'rxjs';
 import { startWith, tap, map } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { DialogMenuDeleteComponent } from './dialog/dialog-menu-delete.component';
 import { DialogMenuUpdateComponent } from './dialog/dialog-menu-update.component';

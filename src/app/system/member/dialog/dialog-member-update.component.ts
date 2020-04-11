@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { NgForm, FormGroupDirective, FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Member } from '../../../../interface/system_auth/member';
 import { MemberService } from '../../../../api/system_auth/member.service';
 

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RoleGroup } from '../../../../interface/system_auth/role_group';
 import { RoleGroupService } from '../../../../api/system_auth/role_group.service';
 

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Menu } from '../../../../interface/system_auth/menu';
 import { MenuService } from '../../../../api/system_auth/menu.service';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';

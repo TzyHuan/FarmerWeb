@@ -14,8 +14,9 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "aot": false,
             "assets": [
               "src/assets",
               "src/favicon.png"
@@ -28,7 +29,7 @@
               "node_modules/angular2-draggable/css/resizable.min.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",                 
+              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/video.js/dist/video.min.js"              
             ]

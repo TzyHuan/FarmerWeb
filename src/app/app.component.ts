@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatDrawer, MatTreeNestedDataSource } from '@angular/material';
+import { MatDrawer } from '@angular/material/sidenav';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Subscription } from 'rxjs';
 import { VmMenu } from '../interface/system_auth/vm_menu';
 import { SharedService, NavMenuService } from './shared-service';

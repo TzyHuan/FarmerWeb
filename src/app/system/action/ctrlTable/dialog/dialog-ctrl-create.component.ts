@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Ctrl } from '../../../../../interface/system_auth/ctrl';
 import { CtrlService } from '../../../../../api/system_auth/ctrl.service';

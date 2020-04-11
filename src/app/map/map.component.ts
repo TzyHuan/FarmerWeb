@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import L from 'leaflet';
 import { GeoSearchControl, EsriProvider } from 'leaflet-geosearch';
@@ -45,7 +45,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     vertical = true;
 
     // mat-sidenav
-    @ViewChild('drawer') drawer: any;
+    @ViewChild('drawer', { static: true }) drawer: any;
     drawerPage: number;
     opened = false;
     subSideChange: Subscription;
@@ -178,21 +178,21 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const eco = new L.TileLayer(ecoUrl, option);
 
         // 匯入GeoJSON世界地圖檔
-        this.worldGeoJson = new L.geoJson(GEOdata, {
-            style: (feature) => {
-                return {
-                    weight: 2,
-                    opacity: 1,
-                    color: '#FED976',
-                    fillColor: '#ADFF2F',
-                    dashArray: '8',
-                    fillOpacity: 0.1
-                };
-            },
-            onEachFeature: (feature, layer) => {
-                this.onEachFeature(feature, layer);
-            }
-        });
+        // this.worldGeoJson = new L.geoJson(GEOdata, {
+        //     style: (feature) => {
+        //         return {
+        //             weight: 2,
+        //             opacity: 1,
+        //             color: '#FED976',
+        //             fillColor: '#ADFF2F',
+        //             dashArray: '8',
+        //             fillOpacity: 0.1
+        //         };
+        //     },
+        //     onEachFeature: (feature, layer) => {
+        //         this.onEachFeature(feature, layer);
+        //     }
+        // });
         // #endregion
 
         // #region Markers、多邊形標籤
@@ -294,11 +294,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             'Antique': antique,
             'Eco': eco
         };
-        const overlayMaps = {
-            'Countries': this.worldGeoJson,
-            'MyLand': myLand,
-            'Cluster': clusterMarkers
-        };
+        // const overlayMaps = {
+        //     'Countries': this.worldGeoJson,
+        //     'MyLand': myLand,
+        //     'Cluster': clusterMarkers
+        // };
 
         // 設定經緯度座標等初始值，匯入html div中
         this.map = L.map('MapDiv', {
@@ -318,7 +318,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.map.setView(new L.LatLng(23.6, 120.90), this.initZoom);
 
         // 加入圖層控制項
-        L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+        //L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+        L.control.layers(baseMaps).addTo(this.map);
 
         // 加入Esri地圖搜尋功能(google的要收錢)
         const provider = new EsriProvider();

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDrawer } from '@angular/material';
+import { MatDrawer } from '@angular/material/sidenav';
 import { SystemService } from '../../api/system_auth/system.service';
 import { VmMenu } from '../../interface/system_auth/vm_menu';
 import { AppRoutingModule } from '../app-routing.module';

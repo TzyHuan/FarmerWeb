@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Validators, FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Member } from '../../../../interface/system_auth/member';

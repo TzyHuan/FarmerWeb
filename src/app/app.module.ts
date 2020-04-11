@@ -13,8 +13,8 @@ import { AppRoutingModule, AppRoutingComponents } from './app-routing.module';
 
 import { AuthInterceptor } from '../interceptor/auth.interceptor';
 import { SharedMaterialModule } from './shared-material.module';
-import { SystemComponents } from './system/system.module';
-import { MapComponents } from './map/map.module';
+import { SystemComponents, SystemModule } from './system/system.module';
+import { MapComponents, MapModule } from './map/map.module';
 
 @NgModule({
   declarations: [
@@ -27,11 +27,12 @@ import { MapComponents } from './map/map.module';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule.forRoot(),
+    NgbModule,
     AppRoutingModule,         // component 路徑樹狀結構
     BrowserAnimationsModule,  // angular material animation
     SharedMaterialModule,     // used material
-    AngularDraggableModule    // directive of ngDraggable/ngResizable to make the DOM element draggable
+    MapModule,
+    SystemModule
   ],
   providers: [
     {

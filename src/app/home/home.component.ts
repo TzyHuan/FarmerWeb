@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterContentInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 import { StationInfo } from '../../interface/greenhouse/station_info';
 import { RealtimeWeather } from '../../interface/greenhouse/realtime_weather';
 import { environment } from '../../environments/environment';
@@ -36,9 +36,9 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   realtimeLux: any;
   realtimeRhGauge: any;
   realtimeTempGauge: any;
-  @ViewChild('realtimeLux') realtimeLuxEle: ElementRef;
-  @ViewChild('realtimeRhGauge') realtimeRhGaugeEle: ElementRef;
-  @ViewChild('realtimeTempGauge') realtimeTempGaugeEle: ElementRef;
+  @ViewChild('realtimeLux', { static: true }) realtimeLuxEle: ElementRef;
+  @ViewChild('realtimeRhGauge', { static: true }) realtimeRhGaugeEle: ElementRef;
+  @ViewChild('realtimeTempGauge', { static: true }) realtimeTempGaugeEle: ElementRef;
 
   constructor(
     private stationInfoService: StationInfoService,

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RoleGroup } from '../../../../interface/system_auth/role_group';
 import { IActionRole } from '../../../../interface/system_auth/i_action_role';
 import { ActionNode, ActionFlatNode, } from '../../../../interface/system_auth/vm_i_role';

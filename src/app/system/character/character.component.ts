@@ -11,15 +11,17 @@ import { RoleGroupService } from '../../../api/system_auth/role_group.service';
 import { IMenuRoleService } from '../../../api/system_auth/i_menu_role.service';
 import { IActionRoleService } from '../../../api/system_auth/i_action_role.service';
 
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { MatDialog } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 import { DialogCharacterCreateComponent } from './dialog/dialog-character-create.component';
 import { DialogCharacterDeleteComponent } from './dialog/dialog-character-delete.component';
 import { DialogCharacterUpdateComponent } from './dialog/dialog-character-update.component';
 import { DialogIMenuRoleComponent } from './dialog/dialog-i-menu-role.component';
 import { DialogIActionRoleComponent } from './dialog/dialog-i-action-role.component';
-import { zip } from 'rxjs/observable/zip';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'system-character',

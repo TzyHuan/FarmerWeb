@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Ctrl } from '../../../../../interface/system_auth/ctrl';
 import { CtrlService } from '../../../../../api/system_auth/ctrl.service';
 
