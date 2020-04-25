@@ -18,7 +18,7 @@ export class DialogCharacterCreateComponent {
         public fb: FormBuilder,
         public dialogRef: MatDialogRef<DialogCharacterCreateComponent>,
         private roleGroupService: RoleGroupService,
-        @Inject(MAT_DIALOG_DATA) public RoleList: RoleGroup[],
+        @Inject(MAT_DIALOG_DATA) public roleList: RoleGroup[],
     ) {
 
         this.addRoleForm = this.fb.group({

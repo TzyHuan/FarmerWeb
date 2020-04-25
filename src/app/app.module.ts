@@ -15,6 +15,8 @@ import { AuthInterceptor } from '../interceptor/auth.interceptor';
 import { SharedMaterialModule } from './shared-material.module';
 import { SystemComponents, SystemModule } from './system/system.module';
 import { MapComponents, MapModule } from './map/map.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { MapComponents, MapModule } from './map/map.module';
     BrowserAnimationsModule,  // angular material animation
     SharedMaterialModule,     // used material
     MapModule,
-    SystemModule
+    SystemModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     {
