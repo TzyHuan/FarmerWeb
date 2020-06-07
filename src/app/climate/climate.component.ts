@@ -40,8 +40,8 @@ export class ClimateComponent implements AfterContentInit {
   selectedStations: StationInfo = new StationInfo();
   humidityChart: any;
   temperatureChart: any;
-  @ViewChild('humidityChart') humidityChartEle: ElementRef;
-  @ViewChild('temperatureChart') temperatureChartEle: ElementRef;
+  @ViewChild('humidityChart', { static: true }) humidityChartEle: ElementRef;
+  @ViewChild('temperatureChart', { static: true }) temperatureChartEle: ElementRef;
 
   constructor(
     private climateService: ClimateService,

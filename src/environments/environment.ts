@@ -6,10 +6,10 @@
 // "ng build" or "ng serve" only
 export const environment = {
   production: false,
-  authUrl: 'http://localhost/SystemAuth/api',
-  greenhouseUrl: 'http://localhost/FarmerAPI/api',
-  sensorHubUrl: 'http://localhost/FarmerAPI/SensorHub',
-  raspGpioUrl: 'http://192.168.43.120:3000/gpio',
-  raspPwmUrl: 'http://192.168.43.120:3000/pwm',
+  authUrl: `https://${location.host}/SystemAuth/api`,
+  greenhouseUrl: `https://${location.host}/FarmerAPI/api`,
+  sensorHubUrl: `https://${location.host}/FarmerAPI/SensorHub`,
+  raspGpioUrl: `http://${location.host}:3000/gpio`,
+  raspPwmUrl: `http://${location.host}:3000/pwm`,
   appId: 0,
 };
