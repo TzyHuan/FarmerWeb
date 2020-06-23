@@ -4,13 +4,10 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularDraggableModule } from 'angular2-draggable';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
-
 import { AppRoutingModule, AppRoutingComponents } from './app-routing.module';
-
 import { AuthInterceptor } from '../interceptor/auth.interceptor';
 import { SharedMaterialModule } from './shared-material.module';
 import { SystemComponents, SystemModule } from './system/system.module';
@@ -35,7 +32,7 @@ import { environment } from '../environments/environment';
     SharedMaterialModule,     // used material
     MapModule,
     SystemModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('/FarmerWeb/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     {
