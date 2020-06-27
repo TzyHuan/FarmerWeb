@@ -30,7 +30,7 @@ export class SystemRoutingModule {
         ).subscribe(([parentPath, childList]: [string, VmMenu[]]) => {
             CheckService.checkLazyRouter(
                 parentPath, childList, this.resolver, this.router,
-                SystemRoutingModule, this.renderRoutingUnsubscribe
+                'system', this.renderRoutingUnsubscribe
             );
         }, (error) => {
             console.error(error);

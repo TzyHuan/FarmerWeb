@@ -15,8 +15,8 @@ platformBrowserDynamic().bootstrapModule(AppModule)
   .then(seccess => console.log('Bootstrap success'))
   .then(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/FarmerWeb/ngsw-worker.js');
-      console.log('regist serviceWorker success')
+      navigator.serviceWorker.register('/ngsw-worker.js');
+      console.log('regist serviceWorker success');
     }
   })
   .catch(err => console.log(err));

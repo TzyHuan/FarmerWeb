@@ -42,8 +42,6 @@ export class SharedService {
         dynamicChildRoutes: VmMenu[]) {
         const foundChild: any = config.find(x => x.path === modulePath);
 
-        console.log(foundChild);
-        
         if (foundChild && foundChild._loadedConfig) {
             const childLoadedRouterConfig: any = foundChild._loadedConfig;
             childLoadedRouterConfig.routes.forEach((route) => {
@@ -70,7 +68,7 @@ export class SharedService {
         }
     }
 
-    constructor( private resolver: ComponentFactoryResolver) {
+    constructor(private resolver: ComponentFactoryResolver) {
         this.factories = Array.from(this.resolver['_factories'].values());
     }
 
@@ -170,11 +168,10 @@ export class CheckService {
     }
 
     public static checkLazyRouter(parentPath: string, childList: VmMenu[],
-        resolver: ComponentFactoryResolver,
-        router: Router, moduleClass: any, renderRoutingUnsubscribe: Subject<any>) {
-        if ((parentPath === moduleClass.name.split(/(?=[A-Z])/)[0] ||
-            parentPath.toLocaleLowerCase() === moduleClass.name.split('_')[0])
-            && childList.length > 0) {
+        resolver: ComponentFactoryResolver, router: Router, moduleName: string,
+        renderRoutingUnsubscribe: Subject<any>) {
+
+        if (parentPath.toLocaleLowerCase() === moduleName.toLocaleLowerCase() && childList.length > 0) {
             // Outside the subscribe may use setTimeout at first!!
             // It seems to "_loadedConfig" would be gotten in the end of RecivableRoutingModule
             SharedService

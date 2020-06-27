@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   activeNode: any;
   treeControl = new NestedTreeControl<VmMenu>(node => node.children);
   dataSource = new MatTreeNestedDataSource<VmMenu>();
-  @ViewChild('drawer') drawer: MatDrawer;
+  @ViewChild('drawer', { static: true }) drawer: MatDrawer;
 
   hasChild = (_: number, node: VmMenu) => !!node.children && node.children.length > 0;
 

@@ -6,10 +6,6 @@ import { ClimateComponent } from './climate/climate.component';
 import { HomeComponent } from './home/home.component';
 // 登入&登出
 import { UserComponents } from './user/user.module';
-// 系統管理
-import { SystemComponents } from './system/system.module';
-// 地圖
-import { MapComponents } from './map/map.module';
 // 統計
 import { StatisticsComponent } from './statistics/statistics.component';
 // 直播
@@ -56,32 +52,17 @@ const routes: Routes = [
   }, {
     path: 'Map',
     loadChildren: () => import('./map/map.module').then(m => m.MapModule),
-    //loadChildren: './map/map.module#MapModule',
   }, {
     path: 'System',
     loadChildren: () => import('./system/system.module').then(m => m.SystemModule),
-    //loadChildren: './system/system.module#SystemModule',
   }, {
     path: '**',
     component: HomeComponent,
   },
 ];
 
-// const appRoutes: Routes = [
-//   { path: 'home', component: HomeComponent },
-//   {
-//       path: 'signup', component: UserComponent,
-//       children: [{ path: '', component: SignUpComponent }]
-//   },
-//   {
-//       path: 'login', component: UserComponent,
-//       children: [{ path: '', component: SignInComponent }]
-//   },
-//   { path : '', redirectTo:'/login', pathMatch : 'full'}
-// ];
-
 @NgModule({
-  imports: [RouterModule.forRoot(routes)], // routes
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 

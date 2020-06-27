@@ -30,9 +30,7 @@ import { environment } from '../environments/environment';
     AppRoutingModule,         // component 路徑樹狀結構
     BrowserAnimationsModule,  // angular material animation
     SharedMaterialModule,     // used material
-    MapModule,
-    SystemModule,
-    ServiceWorkerModule.register('/FarmerWeb/ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     {
@@ -52,7 +50,7 @@ import { environment } from '../environments/environment';
   // or including it in a routing definition.
   entryComponents: [
     AppRoutingComponents,
-    MapComponents,
+    MapComponents[0],
     SystemComponents[0],
   ]
 })
