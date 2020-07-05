@@ -13,6 +13,11 @@ import videojs from 'video.js';
 export class LiveComponent implements OnInit, OnDestroy {
 
     options: any = {
+        html5: {
+            hls: {
+                overrideNative: !videojs.browser.IS_SAFARI
+            }
+        },
         width: 848,
         height: 480,
         controls: true,
