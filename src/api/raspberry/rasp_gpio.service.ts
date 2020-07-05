@@ -22,11 +22,11 @@ export class GpioService {
     }
 
     getGpioStatus(pin: number) {
-        return this.http.get(`${environment.raspGpioUrl}/${pin.toString()}/status`);
+        return this.http.get<GpioStatus>(`${environment.raspGpioUrl}/${pin.toString()}/status`);
     }
 
     getAllGpioStatus() {
-        return this.http.get(`${environment.raspGpioUrl}/status`);
+        return this.http.get<GpioStatus[]>(`${environment.raspGpioUrl}/status`);
     }
 
     putPwm(pin: number, freq: number, duty: number) {

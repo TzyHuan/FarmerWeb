@@ -12,6 +12,8 @@ import videojs from 'video.js';
 
 export class LiveComponent implements OnInit, OnDestroy {
 
+    gpioCheckedObject: GpioCheckedObject = new GpioCheckedObject();
+    player: any;
     options: any = {
         html5: {
             hls: {
@@ -24,14 +26,11 @@ export class LiveComponent implements OnInit, OnDestroy {
         preload: 'auto', // 預載：string；'auto'|'true'|'metadata'|'none'
     };
 
-    player: any;
-
     constructor(private gpioService: GpioService) {
-
     }
 
     ngOnInit() {
-
+        this.initializeAllGpioStatus();
         this.player = videojs('vid1', this.options, function onPlayerReady() {
             videojs.log('Your player is ready!');
 
@@ -69,17 +68,30 @@ export class LiveComponent implements OnInit, OnDestroy {
         });
     }
 
-    readGpioStatus(pin: number, event: string) {
-        this.gpioService.getGpioStatus(pin).subscribe(x => {
-            console.log(x);
+    initializeAllGpioStatus() {
+        this.gpioService.getAllGpioStatus().subscribe(gpioStatus => {
+            gpioStatus.forEach(x => {
+                switch(x.pin._gpio){
+                    case 20:
+                        this.gpioCheckedObject.isCheckedFan = Boolean(x.value);
+                        console.log(20, this.gpioCheckedObject.isCheckedFan);
+                        break;
+                    case 21:
+                        this.gpioCheckedObject.isCheckedLed = Boolean(x.value);
+                        console.log(21, this.gpioCheckedObject.isCheckedLed);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            
         });
     }
+}
 
-    readAllGpioStatus(pins: any[]) {
-        this.gpioService.getAllGpioStatus().subscribe(x => {
-            console.log(x);
-        });
-    }
+class GpioCheckedObject{
+    isCheckedLed: boolean = false;
+    isCheckedFan: boolean = false;
 }
 
 // function allowDrop(event){
