@@ -1,15 +1,14 @@
-import { Component, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
-
+import { Component, AfterContentInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ClimateService } from '../../api/greenhouse/climate.service';
 import { StationInfoService } from '../../api/greenhouse/station_into.service';
-import { HighchartsTempratures, HighchartsHumidities } from '../../interface/greenhouse/climate';
+import { Climate, LineChartData } from '../../interface/greenhouse/climate';
 import { StationInfo } from '../../interface/greenhouse/station_info';
 
 /** If there isn't a declaration file, the TypeScript compiler
  * doesn't know if the module exists, so you need to use require
  * instead which lacks the compilation checking.*/
 import Highcharts from 'highcharts/highstock';
+import { iif } from 'rxjs';
 // import HighchartsMore from 'highcharts/highcharts-more';
 
 /**https://www.highcharts.com/docs/getting-started/install-from-npm
@@ -34,9 +33,10 @@ require('highcharts/highcharts-more')(Highcharts);
   providers: [ClimateService, StationInfoService]
 })
 
-export class ClimateComponent implements AfterContentInit {
+export class ClimateComponent implements OnInit, AfterContentInit {
 
   stations: StationInfo[];
+  searchNum: number = 1000;
   selectedStations: StationInfo = new StationInfo();
   humidityChart: any;
   temperatureChart: any;
@@ -47,17 +47,9 @@ export class ClimateComponent implements AfterContentInit {
     private climateService: ClimateService,
     private stationInfoService: StationInfoService,
   ) {
-    // 抓Station Selector選項
-    this.stationInfoService.getStationInfo().subscribe((result: StationInfo[]) => {
-      this.stations = result;
-      // 預設初始選項為第一個選項
-      this.selectedStations = this.stations[0];
-    }, (error) => {
-      console.error(error);
-    });
   }
 
-  ngAfterContentInit() {
+  ngOnInit() {
     // 設定Highstock屬性
     const optionsA: Highcharts.Highstock.Options = {
       chart: {
@@ -118,9 +110,10 @@ export class ClimateComponent implements AfterContentInit {
       series: [{
         name: 'Temperature',
         data: []
-      }]
-      // createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/
+      }],
+      credits: false
     };
+
     const optionsB: Highcharts.Highstock.Options = {
       chart: {
         // type: 'spline'
@@ -180,83 +173,58 @@ export class ClimateComponent implements AfterContentInit {
       series: [{
         name: 'RH',
         data: []
-      }]
-      // createSeries(this.TemperatureData)           /*[[0, 2],[1, 5],[4,1]]*/
+      }],
+      credits: false
     };
 
     // 初始化Highstock
     this.temperatureChart = new Highcharts.stockChart(this.temperatureChartEle.nativeElement, optionsA);
     this.humidityChart = new Highcharts.stockChart(this.humidityChartEle.nativeElement, optionsB);
+  }
 
-    console.log(this.selectedStations);
-    // 初始查詢條件
-    const params = new HttpParams()
-      .set('StationId', String(this.selectedStations.stationId))
-      .set('SearchNum', '10000');
-
-    // 置入資料至溫度的Highstock
-    this.climateService.getTemperatures(params).subscribe((result: HighchartsTempratures[]) => {
-      this.drawTempHighcharts(this.temperatureChart, result);
-    }, (error) => {
-      console.error(error);
-    });
-
-    // 置入資料至溫度的Highstock
-    this.climateService.getRelativeHumidities(params).subscribe((result: HighchartsHumidities[]) => {
-      this.drawRhHighcharts(this.humidityChart, result);
+  ngAfterContentInit() {
+    this.stationInfoService.getStationInfo().subscribe((result: StationInfo[]) => {
+      this.stations = result;
+      // Default greenhouse own
+      this.selectedStations = this.stations.find(x => x.stationId === 0);
+      this.drawDataOnHighchart(this.selectedStations.stationId, this.searchNum);
     }, (error) => {
       console.error(error);
     });
   }
 
-  onSelect(stationId: number) {
-    // this.selectedStations;
+  onSelect(stationId: string | number) {
     this.stations.forEach(value => {
-      if (value.stationId === stationId) {
+      if (value.stationId === Number(stationId)) {
         this.selectedStations = value;
       }
     });
 
-    const params = new HttpParams()
-      .set('StationId', stationId.toString())
-      .set('SearchNum', '100000');
-
-    this.climateService.getTemperatures(params).subscribe(
-      (result: HighchartsTempratures[]) => {
-        this.drawTempHighcharts(this.temperatureChart, result);
-      }, (error) => {
-        console.error(error);
-      });
-
-    this.climateService.getRelativeHumidities(params).subscribe(
-      (result: HighchartsHumidities[]) => {
-        this.drawRhHighcharts(this.humidityChart, result);
-      }, (error) => {
-        console.error(error);
-      });
+    this.drawDataOnHighchart(Number(stationId), this.searchNum);
   }
 
-  private drawTempHighcharts(chart: Highcharts.ChartObject, updateData: any[]) {
-    const temperatureData: any = [];
-    updateData.forEach(v => {
-      const timeTemp: any = v.dateFormatted.split('-');
-      temperatureData.push([
-        Date.UTC(timeTemp[0], timeTemp[1], timeTemp[2], timeTemp[3], timeTemp[4]),
-        v.temperatureC
-      ]);
+  private drawDataOnHighchart(stationId: number, searchNum: number) {
+    iif(
+      () => !stationId || stationId === 0,
+      this.climateService.getGreenhouseClimate(searchNum),
+      this.climateService.getCwbClimate(stationId, searchNum),
+    ).subscribe((response: Climate[]) => {
+      this.drawLineHighcharts(
+        this.temperatureChart,
+        response.map(x => new LineChartData({ obsTime: x.obsTime, data: x.temperature }))
+      );
+
+      this.drawLineHighcharts(
+        this.humidityChart,
+        response.map(x => new LineChartData({ obsTime: x.obsTime, data: x.rh }))
+      );
+    }, (error) => {
+      console.error(error);
     });
-    chart.series[0].update({ data: temperatureData }, true);
   }
 
-  private drawRhHighcharts(chart: Highcharts.ChartObject, updateData: any[]) {
-    const relativeHumidityData: any = [];
-    updateData.forEach(v => {
-      const timeTemp: any = v.dateFormatted.split('-');
-      relativeHumidityData.push([
-        Date.UTC(timeTemp[0], timeTemp[1], timeTemp[2], timeTemp[3], timeTemp[4]),
-        v.relativeHumidities
-      ]);
-    });
-    chart.series[0].update({ data: relativeHumidityData }, true);
+  private drawLineHighcharts(chart: Highcharts.ChartObject, updateData: LineChartData[]) {
+    const insertData: any[][] = updateData.map(v => [new Date(v.obsTime).getTime(), v.data]);
+    chart.series[0].update({ data: insertData }, true);
   }
 }

@@ -1,9 +1,20 @@
 export class HighchartsTempratures {
-    public dateFormatted: Date;
-    public temperatureC: number;
+    dateFormatted: Date;
+    temperatureC: number;
 }
 
-export class HighchartsHumidities {
-    public dateFormatted: Date;
-    public relativeHumidities: number;
+export class LineChartData {
+    public obsTime: Date | number;
+    public data: number;
+
+    public constructor(init?: Partial<LineChartData>) {
+        Object.assign(this, init);
+    }
+}
+
+export class Climate {
+    public obsTime: Date;
+    public temperature: number;
+    public rh: number;
+    public lux: number;
 }

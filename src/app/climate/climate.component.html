@@ -1,5 +1,4 @@
-<h1>Long-term Weather data</h1>
-<h5>Crawled from 中央氣象局 by Python</h5>
+<h1>Climate</h1>
 <div>
   地點：
   <select (change)="onSelect($event.target.value)" [value]="selectedStations.stationId">
@@ -7,7 +6,9 @@
       {{station.name}}
     </option>
   </select>
-  <br /> Selected Station ID: {{selectedStations.stationId}} & Name: {{selectedStations.name}}
+  筆數：
+  <input type="number" min="1" max="100000" [(ngModel)]="searchNum">
+  <button (click)="onSelect(selectedStations.stationId)">Search</button>
   <br />  
 
   <div class="highchart" #temperatureChart>
