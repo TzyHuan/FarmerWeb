@@ -73,7 +73,7 @@ export class SharedService {
     }
 
     // Service message commands
-    emitChange(change: any) {
+    emitUserLogin(change: any) {
         this.emitLoginSource.next(change);
     }
 

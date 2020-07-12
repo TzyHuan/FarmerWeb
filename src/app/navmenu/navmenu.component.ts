@@ -45,10 +45,9 @@ export class NavMenuComponent implements OnInit {
 
         // 監聽從sign-in.component.ts傳來觸發事件，登入時重新抓Routes
         this.sharedService.loginEmitted$.subscribe(text => {
-            console.log(text);
             this.rebuildRoutes();
 
-            if (localStorage.getItem('userToken')) {
+            if (!localStorage.getItem('userToken')) {
                 this.isSignIn = false;
             } else if (localStorage.getItem('userToken')) {
                 this.isSignIn = true;
@@ -81,6 +80,7 @@ export class NavMenuComponent implements OnInit {
         localStorage.removeItem('account');
         this.isSignIn = false;
         this.rebuildRoutes();
+        this.router.navigate(['']);
     }
 
     drawerToggle() {

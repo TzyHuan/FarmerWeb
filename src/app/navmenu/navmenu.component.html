@@ -7,7 +7,7 @@
 
   <a class="navbar-brand" href="#">Greenhouse</a>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+  <button class="navbar-toggler" type="button" data-toggle="dropdown" data-target="#navbarsExampleDefault"
       aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
   </button>
@@ -29,12 +29,12 @@
                   Sign
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdown01">
-                  <div *ngIf="!isSignIn">
+                  <div [hidden]="isSignIn">
                       <a *ngFor="let signItem of signList" class="dropdown-item" [routerLink]="signItem?.path">
                           {{signItem?.menuText}}
                       </a>
                   </div>
-                  <div *ngIf="isSignIn">
+                  <div [hidden]="!isSignIn">
                       <button class="dropdown-item" (click)="signOut()">Sign Out</button>
                   </div>
               </div>

@@ -33,8 +33,7 @@ export class SignInComponent implements OnInit {
       console.log('Sign in success!');
 
       // 觸發事件，讓menu監聽此事件，並觸發rebuildMenu以動態產生選單
-      // this.SignEvent.emit(null);
-      this.sharedService.emitChange('sign-in onSubmitemit=>navmenu');
+      this.sharedService.emitUserLogin('sign-in onSubmitemit=>navmenu');
 
       // 登入成功後重新導向至首頁
       this.router.navigate(['/Home']);
