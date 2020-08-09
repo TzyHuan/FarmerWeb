@@ -50,6 +50,7 @@ export class ClimateComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit() {
+    const timezoneOffset: number = new Date().getTimezoneOffset();
     // 設定Highstock屬性
     const optionsA: Highcharts.Highstock.Options = {
       chart: {
@@ -102,6 +103,9 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         title: {
           text: 'Temperature(°C)'
         }
+      },
+      time: {
+        timezoneOffset: timezoneOffset,
       },
       tooltip: {
         headerFormat: '<b>{point.x: %b.%e, %H:%M}</b><br>',
@@ -165,6 +169,9 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         title: {
           text: 'Relative Humidity(%)'
         }
+      },
+      time: {
+        timezoneOffset: timezoneOffset,
       },
       tooltip: {
         headerFormat: '<b>{point.x: %b.%e, %H:%M}</b><br>',
