@@ -6,10 +6,11 @@
 // "ng build" or "ng serve" only
 export const environment = {
   production: false,
-  authUrl: `http://localhost:5080/api`,
-  greenhouseUrl: `http://localhost:6080/api`,
-  sensorHubUrl: `http://localhost:6080/SensorHub`,
-  raspGpioUrl: `http://localhost:3000/gpio`,
-  raspPwmUrl: `http://localhost:3000/pwm`,
+  authUrl: location.protocol === 'http:' ? `http://localhost:5080/api` : `http://localhost:5443/api`,
+  greenhouseUrl: location.protocol === 'http:' ? `http://localhost:6080/api` : `http://localhost:6443/api`,
+  sensorHubUrl: location.protocol === 'http:' ? `http://localhost:6080/SensorHub` : `http://localhost:6443/api`,
+  raspGpioUrl: `http://localhost:3080/gpio`,
+  raspPwmUrl: `http://localhost:3080/pwm`,
+  videoUrl: location.protocol === 'http:' ? 'http://192.168.43.215/hls/test.m3u8' : 'https://192.168.43.215/hls/test.m3u8',
   appId: 0,
 };

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GpioService } from '../../api/raspberry/rasp_gpio.service';
 
 import videojs from 'video.js';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-live',
@@ -11,7 +12,6 @@ import videojs from 'video.js';
 })
 
 export class LiveComponent implements OnInit, OnDestroy {
-
     gpioCheckedObject: GpioCheckedObject = new GpioCheckedObject();
     player: any;
     options: any = {
@@ -42,6 +42,7 @@ export class LiveComponent implements OnInit, OnDestroy {
                 videojs.log('Awww...over so soon?!');
             });
         });
+        this.player.src(environment.videoUrl);
     }
 
     ngOnDestroy() {
