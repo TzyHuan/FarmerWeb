@@ -7,7 +7,7 @@ import { StationInfo } from '../../interface/greenhouse/station_info';
 /** If there isn't a declaration file, the TypeScript compiler
  * doesn't know if the module exists, so you need to use require
  * instead which lacks the compilation checking.*/
-import Highcharts from 'highcharts/highstock';
+import Highcharts, { Options } from 'highcharts/highstock';
 import { iif } from 'rxjs';
 // import HighchartsMore from 'highcharts/highcharts-more';
 
@@ -38,8 +38,8 @@ export class ClimateComponent implements OnInit, AfterContentInit {
   stations: StationInfo[];
   searchNum: number = 1000;
   selectedStations: StationInfo = new StationInfo();
-  humidityChart: any;
-  temperatureChart: any;
+  humidityChart: Highcharts.Chart;
+  temperatureChart: Highcharts.Chart;
   @ViewChild('humidityChart', { static: true }) humidityChartEle: ElementRef;
   @ViewChild('temperatureChart', { static: true }) temperatureChartEle: ElementRef;
 
@@ -52,7 +52,7 @@ export class ClimateComponent implements OnInit, AfterContentInit {
   ngOnInit() {
     const timezoneOffset: number = new Date().getTimezoneOffset();
     // 設定Highstock屬性
-    const optionsA: Highcharts.Highstock.Options = {
+    const optionsA: Options = {
       chart: {
         // type: 'spline'
         zoomType: 'x'
@@ -112,13 +112,14 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         pointFormat: '<b>{series.name}: {point.y:.2f}°C</b>'
       },
       series: [{
+        type: 'abands',
         name: 'Temperature',
         data: []
       }],
-      credits: false
+      credits: { enabled: false }
     };
 
-    const optionsB: Highcharts.Highstock.Options = {
+    const optionsB: Options = {
       chart: {
         // type: 'spline'
         zoomType: 'x'
@@ -178,15 +179,16 @@ export class ClimateComponent implements OnInit, AfterContentInit {
         pointFormat: '<b>{series.name}: {point.y:.2f}%</b>'
       },
       series: [{
+        type: 'spline',
         name: 'RH',
         data: []
       }],
-      credits: false
+      credits: { enabled: false }
     };
 
     // 初始化Highstock
-    this.temperatureChart = new Highcharts.stockChart(this.temperatureChartEle.nativeElement, optionsA);
-    this.humidityChart = new Highcharts.stockChart(this.humidityChartEle.nativeElement, optionsB);
+    this.temperatureChart = Highcharts.stockChart(this.temperatureChartEle.nativeElement, optionsA);
+    this.humidityChart = Highcharts.stockChart(this.humidityChartEle.nativeElement, optionsB);
   }
 
   ngAfterContentInit() {
@@ -230,8 +232,8 @@ export class ClimateComponent implements OnInit, AfterContentInit {
     });
   }
 
-  private drawLineHighcharts(chart: Highcharts.ChartObject, updateData: LineChartData[]) {
+  private drawLineHighcharts(chart: Highcharts.Chart, updateData: LineChartData[]) {
     const insertData: any[][] = updateData.map(v => [new Date(v.obsTime).getTime(), v.data]);
-    chart.series[0].update({ data: insertData }, true);
+    chart.series[0].update({ type: 'spline', data: insertData }, true);
   }
 }

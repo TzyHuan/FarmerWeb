@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import Highcharts from 'highcharts';
+import Highcharts, { Options } from 'highcharts';
 require('highcharts/modules/series-label')(Highcharts);
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -10,10 +10,13 @@ require('highcharts/modules/exporting')(Highcharts);
 
 export class StatisticsComponent implements OnInit {
 
-    statisticalCahrt1: Highcharts;
-    statisticalCahrt2: Highcharts;
-    statisticalCahrt3: Highcharts;
-    statisticalCahrt4: Highcharts;
+    statisticalCahrt1: Highcharts.Chart;
+    statisticalCahrt2: Highcharts.Chart;
+    statisticalCahrt3: Highcharts.Chart;
+    statisticalCahrt4: Highcharts.Chart;
+
+//     @ViewChild('humidityChart', { static: true }) humidityChartEle: ElementRef;
+//   @ViewChild('temperatureChart', { static: true }) temperatureChartEle: ElementRef;
 
     constructor() {
 
@@ -33,7 +36,7 @@ export class StatisticsComponent implements OnInit {
                     style: {
                         left: '50px',
                         top: '18px',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                        color: 'black'
                     }
                 }]
             },
@@ -81,7 +84,7 @@ export class StatisticsComponent implements OnInit {
                     enabled: false
                 }
             }]
-        });
+        }  as Options);
 
         this.statisticalCahrt2 = Highcharts.chart('container2', {
             chart: {
@@ -127,7 +130,7 @@ export class StatisticsComponent implements OnInit {
                 y: 80,
                 floating: true,
                 borderWidth: 1,
-                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                backgroundColor: '#FFFFFF',
                 shadow: true
             },
             credits: {
@@ -146,7 +149,7 @@ export class StatisticsComponent implements OnInit {
                 name: 'Year 2016',
                 data: [1216, 1001, 4436, 738, 40]
             }]
-        });
+        } as Options);
 
         this.statisticalCahrt3 = Highcharts.chart('container3', {
             chart: {
@@ -182,7 +185,7 @@ export class StatisticsComponent implements OnInit {
                     ['Grapes (bunch)', 1]
                 ]
             }]
-        });
+        } as Options);
 
         this.statisticalCahrt4 = Highcharts.chart('container4', {
 
@@ -234,8 +237,7 @@ export class StatisticsComponent implements OnInit {
                 data: [50000, 39000, 42000, 31000, 26000, 14000],
                 pointPlacement: 'on'
             }]
-
-        });
+        } as Options);
     }
 
     onResizing(event: Event) {

@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   constructor(
     private stationInfoService: StationInfoService,
     private realtimeService: RealtimeService,
-    ) {
+  ) {
 
     // 初始化建立SignalR連線
     this.connection.start().then(() => {
@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnInit() {
-    const options = {
+    const options: Intl.DateTimeFormatOptions = {
       // year: "numeric", month: "short", day: "numeric",
       hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
       // weekday: "short",
@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         tickColor: '#666',
         labels: {
           step: 2,
-          rotation: 'auto'
+          //rotation: 'auto'
         },
         title: {
           text: '°C',
@@ -148,6 +148,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       },
       series: [{
         name: 'Temperature',
+        type: 'gauge',
         data: [],
         dataLabels: {
           formatter:
@@ -194,7 +195,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
         tickColor: '#666',
         labels: {
           step: 2,
-          rotation: 'auto'
+          //rotation: 'auto'
         },
         title: {
           text: '%',
@@ -223,6 +224,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       },
       series: [{
         name: 'RH',
+        type: 'gauge',
         data: [],
         dataLabels: {
           formatter:
@@ -239,7 +241,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
     const optionsLux: Highcharts.Options = {
       chart: {
         type: 'spline',
-        animation: Highcharts.svg, // don't animate in old IE
+        animation: true, // don't animate in old IE
         marginRight: 10
       },
 
@@ -279,6 +281,7 @@ export class HomeComponent implements OnInit, AfterContentInit, OnDestroy {
       },
       series: [{
         name: 'Illuminance',
+        type: 'spline',
         data:
           (function () {
             // generate an initial zero data

@@ -31,8 +31,8 @@
     "@videojs/http-streaming": "^1.4.2",
     "angular2-draggable": "^2.0.1",
     "bootstrap": "^4.4.1",
-    "highcharts": "^7.2.2",
-    "jquery": "^3.4.1",
+    "highcharts": "^9.1.2",
+    "jquery": "^3.6.0",
     "leaflet": "^1.6.0",
     "leaflet-geosearch": "^2.7.0",
     "leaflet.markercluster": "^1.4.1",
@@ -40,7 +40,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "^6.5.5",
     "tslib": "^1.11.1",
-    "video.js": "^7.3.0",
+    "video.js": "^7.14.0",
     "zone.js": "^0.10.3"
   },
   "devDependencies": {

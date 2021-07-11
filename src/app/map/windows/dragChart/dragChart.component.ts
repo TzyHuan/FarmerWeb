@@ -13,7 +13,7 @@ export class DragChartComponent implements OnInit {
 
     @Input('windowTitle') title: string;
     // Highchart
-    cahrt: Highcharts;
+    cahrt: Highcharts.Chart;
 
     constructor() {
     }
