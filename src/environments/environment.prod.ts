@@ -2,11 +2,11 @@
 // ng serve --prod
 export const environment = {
   production: true,
-  authUrl: location.protocol === 'http:' ? `http://richard-greenhouse.local:5080/api` : `https://richard-greenhouse.local:5443/api`,
-  greenhouseUrl: location.protocol === 'http:' ? `http://richard-greenhouse.local:6080/api` : `https://richard-greenhouse.local:6443/api`,
-  sensorHubUrl: location.protocol === 'http:' ? `http://richard-greenhouse.local:6080/SensorHub` : `https://richard-greenhouse.local:6443/SensorHub`,
-  raspGpioUrl: location.protocol === 'http:' ? `http://richard-greenhouse.local:3080/gpio` : `https://richard-greenhouse.local:3443/gpio`,
-  raspPwmUrl: location.protocol === 'http:' ? `http://richard-greenhouse.local:3080/pwm` : `https://richard-greenhouse.local:3443/pwm`,
-  videoUrl: location.protocol === 'http:' ? 'http://richard-greenhouse.local/hls/test.m3u8' : 'https://richard-greenhouse.local/hls/test.m3u8',
+  authUrl: location.protocol === 'http:' ? `http://${window.location.hostname}:5080/api` : `https://${window.location.hostname}:5443/api`,
+  greenhouseUrl: location.protocol === 'http:' ? `http://${window.location.hostname}:6080/api` : `https://${window.location.hostname}:6443/api`,
+  sensorHubUrl: location.protocol === 'http:' ? `http://${window.location.hostname}:6080/SensorHub` : `https://${window.location.hostname}:6443/SensorHub`,
+  raspGpioUrl: location.protocol === 'http:' ? `http://${window.location.hostname}:3080/gpio` : `https://${window.location.hostname}:3443/gpio`,
+  raspPwmUrl: location.protocol === 'http:' ? `http://${window.location.hostname}:3080/pwm` : `https://${window.location.hostname}:3443/pwm`,
+  videoUrl: location.protocol === 'http:' ? `http://${window.location.hostname}/hls/test.m3u8` : `https://${window.location.hostname}/hls/test.m3u8`,
   appId: 0,
 };
